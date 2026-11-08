@@ -246,31 +246,15 @@ table.inf{border-radius:15px;overflow:hidden}
 details.report{border-radius:20px;border:2px dashed var(--mist);background:#fff}
 footer{background:#000;color:#fff;border:0;border-radius:var(--rc);padding:24px 28px;margin-top:36px}
 footer i{color:var(--aqua)}
-/* hoja imprimible de signos vitales: solo existe al imprimir */
-#printsv{display:none}
-@media print{
-  @page{size:letter;margin:10mm}
-  html,body{background:#fff!important;color:#000}
-  body>*:not(#printsv){display:none!important}
-  #printsv{display:block}
-  .svsheet{font:400 9.5px/1.3 var(--sans);color:#000}
-  .svsheet .svbrand{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#444}
-  .svsheet h1{font-size:20px;font-weight:700;margin:2px 0 4px}
-  .svsheet .svpt{margin:0 0 6px;font-weight:600}
-  .svsheet .svev{border:1.5px solid #000;border-radius:8px;padding:6px 10px;margin:0 0 8px}
-  .svsheet .svev p{margin:2px 0}
-  .svsheet .cwarn{font-weight:700;color:#000}
-  .svt{width:100%;border-collapse:collapse;margin:0 0 8px;page-break-inside:avoid;font-variant-numeric:tabular-nums}
-  .svt caption{text-align:left;font-weight:700;font-size:11px;padding:0 0 3px}
-  .svt th,.svt td{border:1px solid #999;padding:1px 5px;text-align:center}
-  .svt th{background:#eee;font-weight:700}
-  .svt td:first-child{text-align:left;white-space:nowrap}
-  .svt tr.hl td,.svt td.hlc{background:#ddd;font-weight:700}
-  .svsheet .svnote{margin:3px 0;font-size:9.5px}
-  .svsheet .svsrc{margin-top:6px;font-size:8.5px;color:#333}
-  .svsheet .svsrc p{margin:1px 0}
-  .svt,.svsheet .svev{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
+/* signos vitales */
+.svbox{margin:6px 0 14px}
+.svmsg{margin-left:12px;font-size:13px;color:var(--muted)}
+.svt{width:100%;margin:14px 0 4px;font-variant-numeric:tabular-nums}
+.svt caption{text-align:left;font-weight:700;padding:0 0 6px}
+.svt td,.svt th{text-align:center}.svt td:first-child,.svt th:first-child{text-align:left;white-space:nowrap}
+.svt tr.hl td,.svt td.hlc{background:var(--lilac);font-weight:700}
+.sctab.svt td:last-child{min-width:0}
+#v-signos{overflow-x:auto}
 .hidden{display:none}
 </style>
 </head>
@@ -352,6 +336,7 @@ footer i{color:var(--aqua)}
     <button type="button" data-v="infus" data-c="green" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-ivbag"/></svg><span>Infusiones</span></button>
     <button type="button" data-v="escalas" data-c="pink" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-clip"/></svg><span>Escalas</span></button>
     <button type="button" data-v="hoja" data-c="green" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-sheet"/></svg><span>Hoja del paciente</span></button>
+    <button type="button" data-v="signos" data-c="pink" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-thermo"/></svg><span>Signos vitales</span></button>
   </nav>
 
   <div class="layout">
@@ -371,6 +356,7 @@ footer i{color:var(--aqua)}
   <section class="panel view hidden" id="v-infus"></section>
   <section class="panel view hidden" id="v-escalas"></section>
   <section class="panel view hidden" id="v-hoja"></section>
+  <section class="panel view hidden" id="v-signos"></section>
 
   <footer>
     Fuentes: Micromedex NeoFax® Essentials 2020 (dosificación neonatal) y Taketomo CK, Hodding JH, Kraus DM. <i>Manual de prescripción pediátrica y neonatal</i>, 18.ª ed., Lexicomp (dosificación pediátrica); The Harriet Lane Handbook, 24.ª ed. (2027), Johns Hopkins Hospital / Elsevier (formulario y capítulos clínicos); American Heart Association, PALS 2023 (Soporte Vital Avanzado Pediátrico); AAP/AHA, Textbook of Neonatal Resuscitation (NRP), 9.ª ed. Los textos son resúmenes, no transcripciones. Presentaciones: Cuadro Básico de Medicamentos del IMSS (agosto 2019).<br>Última actualización del contenido: 31 de octubre de 2026.
@@ -3375,7 +3361,8 @@ function select(id){
   renderList(); renderDetail();
   if(window.matchMedia('(max-width:860px)').matches) $('#detail').scrollIntoView({behavior:'smooth',block:'start'});
 }
-window.addEventListener('hashchange',()=>{const id=location.hash.slice(1); if(['reanimacion','liquidos','calc','infus','escalas','hoja'].includes(id)){showView(id,true); return;} if(DB.some(d=>d.id===id)&&id!==state.cur){state.cur=id; showView('med',true); renderList(); renderDetail();}});
+const VIEWS=['reanimacion','liquidos','calc','infus','escalas','hoja','signos'];
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1); if(VIEWS.includes(id)){showView(id,true); return;} if(DB.some(d=>d.id===id)&&id!==state.cur){state.cur=id; showView('med',true); renderList(); renderDetail();}});
 
 /* ---------- paciente ---------- */
 state.fav=[]; state.rec=[]; state.hoja=[];
@@ -3764,13 +3751,13 @@ function showView(v,fromHash){
   curView=v;
   document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
   document.querySelector('.layout').classList.toggle('hidden',v!=='med');
-  ['reanimacion','liquidos','calc','infus','escalas','hoja'].forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
+  VIEWS.forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
   if(!fromHash && v!=='med'){ try{history.replaceState(null,'','#'+v);}catch(e){} }
   renderCurrent();
 }
 function updTabs(){ const b=document.querySelector('#tabs button[data-v="hoja"]'); b.querySelector('span').textContent='Hoja del paciente'+(state.hoja.length?' ('+state.hoja.length+')':''); }
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.v==='med' && state.cur){ try{history.replaceState(null,'','#'+state.cur);}catch(e){} } showView(b.dataset.v); }));
-function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView==='reanimacion') renderRCP(); else if(curView==='liquidos') renderLiq(); else if(curView==='calc') renderCalc(); else if(curView==='infus') renderInf(); else if(curView==='escalas') renderEsc(); else renderHoja(); }
+function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView==='reanimacion') renderRCP(); else if(curView==='liquidos') renderLiq(); else if(curView==='calc') renderCalc(); else if(curView==='infus') renderInf(); else if(curView==='escalas') renderEsc(); else if(curView==='signos') renderSV(); else renderHoja(); }
 const _rw=readWeight; 
 pesoIn.addEventListener('input',()=>{ if(curView!=='med') renderCurrent(); patientNote(); });
 
@@ -4071,44 +4058,93 @@ function svEval(P,sx,m){ // líneas de interpretación para el paciente
   }
   return L;
 }
-function svTable(cap,rows,head,hl){ const t=document.createElement('table'); t.className='svt'; if(cap) t.appendChild(el('caption',null,cap));
-  const tr=document.createElement('tr'); head.forEach(x=>tr.appendChild(el('th',null,x))); t.appendChild(tr);
-  rows.forEach((r,i)=>{ const row=document.createElement('tr'); if(i===hl) row.className='hl'; r.forEach(c=>row.appendChild(el('td',null,String(c)))); t.appendChild(row); }); return t; }
-function svSheet(P,sx,m){
-  const s=el('div','svsheet'), y=P.years, bi=svBand(y);
-  s.appendChild(el('div','svbrand','Pedia Life · Dosis pediátricas y neonatales'));
-  s.appendChild(el('h1',null,'Signos vitales por edad'));
+function svDoc(P,sx,m){ // contenido único para la vista y el PDF
+  const D=[], y=P.years, bi=svBand(y);
   const ed=y==null?'sin capturar': P.days<60? fmt(Math.round(P.days))+' días' : y<2? fmt(Math.floor(P.days/30.44))+' meses' : fmt(Math.floor(y))+' años';
-  s.appendChild(el('p','svpt','Edad: '+ed+' · Sexo: '+(sx==='m'?'masculino':sx==='f'?'femenino':'sin capturar')+' · Peso: '+(state.w?fmt(state.w)+' kg':'—')+' · Talla: '+(P.talla!=null?fmt(P.talla)+' cm':'—')+(P.ga!=null?' · EG: '+fmt(P.ga)+' sem':'')+(P.epm!=null?' · EPM: '+fmt(Math.round(P.epm*10)/10)+' sem':'')+' · Fecha: '+new Date().toLocaleDateString('es-MX')));
-  const ev=svEval(P,sx,m); const box=el('div','svev'); ev.forEach(x=>box.appendChild(el('p',x.startsWith('⚠')?'cwarn':null,x))); s.appendChild(box);
+  D.push({k:'pt',t:'Edad: '+ed+' · Sexo: '+(sx==='m'?'masculino':sx==='f'?'femenino':'sin capturar')+' · Peso: '+(state.w?fmt(state.w)+' kg':'—')+' · Talla: '+(P.talla!=null?fmt(P.talla)+' cm':'—')+(P.ga!=null?' · EG: '+fmt(P.ga)+' sem':'')+(P.epm!=null?' · EPM: '+fmt(Math.round(P.epm*10)/10)+' sem':'')+' · Fecha: '+new Date().toLocaleDateString('es-MX')});
+  D.push({k:'ev',l:svEval(P,sx,m)});
   const pch=['Edad','p1','p5','p10','p50','p90','p95','p99'];
-  s.appendChild(svTable('Frecuencia cardiaca (lpm) · niños hospitalizados fuera de UCI',SV.bands.map((b,i)=>[b[0]].concat(SV.hr[i])),pch,bi));
-  s.appendChild(svTable('Frecuencia respiratoria (rpm) · niños hospitalizados fuera de UCI',SV.bands.map((b,i)=>[b[0]].concat(SV.rr[i])),pch,bi));
+  D.push({k:'tbl',cap:'Frecuencia cardiaca (lpm) · niños hospitalizados fuera de UCI',head:pch,rows:SV.bands.map((b,i)=>[b[0]].concat(SV.hr[i])),hr:bi,hc:-1});
+  D.push({k:'tbl',cap:'Frecuencia respiratoria (rpm) · niños hospitalizados fuera de UCI',head:pch,rows:SV.bands.map((b,i)=>[b[0]].concat(SV.rr[i])),hr:bi,hc:-1});
   if(y!=null && y>=1 && y<18){
-    const sexes=sx?[sx]:['f','m'];
-    sexes.forEach(k=>{ const r=SV.aap[k][Math.floor(y)], c=svHcol(r,P.talla), lb=['p50','p90','p95','p95 + 12'];
-      const t=svTable('Presión arterial · '+(k==='m'?'masculino':'femenino')+' · '+Math.floor(y)+' años (mmHg) · columnas = percentil de talla',
-        [['Talla (cm)'].concat(r.h)].concat(lb.map((x,i)=>['TAS '+x].concat(r.s[i]))).concat(lb.map((x,i)=>['TAD '+x].concat(r.d[i]))),['Percentil'].concat(SV_HPC),-1);
-      t.querySelectorAll('tr').forEach(tr=>{ const td=tr.children[c+1]; if(td) td.classList.add('hlc'); }); s.appendChild(t); });
-    s.appendChild(el('p','svnote',y>=13?'≥13 años: elevada 120–129/<80 · estadio 1 130–139/80–89 · estadio 2 ≥140/90 mmHg.':'1–12 años: elevada ≥p90 (o ≥120/80) · estadio 1 ≥p95 (o ≥130/80) · estadio 2 ≥p95 + 12 (o ≥140/90); se usa el valor que sea menor.'));
+    (sx?[sx]:['f','m']).forEach(k=>{ const r=SV.aap[k][Math.floor(y)], lb=['p50','p90','p95','p95 + 12'];
+      D.push({k:'tbl',cap:'Presión arterial · '+(k==='m'?'masculino':'femenino')+' · '+Math.floor(y)+' años (mmHg) · columnas = percentil de talla',head:['Percentil'].concat(SV_HPC),
+        rows:[['Talla (cm)'].concat(r.h)].concat(lb.map((x,i)=>['TAS '+x].concat(r.s[i]))).concat(lb.map((x,i)=>['TAD '+x].concat(r.d[i]))),hr:-1,hc:svHcol(r,P.talla)+1}); });
+    D.push({k:'note',t:y>=13?'≥13 años: elevada 120–129/<80 · estadio 1 130–139/80–89 · estadio 2 ≥140/90 mmHg.':'1–12 años: elevada ≥p90 (o ≥120/80) · estadio 1 ≥p95 (o ≥130/80) · estadio 2 ≥p95 + 12 (o ≥140/90); se usa el valor que sea menor.'});
   } else if(y==null || y<1){
-    const nr=svNeoRow(P), i=nr?SV.neo.indexOf(nr):-1;
-    s.appendChild(svTable('Presión arterial neonatal después de 2 semanas de vida, por edad posmenstrual (mmHg)',SV.neo.map(r=>[r[0]+' sem',r[1].join(' / '),r[2].join(' / '),r[3].join(' / ')]),['EPM','TAS p50 / p95 / p99','TAD p50 / p95 / p99','TAM p50 / p95 / p99'],i));
+    const nr=svNeoRow(P);
+    D.push({k:'tbl',cap:'Presión arterial neonatal después de 2 semanas de vida, por edad posmenstrual (mmHg)',head:['EPM','TAS p50 / p95 / p99','TAD p50 / p95 / p99','TAM p50 / p95 / p99'],rows:SV.neo.map(r=>[r[0]+' sem',r[1].join(' / '),r[2].join(' / '),r[3].join(' / ')]),hr:nr?SV.neo.indexOf(nr):-1,hc:-1});
   }
-  s.appendChild(el('p','svnote','Hipotensión (TAS menor del p5): <60 mmHg en neonatos · <70 de 1 mes a 1 año · <70 + 2 × edad en años de 1 a 10 años · <90 en mayores de 10 años. La fiebre, el llanto, el dolor y la ansiedad elevan la FC y la FR: valore en reposo y compare con mediciones previas.'));
-  const src=el('div','svsrc'); src.appendChild(el('b',null,'Fuentes')); [SV.src.hr,SV.src.bp,SV.src.neo,SV.src.hypo].forEach(x=>src.appendChild(el('p',null,x))); s.appendChild(src);
-  s.appendChild(el('p','svnote','Herramienta de apoyo; no sustituye el juicio clínico ni los protocolos institucionales.'));
-  return s;
+  D.push({k:'note',t:'Hipotensión (TAS menor del p5): <60 mmHg en neonatos · <70 de 1 mes a 1 año · <70 + 2 × edad en años de 1 a 10 años · <90 en mayores de 10 años. La fiebre, el llanto, el dolor y la ansiedad elevan la FC y la FR: valore en reposo y compare con mediciones previas.'});
+  D.push({k:'src',l:[SV.src.hr,SV.src.bp,SV.src.neo,SV.src.hypo]});
+  return D;
 }
-function svPrint(node){ let p=document.getElementById('printsv'); if(!p){ p=el('div'); p.id='printsv'; document.body.appendChild(p); } p.textContent=''; p.appendChild(node); try{ window.print(); }catch(e){} }
-function svCard(g,P){
-  const b=ccard(g,'vig','Signos vitales por edad y percentilas','Usa la edad, la EG y la talla de los datos del paciente. Capture lo medido para ubicar su percentil.');
-  const sx=selIn([['','Sexo…'],['f','Femenino'],['m','Masculino']],state.svSex||''), fc=numIn(null,'1','lpm'), fr=numIn(null,'1','rpm'), tas=numIn(null,'1','TAS'), tad=numIn(null,'1','TAD');
-  const mi=el('div','mini'); mi.append(fld('Sexo',sx),fld('FC',fc),fld('FR',fr),fld('TAS',tas),fld('TAD',tad)); b.appendChild(mi);
-  const meas=()=>({fc:nv(fc),fr:nv(fr),tas:nv(tas),tad:nv(tad)});
-  sx.addEventListener('change',()=>{ state.svSex=sx.value; });
-  liveOut(b,[sx,fc,fr,tas,tad],()=>svEval(P,sx.value,meas()));
-  const pb=el('button','copybtn','Imprimir hoja de signos vitales'); pb.type='button'; pb.addEventListener('click',()=>svPrint(svSheet(pt(),sx.value,meas()))); b.appendChild(pb);
+function svTableEl(b){ const t=document.createElement('table'); t.className='sctab svt'; t.appendChild(el('caption',null,b.cap));
+  const tr=document.createElement('tr'); b.head.forEach(x=>tr.appendChild(el('th',null,x))); t.appendChild(tr);
+  b.rows.forEach((r,i)=>{ const row=document.createElement('tr'); if(i===b.hr) row.className='hl'; r.forEach((c,j)=>{ const td=el('td',j===b.hc?'hlc':null,String(c)); row.appendChild(td); }); t.appendChild(row); }); return t; }
+
+/* PDF mínimo (Helvetica estándar, WinAnsi), sin librerías: la página sigue autocontenida */
+const PDFW={r:[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584],
+  b:[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584]};
+const PDFMAP={'–':150,'—':151,'•':149,'…':133,'‘':145,'’':146,'“':147,'”':148,'€':128};
+function pdfTxt(s){ return String(s).replace(/≥/g,'>=').replace(/≤/g,'<=').replace(/≈/g,'~').replace(/⚠\s*/g,'').replace(/−/g,'-'); }
+function pdfW(s,size,bold){ const W=bold?PDFW.b:PDFW.r; let w=0; for(const ch of pdfTxt(s)){ const c=ch.normalize('NFD').charCodeAt(0); w+= c>=32&&c<=126? W[c-32] : 556; } return w*size/1000; }
+function pdfEsc(s){ let o=''; for(const ch of pdfTxt(s)){ let c=ch.charCodeAt(0); if(PDFMAP[ch]) c=PDFMAP[ch]; else if(c>255) c=63;
+  o+= c===40||c===41||c===92? '\\'+ch : c<32||c>126? '\\'+c.toString(8).padStart(3,'0') : ch; } return o; }
+function svPDF(D){
+  const PW=612, PH=792, M=30, CW=PW-2*M, pages=[]; let ops=[], y=M;
+  const page=()=>{ if(ops.length) pages.push(ops.join('\n')); ops=[]; y=M; };
+  const need=h=>{ if(y+h>PH-M) page(); };
+  const text=(x,yy,s,size,bold)=>ops.push('BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x.toFixed(1)+' '+(PH-yy).toFixed(1)+' Td ('+pdfEsc(s)+') Tj ET');
+  const rect=(x,yy,w,h,fill,stroke)=>ops.push((fill!=null?fill+' g ':'')+(stroke?'0.6 G 0.5 w ':'')+x.toFixed(1)+' '+(PH-yy-h).toFixed(1)+' '+w.toFixed(1)+' '+h.toFixed(1)+' re '+(fill!=null&&stroke?'B':fill!=null?'f':'S')+' 0 g');
+  const wrap=(s,size,bold,w)=>{ const out=[]; let ln=''; String(s).split(/\s+/).forEach(wd=>{ const t=ln?ln+' '+wd:wd; if(pdfW(t,size,bold)>w&&ln){ out.push(ln); ln=wd; } else ln=t; }); if(ln) out.push(ln); return out; };
+  const para=(s,size,bold,x,w,lead)=>{ wrap(s,size,bold,w).forEach(l=>{ need(lead); text(x,y+size,l,size,bold); y+=lead; }); };
+  text(M,y+8,'PEDIA LIFE · DOSIS PEDIÁTRICAS Y NEONATALES',7,false); y+=12;
+  text(M,y+17,'Signos vitales por edad',17,true); y+=24;
+  D.forEach(b=>{
+    if(b.k==='pt'){ para(b.t,8.5,true,M,CW,11); y+=4; }
+    else if(b.k==='ev'){ const lines=b.l.map(s=>({w:s.startsWith('⚠'),l:wrap((s.startsWith('⚠')?'(!) ':'')+s,8.5,s.startsWith('⚠'),CW-16)})); const h=lines.reduce((a,x)=>a+x.l.length*11,0)+10;
+      need(h); rect(M,y,CW,h,null,true); y+=5; lines.forEach(x=>x.l.forEach(l=>{ text(M+8,y+8.5,l,8.5,x.w); y+=11; })); y+=9; }
+    else if(b.k==='tbl'){ const n=b.head.length, first=n>5?110:70, cw=(CW-first)/(n-1), rh=10.8, fs=7.8;
+      need(14+rh*2); text(M,y+9,b.cap,9,true); y+=13;
+      const row=(cells,bold,fill,hc)=>{ need(rh); let x=M; cells.forEach((c,j)=>{ const w=j?cw:first; const f=fill!=null?fill:(j===hc?0.86:null); rect(x,y,w,rh,f,true); const s=String(c), tw=pdfW(s,fs,bold||j===hc);
+          text(j? x+(w-tw)/2 : x+3, y+8, s, fs, bold||j===hc); x+=w; }); y+=rh; };
+      row(b.head,true,0.92,-1); b.rows.forEach((r,i)=>row(r,i===b.hr,i===b.hr?0.86:null,b.hc)); y+=8; }
+    else if(b.k==='note'){ para(b.t,8,false,M,CW,10); y+=3; }
+    else if(b.k==='src'){ y+=3; need(12); text(M,y+8,'Fuentes',8,true); y+=11; b.l.forEach(s=>para(s,7,false,M,CW,9)); }
+  });
+  y+=4; para('Herramienta de apoyo; no sustituye el juicio clínico ni los protocolos institucionales.',8,false,M,CW,10);
+  page();
+  // ensamblar el archivo
+  const objs=['<< /Type /Catalog /Pages 2 0 R >>',null,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+  const kids=[]; pages.forEach((c,i)=>{ const pn=objs.length+1; kids.push(pn+' 0 R'); objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+PW+' '+PH+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+(pn+1)+' 0 R >>');
+    const foot='BT /F1 7 Tf '+M+' 20 Td ('+pdfEsc('Pedia Life · página '+(i+1)+' de '+pages.length)+') Tj ET'; const st=c+'\n'+foot; objs.push('<< /Length '+st.length+' >>\nstream\n'+st+'\nendstream'); });
+  objs[1]='<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+pages.length+' >>';
+  let out='%PDF-1.4\n', off=[]; objs.forEach((o,i)=>{ off.push(out.length); out+=(i+1)+' 0 obj\n'+o+'\nendobj\n'; });
+  const xr=out.length; out+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n'+off.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('');
+  out+='trailer\n<< /Size '+(objs.length+1)+' /Root 1 0 R >>\nstartxref\n'+xr+'\n%%EOF\n';
+  return out;
+}
+async function svDownload(D,name,msg){
+  const blob=new Blob([svPDF(D)],{type:'application/pdf'});
+  try{ const dl=window.claude&&claude.use? await claude.use('downloads') : null;
+    if(dl){ await dl.save({filename:name,data:blob}); msg.textContent='PDF listo.'; return; } }
+  catch(e){ const c=e&&e.code; if(c==='declined'){ msg.textContent='Descarga cancelada.'; return; } if(c==='rate_limited'){ msg.textContent='Ya hay una descarga pendiente; intente de nuevo en un momento.'; return; } }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },2000); msg.textContent='PDF descargado.';
+}
+function renderSV(){
+  const h=$('#v-signos'); h.textContent=''; h.appendChild(el('div','eyebrow','Evaluación')); h.appendChild(el('h2',null,'Signos vitales por edad'));
+  const P=pt(); const m=state.svM||(state.svM={});
+  h.appendChild(el('p','csub','Percentilas de FC, FR y TA según la edad, el sexo, la talla y la EG de los datos del paciente. Capture lo medido para ubicar su percentil y descargue la hoja en PDF.'));
+  const b=el('div','box vig svbox'); h.appendChild(b);
+  const sx=selIn([['','Sexo…'],['f','Femenino'],['m','Masculino']],state.svSex||''), ins={fc:numIn(m.fc,'1','lpm'),fr:numIn(m.fr,'1','rpm'),tas:numIn(m.tas,'1','TAS'),tad:numIn(m.tad,'1','TAD')};
+  const mi=el('div','mini'); mi.append(fld('Sexo',sx),fld('FC',ins.fc),fld('FR',ins.fr),fld('TAS',ins.tas),fld('TAD',ins.tad)); b.appendChild(mi);
+  const meas=()=>{ for(const k in ins) m[k]=nv(ins[k]); return m; };
+  sx.addEventListener('change',()=>{ state.svSex=sx.value; renderSV(); });
+  liveOut(b,[ins.fc,ins.fr,ins.tas,ins.tad],()=>svEval(P,sx.value,meas()));
+  const pb=el('button','copybtn','Descargar PDF'); pb.type='button'; b.appendChild(pb); const msg=el('span','svmsg'); b.appendChild(msg);
+  pb.addEventListener('click',()=>{ const d=new Date(), f='signos-vitales-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.pdf'; msg.textContent=''; svDownload(svDoc(pt(),sx.value,meas()),f,msg); });
+  svDoc(P,sx.value,meas()).forEach(x=>{ if(x.k==='tbl') h.appendChild(svTableEl(x)); else if(x.k==='note') h.appendChild(el('p','csub',x.t)); else if(x.k==='src'){ const s=el('div','src'); x.l.forEach(t=>s.appendChild(el('p',null,t))); h.appendChild(s); } });
 }
 function renderEsc(){
   const h=$('#v-escalas'); h.textContent=''; h.appendChild(el('div','eyebrow','Evaluación')); h.appendChild(el('h2',null,'Escalas rápidas'));
@@ -4149,8 +4185,7 @@ function renderEsc(){
     ['Piernas',[[0,'Relajadas'],[1,'Flexión / extensión']]],
     ['Estado de alerta',[[0,'Dormido / tranquilo'],[1,'Inquieto']]]],
     s=>s<=2?'Sin dolor o dolor leve':s<=4?'Dolor leve a moderado':'Dolor intenso');
-  svCard(g,P);
-  h.appendChild(el('p','src','Glasgow y FLACC: Harriet Lane 2027. Signos vitales: Bonafide 2013 (FC y FR), AAP 2017 (TA de 1 a 17 años), Dionne 2012 (TA neonatal) y PALS 2023 (hipotensión). Wood-Downes, Westley y NIPS: uso clínico habitual.'));
+  h.appendChild(el('p','src','Glasgow y FLACC: Harriet Lane 2027. Wood-Downes, Westley y NIPS: uso clínico habitual. Los signos vitales por edad están en su propia pestaña.'));
 }
 
 /* ---------- equipo por peso (Harriet Lane) ---------- */
@@ -4245,7 +4280,7 @@ function renderHoja(){
 
 /* ---------- inicio ---------- */
 readWeight(); renderList(); updTabs(); patientNote();
-const h=location.hash.slice(1); if(['reanimacion','liquidos','calc','infus','escalas','hoja'].includes(h)) showView(h,true); else if(DB.some(d=>d.id===h)){state.cur=h; renderList(); renderDetail();}
+const h=location.hash.slice(1); if(VIEWS.includes(h)) showView(h,true); else if(DB.some(d=>d.id===h)){state.cur=h; renderList(); renderDetail();}
 })();
 </script>
 </body>
