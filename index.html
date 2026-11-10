@@ -253,9 +253,8 @@ footer i{color:var(--aqua)}
 .svt caption{text-align:left;font-weight:700;padding:0 0 6px}
 .svt td,.svt th{text-align:center}.svt td:first-child,.svt th:first-child{text-align:left;white-space:nowrap}
 .sctab.svt td:last-child{min-width:0}
-.svt tr.z-ok td{background:#e2f6e5}.svt tr.z-vig td{background:#fff3c4}.svt tr.z-av2 td{background:#ffe0bd}.svt tr.z-av td{background:#fdd5d5}.svt tr.z-hi td{background:#fbbcbc}
-.svt tr[class^="z-"] td:first-child{font-weight:700}
-.svsmall{font-size:12px;margin-top:2px}.copybtn:disabled{opacity:.45;cursor:not-allowed}
+.svsmall{font-size:12px;margin-top:2px}
+.svbig{max-width:640px;font-size:20px;margin-top:18px}.svbig th,.svbig td{padding:8px 14px;border:2px solid var(--ink);text-align:center}.svbig th{font-size:16px;font-weight:700;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--lilac)}.svbig td:first-child{font-weight:700;text-align:left;background:var(--sky)}.copybtn:disabled{opacity:.45;cursor:not-allowed}
 #v-signos{overflow-x:auto}
 .hidden{display:none}
 </style>
@@ -4061,60 +4060,44 @@ function svEval(P,sx,m){ // líneas de interpretación para el paciente
   return L;
 }
 function svRng(a,b){ return a>b? '—' : a===b? String(a) : a+'–'+b; }
-function svDoc(P,sx,m){ // hoja exclusiva del paciente: sus rangos y zonas, no las tablas completas
+function svDoc(P,sx,m){ // hoja exclusiva del paciente: tablas P5 / P50 / P90 / P95 de FC, FR y TA
   const D=[], y=P.years, bi=svBand(y);
   D.push({k:'blank',l:['Nombre','Cama','Expediente']});
   const ed=y==null?'sin capturar': P.days<60? fmt(Math.round(P.days))+' días' : y<2? fmt(Math.floor(P.days/30.44))+' meses' : fmt(Math.floor(y))+' años';
   D.push({k:'pt',t:'Edad: '+ed+' · Sexo: '+(sx==='m'?'masculino':sx==='f'?'femenino':'sin capturar')+' · Peso: '+(state.w?fmt(state.w)+' kg':'—')+' · Talla: '+(P.talla!=null?fmt(P.talla)+' cm':'—')+(P.ga!=null?' · EG: '+fmt(P.ga)+' sem':'')+(P.epm!=null?' · EPM: '+fmt(Math.round(P.epm*10)/10)+' sem':'')+' · Fecha: '+new Date().toLocaleDateString('es-MX')});
   if(y==null||y>=18){ D.push({k:'note',t:y==null?'Capture la edad (y en neonatos la EG) en los datos del paciente para generar su hoja.':'Las tablas pediátricas llegan a los 17 años.'}); return D; }
   const src=[SV.src.hr];
-  const rate=(nm,u,r)=>{
-    D.push({k:'tbl',cap:nm+' ('+u+') · '+SV.bands[bi][0],head:['Zona',nm+' ('+u+')','Percentil'],w:[0.34,0.4,0.26],z:['ok','vig','av'],rows:[
-      ['Normal',svRng(r[2],r[4]),'p10–p90'],
-      ['Vigilar',svRng(r[1],r[2]-1)+' o '+svRng(r[4]+1,r[5]),'p5–p10 / p90–p95'],
-      ['Avisar al médico','menor de '+r[1]+' o mayor de '+r[5],'<p5 / >p95']]});
-    D.push({k:'tbl',cap:'',small:1,head:SV.pc.map(p=>'p'+p),rows:[r]}); };
-  rate('FC','lpm',SV.hr[bi]); rate('FR','rpm',SV.rr[bi]);
+  const H=['','P5','P50','P90','P95'], W=[0.2,0.2,0.2,0.2,0.2];
+  const tb=(cap,rows)=>D.push({k:'tbl',big:1,cap,head:H,w:W,rows});
+  const hr=SV.hr[bi], rr=SV.rr[bi];
+  tb('Frecuencia cardiaca (lpm) · '+SV.bands[bi][0],[['FC',hr[1],hr[3],hr[4],hr[5]]]);
+  tb('Frecuencia respiratoria (rpm) · '+SV.bands[bi][0],[['FR',rr[1],rr[3],rr[4],rr[5]]]);
   const hp=svHypo(P);
   if(y>=1){
-    if(!sx) D.push({k:'note',t:'Elija el sexo para incluir los rangos de presión arterial.'});
-    else { const r=SV.aap[sx][Math.floor(y)], c=svHcol(r,P.talla), S=r.s.map(x=>x[c]), Dd=r.d.map(x=>x[c]); src.push(SV.src.bp);
-      const ad=y>=13, e=ad?120:Math.min(S[1],120), eD=ad?80:Math.min(Dd[1],80), s1=ad?130:Math.min(S[2],130), s1D=ad?80:Math.min(Dd[2],80), s2=ad?140:Math.min(S[3],140), s2D=ad?90:Math.min(Dd[3],90);
-      D.push({k:'tbl',cap:'Presión arterial (mmHg) · '+(sx==='m'?'masculino':'femenino')+', '+Math.floor(y)+' años, talla '+SV_HPC[c]+(P.talla==null?' (sin talla capturada)':' ≈ '+r.h[c]+' cm'),head:['Zona','TAS','TAD'],w:[0.4,0.3,0.3],z:['av','ok','vig','av2','hi'],rows:[
-        ['Hipotensión','menor de '+hp,'—'],
-        ['Normal',svRng(hp,e-1),'menor de '+eD],
-        ['Presión elevada',svRng(e,s1-1),ad?'menor de 80':svRng(eD,s1D-1)],
-        ['Hipertensión estadio 1',svRng(s1,s2-1),svRng(s1D,s2D-1)],
-        ['Hipertensión estadio 2',s2+' o más',s2D+' o más']]});
-      const tam=i=>Math.round(Dd[i]+(S[i]-Dd[i])/3);
-      D.push({k:'tbl',cap:'Percentilas de presión arterial (mmHg)',small:1,head:['','p5','p50','p90','p95','p95 + 12'],w:[0.15,0.17,0.17,0.17,0.17,0.17],rows:[
-        ['TAS',hp].concat(S),['TAD','—'].concat(Dd),['TAM',Math.round(40+1.5*Math.floor(y))].concat([0,1,2,3].map(tam))]});
-      D.push({k:'note',t:(ad?'Cortes: criterios de adulto de la AAP 2017 (13 años o más).':'Cortes: percentil o 120/80, 130/80, 140/90 mmHg, el que sea menor (AAP 2017).')+' TAS p5 = hipotensión (PALS/HL); TAD p5 no viene en las fuentes; TAM p5 = 40 + 1.5 × edad (HL); demás TAM = TAD + (TAS − TAD) / 3.'}); }
+    if(!sx){ tb('Presión arterial (mmHg)',[['TAS',hp,'—','—','—'],['TAD','—','—','—','—'],['TAM',Math.round(40+1.5*Math.floor(y)),'—','—','—']]); D.push({k:'note',t:'Elija el sexo para completar las percentilas de presión arterial.'}); }
+    else { const r=SV.aap[sx][Math.floor(y)], c=svHcol(r,P.talla), S=r.s.map(x=>x[c]), Dd=r.d.map(x=>x[c]), tam=i=>Math.round(Dd[i]+(S[i]-Dd[i])/3); src.push(SV.src.bp);
+      tb('Presión arterial (mmHg) · '+(sx==='m'?'masculino':'femenino')+', '+Math.floor(y)+' años, talla '+SV_HPC[c]+(P.talla==null?' (sin talla capturada)':' ≈ '+r.h[c]+' cm'),
+        [['TAS',hp,S[0],S[1],S[2]],['TAD','—',Dd[0],Dd[1],Dd[2]],['TAM',Math.round(40+1.5*Math.floor(y)),tam(0),tam(1),tam(2)]]);
+      D.push({k:'note',t:'TAS menor del P5 = hipotensión. '+(y>=13?'13 años o más (criterios de adulto): elevada 120–129/<80 · estadio 1 130–139/80–89 · estadio 2 ≥140/90 mmHg.':'Elevada ≥P90 · hipertensión estadio 1 ≥P95 · estadio 2 ≥P95 + 12 ('+S[3]+'/'+Dd[3]+' mmHg); si 120/80, 130/80 o 140/90 es menor, se usa ese valor (AAP 2017).')});
+      D.push({k:'note',t:'TAS P5 = límite de hipotensión (PALS/HL); TAD P5 no viene en las fuentes; TAM P5 = 40 + 1.5 × edad (HL); demás TAM = TAD + (TAS − TAD) / 3 con los valores de la AAP.'}); }
   } else {
     const nr=svNeoRow(P);
     if(nr){ src.push(SV.src.neo);
-      D.push({k:'tbl',cap:'Presión arterial neonatal (mmHg) · EPM '+nr[0]+' semanas',head:['Zona','TAS','TAD','TAM'],w:[0.34,0.22,0.22,0.22],z:['av','ok','vig','hi'],rows:[
-        ['Hipotensión','menor de '+hp,'—','—'],
-        ['Normal (menor del p95)',svRng(hp,nr[1][1]-1),'menor de '+nr[2][1],'menor de '+nr[3][1]],
-        ['Hipertensión (p95)',svRng(nr[1][1],nr[1][2]-1),svRng(nr[2][1],nr[2][2]-1),svRng(nr[3][1],nr[3][2]-1)],
-        ['Hipertensión importante (p99)',nr[1][2]+' o más',nr[2][2]+' o más',nr[3][2]+' o más']]});
-      D.push({k:'tbl',cap:'Percentilas de presión arterial (mmHg)',small:1,head:['','p5','p50','p95','p99'],w:[0.2,0.2,0.2,0.2,0.2],rows:[
-        ['TAS',hp,nr[1][0],nr[1][1],nr[1][2]],['TAD','—',nr[2][0],nr[2][1],nr[2][2]],['TAM','—',nr[3][0],nr[3][1],nr[3][2]]]});
-      D.push({k:'note',t:'Valores de Dionne 2012 para después de las 2 semanas de vida. TAS p5 = límite de hipotensión (PALS); TAD y TAM p5 no vienen en las fuentes.'}); }
-    else { D.push({k:'tbl',cap:'Presión arterial (mmHg)',head:['Zona','TAS'],w:[0.5,0.5],z:['av'],rows:[['Hipotensión','menor de '+hp]]});
-      D.push({k:'note',t: P.days!=null&&P.days<14? 'Primeras 2 semanas de vida: la TAM en mmHg es aproximadamente igual a la EG en semanas'+(P.ga!=null?' (≈ '+Math.round(P.ga)+' mmHg)':'')+'.' : P.epm==null&&P.days<=120? 'Capture la EG para agregar los rangos de TA neonatal por edad posmenstrual (Dionne 2012).' : 'Entre 1 y 12 meses no hay tabla de percentilas de TA en estas fuentes: vigile la hipotensión y compare con mediciones previas.'}); }
+      tb('Presión arterial neonatal (mmHg) · EPM '+nr[0]+' semanas',[['TAS',hp,nr[1][0],'—',nr[1][1]],['TAD','—',nr[2][0],'—',nr[2][1]],['TAM','—',nr[3][0],'—',nr[3][1]]]);
+      D.push({k:'note',t:'TAS menor del P5 = hipotensión; mayor o igual al P95 = hipertensión (P99: '+nr[1][2]+'/'+nr[2][2]+', TAM '+nr[3][2]+' mmHg = hipertensión importante). Dionne 2012 no da P90; valores para después de las 2 semanas de vida.'}); }
+    else { tb('Presión arterial (mmHg)',[['TAS',hp,'—','—','—'],['TAD','—','—','—','—'],['TAM','—',P.days!=null&&P.days<14&&P.ga!=null?'≈ '+Math.round(P.ga):'—','—','—']]);
+      D.push({k:'note',t: P.days!=null&&P.days<14? 'Primeras 2 semanas de vida: la TAM en mmHg es aproximadamente igual a la EG en semanas (Harriet Lane).'+(P.ga==null?' Capture la EG.':'') : P.epm==null&&P.days<=120? 'Capture la EG para completar la TA neonatal por edad posmenstrual (Dionne 2012).' : 'Entre 1 y 12 meses estas fuentes no dan percentilas de TA; solo el límite de hipotensión (TAS P5).'}); }
   }
   src.push(SV.src.hypo);
   const anyM=m&&['fc','fr','tas','tad'].some(k=>m[k]!=null);
   if(anyM) D.push({k:'ev',t:'Valores medidos',l:svEval(P,sx,m).filter(x=>/^(⚠ )?(FC \d|FR \d|TAS \d|TA [\d—]|TA mayor|TA menor)/.test(x))});
-  D.push({k:'note',t:'Las zonas usan los percentiles de la fuente: normal p10–p90, vigilar p5–p10 y p90–p95, avisar fuera de p5–p95. La fiebre, el llanto, el dolor y la ansiedad elevan la FC y la FR: valore en reposo y compare con mediciones previas.'});
+  D.push({k:'note',t:'FC y FR de niños hospitalizados fuera de UCI. La fiebre, el llanto, el dolor y la ansiedad elevan la FC y la FR: valore en reposo y compare con mediciones previas.'});
   D.push({k:'src',l:src});
   return D;
 }
-const SVZ={ok:[0.86,0.95,0.87],vig:[1,0.95,0.76],av2:[1,0.88,0.74],av:[0.99,0.83,0.83],hi:[0.98,0.74,0.74]};
-function svTableEl(b){ const t=document.createElement('table'); t.className='sctab svt'+(b.small?' svsmall':''); if(b.cap) t.appendChild(el('caption',null,b.cap));
+function svTableEl(b){ const t=document.createElement('table'); t.className='sctab svt'+(b.big?' svbig':b.small?' svsmall':''); if(b.cap) t.appendChild(el('caption',null,b.cap));
   const tr=document.createElement('tr'); b.head.forEach(x=>tr.appendChild(el('th',null,x))); t.appendChild(tr);
-  b.rows.forEach((r,i)=>{ const row=document.createElement('tr'); if(b.z&&b.z[i]) row.className='z-'+b.z[i]; r.forEach(c=>row.appendChild(el('td',null,String(c)))); t.appendChild(row); }); return t; }
+  b.rows.forEach(r=>{ const row=document.createElement('tr'); r.forEach(c=>row.appendChild(el('td',null,String(c)))); t.appendChild(row); }); return t; }
 
 /* PDF mínimo (Helvetica estándar, WinAnsi), sin librerías: la página sigue autocontenida */
 const PDFW={r:[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584],
@@ -4139,11 +4122,11 @@ function svPDF(D){
     else if(b.k==='pt'){ para(b.t,9,true,M,CW,12); y+=6; }
     else if(b.k==='ev'){ const lines=b.l.map(s=>({w:s.startsWith('⚠'),l:wrap((s.startsWith('⚠')?'(!) ':'')+s,9,s.startsWith('⚠'),CW-16)})); const h=lines.reduce((a,x)=>a+x.l.length*12,0)+24;
       need(h); rect(M,y,CW,h,null,true); text(M+8,y+13,b.t,9.5,true); y+=19; lines.forEach(x=>x.l.forEach(l=>{ text(M+8,y+9,l,9,x.w); y+=12; })); y+=12; }
-    else if(b.k==='tbl'){ const n=b.head.length, ws=(b.w||b.head.map(()=>1/n)).map(f=>f*CW), rh=b.small?12.5:16.5, fs=b.small?8.5:10;
+    else if(b.k==='tbl'){ const n=b.head.length, ws=(b.w||b.head.map(()=>1/n)).map(f=>f*CW), rh=b.big?26:b.small?12.5:16.5, fs=b.big?14:b.small?8.5:10;
       need((b.cap?18:0)+rh*(b.rows.length+1)); if(b.cap){ text(M,y+11,b.cap,11,true); y+=17; }
       const row=(cells,bold,fill)=>{ let x=M; cells.forEach((c,j)=>{ const w=ws[j]; rect(x,y,w,rh,fill,true); const s=String(c), bb=bold||(!b.small&&j===0), tw=pdfW(s,fs,bb);
           text(j||b.small? x+(w-tw)/2 : x+6, y+rh/2+fs*0.35, s, fs, bb); x+=w; }); y+=rh; };
-      row(b.head,true,0.9); b.rows.forEach((r,i)=>row(r,false,b.z&&b.z[i]?SVZ[b.z[i]]:null)); y+=b.small?12:6; }
+      row(b.head,true,0.9); b.rows.forEach(r=>row(r,false,null)); y+=b.small?12:6; }
     else if(b.k==='note'){ para(b.t,8.5,false,M,CW,11); y+=5; }
     else if(b.k==='src'){ y+=4; need(12); text(M,y+8,'Fuentes',8,true); y+=11; b.l.forEach(s=>para(s,7,false,M,CW,9)); }
   });
