@@ -4086,8 +4086,10 @@ function svDoc(P,sx,m){ // hoja exclusiva del paciente: sus rangos y zonas, no l
         ['Presión elevada',svRng(e,s1-1),ad?'menor de 80':svRng(eD,s1D-1)],
         ['Hipertensión estadio 1',svRng(s1,s2-1),svRng(s1D,s2D-1)],
         ['Hipertensión estadio 2',s2+' o más',s2D+' o más']]});
-      D.push({k:'tbl',cap:'',small:1,head:['','p50','p90','p95','p95 + 12'],w:[0.2,0.2,0.2,0.2,0.2],rows:[['TAS'].concat(S),['TAD'].concat(Dd)]});
-      D.push({k:'note',t:ad?'13 años o más: criterios de adulto de la AAP 2017.':'Menores de 13 años: cada corte es el percentil (p90, p95, p95 + 12) o 120/80, 130/80, 140/90 mmHg, el que sea menor (AAP 2017).'}); }
+      const tam=i=>Math.round(Dd[i]+(S[i]-Dd[i])/3);
+      D.push({k:'tbl',cap:'Percentilas de presión arterial (mmHg)',small:1,head:['','p5','p50','p90','p95','p95 + 12'],w:[0.15,0.17,0.17,0.17,0.17,0.17],rows:[
+        ['TAS',hp].concat(S),['TAD','—'].concat(Dd),['TAM',Math.round(40+1.5*Math.floor(y))].concat([0,1,2,3].map(tam))]});
+      D.push({k:'note',t:(ad?'Cortes: criterios de adulto de la AAP 2017 (13 años o más).':'Cortes: percentil o 120/80, 130/80, 140/90 mmHg, el que sea menor (AAP 2017).')+' TAS p5 = hipotensión (PALS/HL); TAD p5 no viene en las fuentes; TAM p5 = 40 + 1.5 × edad (HL); demás TAM = TAD + (TAS − TAD) / 3.'}); }
   } else {
     const nr=svNeoRow(P);
     if(nr){ src.push(SV.src.neo);
@@ -4096,7 +4098,9 @@ function svDoc(P,sx,m){ // hoja exclusiva del paciente: sus rangos y zonas, no l
         ['Normal (menor del p95)',svRng(hp,nr[1][1]-1),'menor de '+nr[2][1],'menor de '+nr[3][1]],
         ['Hipertensión (p95)',svRng(nr[1][1],nr[1][2]-1),svRng(nr[2][1],nr[2][2]-1),svRng(nr[3][1],nr[3][2]-1)],
         ['Hipertensión importante (p99)',nr[1][2]+' o más',nr[2][2]+' o más',nr[3][2]+' o más']]});
-      D.push({k:'note',t:'p50: '+nr[1][0]+'/'+nr[2][0]+' (TAM '+nr[3][0]+') mmHg. Valores de Dionne 2012 para después de las 2 semanas de vida.'}); }
+      D.push({k:'tbl',cap:'Percentilas de presión arterial (mmHg)',small:1,head:['','p5','p50','p95','p99'],w:[0.2,0.2,0.2,0.2,0.2],rows:[
+        ['TAS',hp,nr[1][0],nr[1][1],nr[1][2]],['TAD','—',nr[2][0],nr[2][1],nr[2][2]],['TAM','—',nr[3][0],nr[3][1],nr[3][2]]]});
+      D.push({k:'note',t:'Valores de Dionne 2012 para después de las 2 semanas de vida. TAS p5 = límite de hipotensión (PALS); TAD y TAM p5 no vienen en las fuentes.'}); }
     else { D.push({k:'tbl',cap:'Presión arterial (mmHg)',head:['Zona','TAS'],w:[0.5,0.5],z:['av'],rows:[['Hipotensión','menor de '+hp]]});
       D.push({k:'note',t: P.days!=null&&P.days<14? 'Primeras 2 semanas de vida: la TAM en mmHg es aproximadamente igual a la EG en semanas'+(P.ga!=null?' (≈ '+Math.round(P.ga)+' mmHg)':'')+'.' : P.epm==null&&P.days<=120? 'Capture la EG para agregar los rangos de TA neonatal por edad posmenstrual (Dionne 2012).' : 'Entre 1 y 12 meses no hay tabla de percentilas de TA en estas fuentes: vigile la hipotensión y compare con mediciones previas.'}); }
   }
@@ -4121,7 +4125,7 @@ function pdfW(s,size,bold){ const W=bold?PDFW.b:PDFW.r; let w=0; for(const ch of
 function pdfEsc(s){ let o=''; for(const ch of pdfTxt(s)){ let c=ch.charCodeAt(0); if(PDFMAP[ch]) c=PDFMAP[ch]; else if(c>255) c=63;
   o+= c===40||c===41||c===92? '\\'+ch : c<32||c>126? '\\'+c.toString(8).padStart(3,'0') : ch; } return o; }
 function svPDF(D){
-  const PW=612, PH=792, M=30, CW=PW-2*M, pages=[]; let ops=[], y=M;
+  const PW=612, PH=792, M=26, CW=PW-2*M, pages=[]; let ops=[], y=M;
   const page=()=>{ if(ops.length) pages.push(ops.join('\n')); ops=[]; y=M; };
   const need=h=>{ if(y+h>PH-M) page(); };
   const text=(x,yy,s,size,bold)=>ops.push('BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x.toFixed(1)+' '+(PH-yy).toFixed(1)+' Td ('+pdfEsc(s)+') Tj ET');
@@ -4129,13 +4133,13 @@ function svPDF(D){
   const wrap=(s,size,bold,w)=>{ const out=[]; let ln=''; String(s).split(/\s+/).forEach(wd=>{ const t=ln?ln+' '+wd:wd; if(pdfW(t,size,bold)>w&&ln){ out.push(ln); ln=wd; } else ln=t; }); if(ln) out.push(ln); return out; };
   const para=(s,size,bold,x,w,lead)=>{ wrap(s,size,bold,w).forEach(l=>{ need(lead); text(x,y+size,l,size,bold); y+=lead; }); };
   text(M,y+8,'PEDIA LIFE · DOSIS PEDIÁTRICAS Y NEONATALES',7,false); y+=12;
-  text(M,y+19,'Signos vitales del paciente',19,true); y+=28;
+  text(M,y+19,'Signos vitales del paciente',19,true); y+=26;
   D.forEach(b=>{
-    if(b.k==='blank'){ const w=CW/b.l.length; b.l.forEach((l,i)=>{ const x=M+i*w; text(x,y+14,l+':',9,true); ops.push('0.4 G 0.6 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S'); }); y+=26; }
+    if(b.k==='blank'){ const w=CW/b.l.length; b.l.forEach((l,i)=>{ const x=M+i*w; text(x,y+14,l+':',9,true); ops.push('0.4 G 0.6 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S'); }); y+=22; }
     else if(b.k==='pt'){ para(b.t,9,true,M,CW,12); y+=6; }
     else if(b.k==='ev'){ const lines=b.l.map(s=>({w:s.startsWith('⚠'),l:wrap((s.startsWith('⚠')?'(!) ':'')+s,9,s.startsWith('⚠'),CW-16)})); const h=lines.reduce((a,x)=>a+x.l.length*12,0)+24;
       need(h); rect(M,y,CW,h,null,true); text(M+8,y+13,b.t,9.5,true); y+=19; lines.forEach(x=>x.l.forEach(l=>{ text(M+8,y+9,l,9,x.w); y+=12; })); y+=12; }
-    else if(b.k==='tbl'){ const n=b.head.length, ws=(b.w||b.head.map(()=>1/n)).map(f=>f*CW), rh=b.small?14:19, fs=b.small?8.5:10.5;
+    else if(b.k==='tbl'){ const n=b.head.length, ws=(b.w||b.head.map(()=>1/n)).map(f=>f*CW), rh=b.small?12.5:16.5, fs=b.small?8.5:10;
       need((b.cap?18:0)+rh*(b.rows.length+1)); if(b.cap){ text(M,y+11,b.cap,11,true); y+=17; }
       const row=(cells,bold,fill)=>{ let x=M; cells.forEach((c,j)=>{ const w=ws[j]; rect(x,y,w,rh,fill,true); const s=String(c), bb=bold||(!b.small&&j===0), tw=pdfW(s,fs,bb);
           text(j||b.small? x+(w-tw)/2 : x+6, y+rh/2+fs*0.35, s, fs, bb); x+=w; }); y+=rh; };
