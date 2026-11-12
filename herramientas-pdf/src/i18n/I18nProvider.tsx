@@ -72,3 +72,9 @@ export function useI18n() {
   if (!v) throw new Error('useI18n fuera de I18nProvider');
   return v;
 }
+
+/** Texto en línea con su traducción: L('Posición', 'Position') */
+export function useL() {
+  const { lang } = useI18n();
+  return useCallback((es: string, en: string, vars?: Record<string, string | number>) => interpolate(lang === 'es' ? es : en, vars), [lang]);
+}

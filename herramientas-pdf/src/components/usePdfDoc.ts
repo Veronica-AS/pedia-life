@@ -3,7 +3,7 @@ import { openPdf, type PDFDocumentProxy } from '../lib/pdfjs';
 import { toAppError, type AppError } from '../lib/errors';
 
 /** Abre un PDF con pdf.js para miniaturas/vista previa y lo cierra al desmontar */
-export function usePdfDoc(bytes: Uint8Array | null, fileName?: string) {
+export function usePdfDoc(bytes: Uint8Array | null, fileName?: string, password?: string) {
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null);
   const [error, setError] = useState<AppError | null>(null);
   useEffect(() => {
@@ -12,7 +12,7 @@ export function usePdfDoc(bytes: Uint8Array | null, fileName?: string) {
     if (!bytes) return;
     let cancelled = false;
     let opened: PDFDocumentProxy | null = null;
-    openPdf(bytes, fileName).then(
+    openPdf(bytes, fileName, password).then(
       (d) => {
         opened = d;
         if (cancelled) d.destroy();
@@ -24,6 +24,6 @@ export function usePdfDoc(bytes: Uint8Array | null, fileName?: string) {
       cancelled = true;
       opened?.destroy();
     };
-  }, [bytes, fileName]);
+  }, [bytes, fileName, password]);
   return { doc, error };
 }

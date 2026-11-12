@@ -17,7 +17,8 @@ export function getPdfJs(): Promise<PdfJs> {
       import('pdfjs-dist/legacy/build/pdf.mjs') as unknown as Promise<PdfJs>,
       import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
     ]).then(([lib, worker]) => {
-      lib.GlobalWorkerOptions.workerSrc = (worker as { default: string }).default;
+      // Las pruebas en Node configuran su propia ruta del worker antes de llegar aquí
+      if (!lib.GlobalWorkerOptions.workerSrc) lib.GlobalWorkerOptions.workerSrc = (worker as { default: string }).default;
       return lib;
     });
     pdfjsPromise.catch(() => {
@@ -30,22 +31,27 @@ export function getPdfJs(): Promise<PdfJs> {
 const assetBase = () => `${import.meta.env.BASE_URL}pdfjs/`;
 
 /** Abre un PDF con pdf.js. Se pasa una copia porque pdf.js transfiere (vacía) el buffer al Worker. */
-export async function openPdf(bytes: Uint8Array, fileName?: string): Promise<PDFDocumentProxy> {
+export async function openPdf(bytes: Uint8Array, fileName?: string, password?: string): Promise<PDFDocumentProxy> {
   assertPdfBytes(bytes, fileName);
   const pdfjs = await getPdfJs();
   try {
     const task = pdfjs.getDocument({
       data: bytes.slice(),
+      password,
       isEvalSupported: false,
       cMapUrl: `${assetBase()}cmaps/`,
       cMapPacked: true,
       standardFontDataUrl: `${assetBase()}standard_fonts/`,
       // Si el PDF pide contraseña, falla de inmediato en lugar de quedarse esperando
     });
-    task.onPassword = () => {
-      task.destroy();
-    };
-    const doc = await task.promise;
+    const doc = await new Promise<PDFDocumentProxy>((resolve, reject) => {
+      // reason 1 = necesita contraseña, 2 = contraseña incorrecta
+      task.onPassword = (_update: unknown, reason: number) => {
+        reject(new AppError(reason === 2 ? 'wrong-password' : 'encrypted', { fileName }));
+        task.destroy();
+      };
+      task.promise.then(resolve, reject);
+    });
     return doc;
   } catch (err) {
     throw toAppError(err, fileName);

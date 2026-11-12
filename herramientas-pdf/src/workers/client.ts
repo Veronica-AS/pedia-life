@@ -11,6 +11,12 @@ import type { PreparedImage } from '../tools/images-to-pdf/imagesToPdf';
 import type { LayoutOptions } from '../tools/images-to-pdf/layout';
 import type { CompressLevel, CompressStats } from '../tools/compress/compress';
 import { toAppError } from '../lib/errors';
+import type { PageNumberOptions } from '../tools/page-numbers/pageNumbers';
+import type { MetadataEdits, MetadataInfo } from '../tools/metadata/metadata';
+import type { FormInfo, FormValues } from '../tools/fill-form/fillForm';
+import type { Placement, SignatureImage } from '../tools/sign/sign';
+import type { OcrImagePage, OcrPage } from '../tools/ocr/textLayer';
+import type { RedactedPage } from '../tools/redact/redact';
 
 let worker: Worker | null = null;
 let remote: Promise<Comlink.Remote<PdfWorkerApi> | null> | null = null;
@@ -104,5 +110,50 @@ export const pdfTasks = {
         const m = await import('../tools/compress/compress');
         return m.compressPdf(bytes, level, m.createCanvasCodec(), onProgress);
       },
+    ),
+  pageNumbers: (bytes: Uint8Array, opts: PageNumberOptions, onProgress?: ProgressFn) =>
+    call(
+      (api) => api.pageNumbers(bytes, opts, p(onProgress)),
+      async () => (await import('../tools/page-numbers/pageNumbers')).addPageNumbers(bytes, opts, onProgress),
+    ),
+  readMetadata: (bytes: Uint8Array) =>
+    call<MetadataInfo>(
+      (api) => api.readMetadata(bytes),
+      async () => (await import('../tools/metadata/metadata')).readMetadata(bytes),
+    ),
+  cleanMetadata: (bytes: Uint8Array, keep: MetadataEdits) =>
+    call(
+      (api) => api.cleanMetadata(bytes, keep),
+      async () => (await import('../tools/metadata/metadata')).cleanMetadata(bytes, keep),
+    ),
+  readForm: (bytes: Uint8Array) =>
+    call<FormInfo>(
+      (api) => api.readForm(bytes),
+      async () => (await import('../tools/fill-form/fillForm')).readForm(bytes),
+    ),
+  fillForm: (bytes: Uint8Array, values: FormValues, flatten: boolean) =>
+    call(
+      (api) => api.fillForm(bytes, values, flatten),
+      async () => (await import('../tools/fill-form/fillForm')).fillForm(bytes, values, flatten),
+    ),
+  sign: (bytes: Uint8Array, images: SignatureImage[], placements: Placement[], onProgress?: ProgressFn) =>
+    call(
+      (api) => api.sign(bytes, images, placements, p(onProgress)),
+      async () => (await import('../tools/sign/sign')).signPdf(bytes, images, placements, onProgress),
+    ),
+  addOcr: (bytes: Uint8Array, pages: (OcrPage | null)[], onProgress?: ProgressFn) =>
+    call(
+      (api) => api.addOcr(bytes, pages, p(onProgress)),
+      async () => (await import('../tools/ocr/textLayer')).addOcrToPdf(bytes, pages, onProgress),
+    ),
+  imagesOcr: (images: OcrImagePage[], layout: LayoutOptions, onProgress?: ProgressFn) =>
+    call(
+      (api) => api.imagesOcr(images, layout, p(onProgress)),
+      async () => (await import('../tools/ocr/textLayer')).imagesToSearchablePdf(images, layout, onProgress),
+    ),
+  redact: (bytes: Uint8Array, pages: RedactedPage[], onProgress?: ProgressFn) =>
+    call(
+      (api) => api.redact(bytes, pages, p(onProgress)),
+      async () => (await import('../tools/redact/redact')).assembleRedacted(bytes, pages, onProgress),
     ),
 };

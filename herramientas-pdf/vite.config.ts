@@ -34,12 +34,18 @@ export default defineConfig({
       },
       workbox: {
         // Todo el código (incluidas las herramientas cargadas bajo demanda) queda disponible sin conexión
-        globPatterns: ['**/*.{js,mjs,css,html,svg,png,ico,woff2,pfb,ttf}'],
-        globIgnores: ['**/pdfjs/cmaps/**'],
+        globPatterns: ['**/*.{js,mjs,css,html,svg,png,ico,woff,woff2,pfb,ttf,wasm}'],
+        globIgnores: ['**/pdfjs/cmaps/**', '**/tesseract/**', '**/*.woff', '**/*-cyrillic*', '**/*-vietnamese*', '**/*-greek*'],
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         navigateFallback: 'index.html',
         navigateFallbackDenylist: [/\/sitemap\.xml$/, /\/robots\.txt$/],
         runtimeCaching: [
+          {
+            // Motor e idiomas del OCR (~13 MB): se guardan la primera vez que se usa el OCR
+            urlPattern: ({ url }) => url.pathname.includes('/tesseract/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'ocr-engine', expiration: { maxEntries: 20 } },
+          },
           {
             // Mapas de caracteres para PDF en chino/japonés/coreano: se guardan al primer uso
             urlPattern: ({ url }) => url.pathname.includes('/pdfjs/cmaps/'),

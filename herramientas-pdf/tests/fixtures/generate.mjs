@@ -81,6 +81,28 @@ await save('large-150.pdf', await textPdf(150, 'Documento grande'));
   await save('png-image.pdf', doc);
 }
 
+// 6b) Datos personales ficticios (para ocultar/redactar)
+{
+  const doc = await PDFDocument.create();
+  doc.setTitle('Expediente confidencial');
+  doc.setAuthor('Recursos Humanos');
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const page = doc.addPage([595.28, 841.89]);
+  const lines = [
+    'Expediente del empleado',
+    'Nombre: José Núñez Peña',
+    'Correo: jose.nunez@example.com',
+    'Teléfono: +52 55 1234 5678',
+    'CURP: NUPJ800101HDFXXX09',
+    'Puesto: Analista de datos',
+  ];
+  lines.forEach((t, i) => page.drawText(t, { x: 60, y: 760 - i * 30, size: 14, font }));
+  const p2 = doc.addPage([595.28, 841.89]);
+  p2.drawText('Contacto de emergencia: ana.perez@example.org', { x: 60, y: 760, size: 14, font });
+  p2.drawText('Esta página no se modifica si no tiene datos.', { x: 60, y: 730, size: 14, font });
+  await save('datos.pdf', doc);
+}
+
 // 7) Protegido con contraseña de apertura y 8) solo con contraseña de propietario
 execFileSync('python3', [join(here, 'encrypt.py'), join(out, 'sample-3.pdf'), join(out, 'protected.pdf'), '1234', 'propietario']);
 execFileSync('python3', [join(here, 'encrypt.py'), join(out, 'sample-3.pdf'), join(out, 'owner-only.pdf'), '', 'propietario']);

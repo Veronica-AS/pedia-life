@@ -16,6 +16,11 @@ export type ErrorCode =
   | 'invalid-range'
   | 'no-pages'
   | 'canvas-too-large'
+  | 'wrong-password'
+  | 'not-encrypted'
+  | 'no-form-fields'
+  | 'ocr-failed'
+  | 'weak-password'
   | 'unknown';
 
 const PREFIX = 'APPERR::';
@@ -75,7 +80,7 @@ export const ERROR_TEXT: Record<'es' | 'en', Record<ErrorCode, ErrorText>> = {
   es: {
     encrypted: {
       title: 'Este PDF está protegido con contraseña',
-      fix: 'Ábrelo con la contraseña y guárdalo sin protección, o espera la herramienta "Quitar contraseña" que llega en la próxima fase.',
+      fix: 'Si conoces la contraseña, usa primero la herramienta "Quitar contraseña" y luego vuelve aquí con el PDF desbloqueado.',
     },
     corrupt: {
       title: 'El archivo parece dañado o incompleto',
@@ -117,13 +122,33 @@ export const ERROR_TEXT: Record<'es' | 'en', Record<ErrorCode, ErrorText>> = {
       title: 'La página es demasiado grande para esta resolución',
       fix: 'Elige una resolución menor. Tu navegador limita el tamaño máximo de imagen.',
     },
+    'wrong-password': {
+      title: 'La contraseña no es correcta',
+      fix: 'Revisa mayúsculas y minúsculas, y que el teclado no tenga activado el bloqueo de mayúsculas. Sin la contraseña correcta no es posible abrir el PDF.',
+    },
+    'not-encrypted': {
+      title: 'Este PDF no tiene contraseña',
+      fix: 'Ya puedes abrirlo y editarlo sin hacer nada. Si quieres protegerlo, usa la herramienta "Proteger con contraseña".',
+    },
+    'no-form-fields': {
+      title: 'Este PDF no tiene campos rellenables',
+      fix: 'Es un documento normal, no un formulario interactivo. Puedes firmarlo con la herramienta "Firmar PDF".',
+    },
+    'ocr-failed': {
+      title: 'No se pudo iniciar el reconocimiento de texto (OCR)',
+      fix: 'La primera vez se necesita conexión para descargar el motor y los idiomas (unos 10 MB). Comprueba tu conexión y vuelve a intentarlo.',
+    },
+    'weak-password': {
+      title: 'Las contraseñas no coinciden o están vacías',
+      fix: 'Escribe la misma contraseña en los dos campos.',
+    },
     unknown: {
       title: 'Algo salió mal al procesar el archivo',
       fix: 'Inténtalo de nuevo. Si el problema continúa, prueba con otro navegador (Chrome, Firefox o Safari actualizados).',
     },
   },
   en: {
-    encrypted: { title: 'This PDF is password protected', fix: 'Open it with its password and save an unprotected copy.' },
+    encrypted: { title: 'This PDF is password protected', fix: 'If you know the password, use "Unlock PDF" first, then come back with the unlocked file.' },
     corrupt: { title: 'The file looks damaged or incomplete', fix: 'Download it again, or open it elsewhere and "Print → Save as PDF".' },
     'not-pdf': { title: 'This file is not a PDF', fix: 'Check you chose the right file. For images use "Images to PDF".' },
     'empty-file': { title: 'The file is empty (0 bytes)', fix: 'The download or copy may not have finished. Get the file again.' },
@@ -134,6 +159,11 @@ export const ERROR_TEXT: Record<'es' | 'en', Record<ErrorCode, ErrorText>> = {
     'invalid-range': { title: 'Invalid page ranges', fix: 'Use numbers and hyphens separated by commas, e.g. 1-3, 5, 8-10.' },
     'no-pages': { title: 'No pages left', fix: 'Keep at least one page.' },
     'canvas-too-large': { title: 'The page is too large for this resolution', fix: 'Choose a lower resolution.' },
+    'wrong-password': { title: 'Wrong password', fix: 'Check upper/lower case and Caps Lock.' },
+    'not-encrypted': { title: 'This PDF has no password', fix: 'You can already open and edit it.' },
+    'no-form-fields': { title: 'This PDF has no fillable fields', fix: 'It is a regular document. You can sign it with "Sign PDF".' },
+    'ocr-failed': { title: 'Text recognition (OCR) could not start', fix: 'The first time, a connection is needed to download the engine (about 10 MB).' },
+    'weak-password': { title: 'Passwords are empty or do not match', fix: 'Type the same password in both fields.' },
     unknown: { title: 'Something went wrong', fix: 'Try again, or use an up-to-date Chrome, Firefox or Safari.' },
   },
 };

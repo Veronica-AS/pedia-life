@@ -6,9 +6,9 @@ import { usePdfDoc } from './usePdfDoc';
 import { ErrorMessage } from './ErrorMessage';
 
 /** Vista previa del PDF resultante: todas sus páginas en miniatura, ampliables */
-export function PdfPreview({ bytes, maxPages }: { bytes: Uint8Array; maxPages?: number }) {
+export function PdfPreview({ bytes, maxPages, password }: { bytes: Uint8Array; maxPages?: number; password?: string }) {
   const { t } = useI18n();
-  const { doc, error } = usePdfDoc(bytes);
+  const { doc, error } = usePdfDoc(bytes, undefined, password);
   const [open, setOpen] = useState<number | null>(null);
   if (error) return <ErrorMessage error={error} />;
   if (!doc) return <p className="muted text-sm">{t('loadingPreview')}</p>;

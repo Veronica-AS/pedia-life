@@ -13,7 +13,16 @@ export type ComponentId =
   | 'compress'
   | 'organize'
   | 'imagesToPdf'
-  | 'pdfToImages';
+  | 'pdfToImages'
+  | 'ocr'
+  | 'pdfToText'
+  | 'pageNumbers'
+  | 'sign'
+  | 'fillForm'
+  | 'protect'
+  | 'unlock'
+  | 'redact'
+  | 'metadata';
 
 export interface Faq {
   q: string;
@@ -120,6 +129,19 @@ const soon = (
   es: { name: esName, short: esShort, title: '', description: '', h1: esName, intro: esShort, faq: [], keywords },
   en: { name: enName, short: enShort, title: '', description: '', h1: enName, intro: enShort, faq: [], keywords },
 });
+
+function tool(
+  slug: string,
+  category: CategoryId,
+  icon: string,
+  component: ComponentId,
+  text: { es: ToolText; en: ToolText },
+  preset?: Record<string, string>,
+  alias = false,
+  phase: 1 | 2 | 3 = 2,
+): ToolDef {
+  return { slug, category, icon, status: 'ready', phase, component, preset, alias, ...text };
+}
 
 export const TOOLS: ToolDef[] = [
   // ───────────── Fase 1 ─────────────
@@ -507,17 +529,209 @@ export const TOOLS: ToolDef[] = [
     },
   },
 
-  // ───────────── Fase 2 (próximamente) ─────────────
-  soon('ocr-pdf', 'convertir', 'ocr', 2, 'OCR: PDF buscable', 'Convierte escaneos y fotos en texto seleccionable.', 'OCR PDF', 'Make scans searchable.', ['escaneado', 'reconocer texto']),
-  soon('pdf-a-word', 'convertir', 'word', 2, 'PDF a Word', 'Exporta el texto a un .docx editable.', 'PDF to Word', 'Export text to .docx.', ['docx', 'word']),
-  soon('pdf-a-texto', 'convertir', 'text', 2, 'PDF a texto', 'Extrae el texto plano del PDF.', 'PDF to text', 'Extract plain text.', ['txt']),
-  soon('numerar-paginas', 'editar', 'numbers', 2, 'Numerar páginas', 'Añade números, encabezados y pies de página.', 'Page numbers', 'Add numbers, headers and footers.', ['encabezado', 'pie']),
-  soon('firmar-pdf', 'editar', 'sign', 2, 'Firmar PDF', 'Dibuja, escribe o sube tu firma.', 'Sign PDF', 'Draw, type or upload your signature.', ['firma']),
-  soon('rellenar-formulario-pdf', 'editar', 'form', 2, 'Rellenar formularios', 'Completa formularios PDF.', 'Fill PDF forms', 'Fill in PDF forms.', ['formulario']),
-  soon('proteger-pdf', 'seguridad', 'lock', 2, 'Proteger con contraseña', 'Cifra tu PDF con AES-256.', 'Protect PDF', 'Encrypt with AES-256.', ['contraseña', 'cifrar']),
-  soon('desbloquear-pdf', 'seguridad', 'unlock', 2, 'Quitar contraseña', 'Si conoces la contraseña, quítala.', 'Unlock PDF', 'Remove a known password.', ['contraseña']),
-  soon('ocultar-datos-pdf', 'seguridad', 'redact', 2, 'Ocultar datos sensibles', 'Redacción real: el texto se elimina.', 'Redact PDF', 'True redaction.', ['tachar', 'redactar', 'censurar']),
-  soon('eliminar-metadatos-pdf', 'seguridad', 'metadata', 2, 'Eliminar metadatos', 'Borra autor, fechas y software.', 'Remove metadata', 'Remove author, dates, software.', ['metadatos', 'privacidad']),
+  // ───────────── Fase 2 ─────────────
+  tool('ocr-pdf', 'convertir', 'ocr', 'ocr', {
+    es: {
+      name: 'OCR: PDF buscable',
+      short: 'Convierte escaneos y fotos en texto seleccionable, con revisión antes de exportar.',
+      title: 'OCR en español gratis: PDF escaneado a texto | PDF Libre',
+      description: 'Reconoce el texto de PDF escaneados y fotos (español e inglés) y crea un PDF buscable. Corrige el texto antes de descargar. Sin subir archivos.',
+      h1: 'OCR: convierte un escaneo en PDF buscable',
+      intro: 'Reconoce el texto de un PDF escaneado o de fotos. Revisa y corrige cada línea (los acentos incluidos) antes de crear el PDF buscable.',
+      faq: [
+        { q: '¿Reconoce bien los acentos y la ñ?', a: 'Sí. El OCR usa el modelo de español por defecto y puedes corregir cualquier línea antes de exportar. Las líneas dudosas se marcan en amarillo.' },
+        { q: '¿Necesita internet?', a: 'Solo la primera vez, para descargar el motor y el idioma (unos 10 MB) desde este mismo sitio. Después funciona sin conexión.' },
+        { q: '¿Cambia el aspecto de mi documento?', a: 'No. El texto reconocido se añade como una capa invisible sobre la página original: se ve igual, pero ahora puedes buscar y copiar.' },
+      ],
+      keywords: ['reconocer texto', 'escaneado', 'escanear', 'buscable', 'seleccionable', 'ocr', 'foto a texto', 'imagen a texto'],
+    },
+    en: {
+      name: 'OCR: searchable PDF', short: 'Turn scans and photos into selectable text, reviewed before export.', title: 'OCR PDF | PDF Libre',
+      description: 'Recognize text in scanned PDFs and photos and create a searchable PDF.', h1: 'OCR: make a scan searchable',
+      intro: 'Recognize text in a scanned PDF or photos. Review and fix each line before creating the searchable PDF.', faq: [], keywords: ['ocr', 'scan'],
+    },
+  }),
+  tool('pdf-a-word', 'convertir', 'word', 'pdfToText', {
+    es: {
+      name: 'PDF a Word',
+      short: 'Exporta el texto a un .docx editable (diseño básico).',
+      title: 'PDF a Word (.docx) gratis y sin subir archivos | PDF Libre',
+      description: 'Convierte el texto de un PDF en un documento Word editable con títulos, párrafos y negritas. Vista previa antes de descargar. Gratis y privado.',
+      h1: 'Convertir PDF a Word',
+      intro: 'Extrae el texto de tu PDF a un documento .docx editable, con títulos, párrafos y negritas.',
+      faq: [
+        { q: '¿Se conserva el diseño exacto?', a: 'No siempre, y preferimos decírtelo antes: se conservan el texto, los párrafos, los títulos y las negritas, pero las columnas, tablas complejas e imágenes pueden perderse. Revisa la vista previa antes de descargar.' },
+        { q: '¿Funciona con PDF escaneados?', a: 'Un escaneo es una imagen y no tiene texto. Usa primero la herramienta OCR y luego conviértelo a Word.' },
+      ],
+      keywords: ['docx', 'word', 'editable', 'doc', 'convertir a word'],
+    },
+    en: {
+      name: 'PDF to Word', short: 'Export text to an editable .docx (basic layout).', title: 'PDF to Word | PDF Libre',
+      description: 'Convert PDF text into an editable Word document.', h1: 'PDF to Word',
+      intro: 'Extract your PDF text into an editable .docx with headings, paragraphs and bold.', faq: [], keywords: ['docx', 'word'],
+    },
+  }, { format: 'docx' }),
+  tool('pdf-a-texto', 'convertir', 'text', 'pdfToText', {
+    es: {
+      name: 'PDF a texto',
+      short: 'Extrae el texto plano, editable y listo para copiar.',
+      title: 'PDF a texto (TXT) gratis | PDF Libre',
+      description: 'Extrae todo el texto de un PDF a un archivo .txt. Edítalo o cópialo antes de descargar. Sin subir archivos.',
+      h1: 'Extraer texto de un PDF',
+      intro: 'Obtén el texto de tu PDF en orden de lectura. Puedes editarlo o copiarlo antes de descargar el .txt.',
+      faq: [{ q: '¿Por qué no aparece texto?', a: 'Si el PDF es un escaneo, el texto es parte de una imagen. Usa la herramienta OCR para reconocerlo.' }],
+      keywords: ['txt', 'copiar texto', 'extraer texto', 'texto plano'],
+    },
+    en: {
+      name: 'PDF to text', short: 'Extract plain text, editable and ready to copy.', title: 'PDF to text | PDF Libre',
+      description: 'Extract the text from a PDF into a .txt file.', h1: 'Extract text from PDF', intro: 'Get your PDF text in reading order.', faq: [], keywords: ['txt'],
+    },
+  }, { format: 'txt' }),
+  tool('numerar-paginas', 'editar', 'numbers', 'pageNumbers', {
+    es: {
+      name: 'Numerar páginas',
+      short: 'Añade números, encabezados y pies de página.',
+      title: 'Numerar páginas de un PDF y añadir encabezado | PDF Libre',
+      description: 'Añade números de página, encabezados y pies de página a tu PDF. Elige posición, formato y desde qué página empezar. Gratis y sin subir archivos.',
+      h1: 'Numerar páginas y añadir encabezado o pie',
+      intro: 'Elige dónde y cómo numerar, desde qué página empezar, y añade un encabezado o pie de página con texto propio.',
+      faq: [
+        { q: '¿Puedo no numerar la portada?', a: 'Sí. Indica "Empezar en la página 2" y elige con qué número comienza.' },
+        { q: '¿Qué puedo poner en el encabezado?', a: 'Cualquier texto. Usa {n} para el número de página, {total} para el total y {fecha} para la fecha de hoy.' },
+      ],
+      keywords: ['paginar', 'números de página', 'encabezado', 'pie de página', 'foliar', 'enumerar'],
+    },
+    en: {
+      name: 'Page numbers', short: 'Add numbers, headers and footers.', title: 'Add page numbers to PDF | PDF Libre',
+      description: 'Add page numbers, headers and footers to a PDF.', h1: 'Page numbers, header and footer', intro: 'Choose where and how to number pages and add your own header or footer.', faq: [], keywords: ['numbers', 'header', 'footer'],
+    },
+  }),
+  tool('firmar-pdf', 'editar', 'sign', 'sign', {
+    es: {
+      name: 'Firmar PDF',
+      short: 'Dibuja, escribe o sube tu firma y colócala donde quieras.',
+      title: 'Firmar PDF gratis: dibuja o sube tu firma | PDF Libre',
+      description: 'Firma documentos PDF dibujando tu firma, escribiéndola o subiendo una imagen. Colócala y ajústala en cualquier página. Tu firma nunca sale de tu dispositivo.',
+      h1: 'Firmar PDF',
+      intro: 'Crea tu firma (dibujada, escrita o desde una foto) y colócala en las páginas que necesites.',
+      faq: [
+        { q: '¿Es una firma electrónica avanzada?', a: 'Es una firma visual (imagen de tu firma), válida para la mayoría de trámites cotidianos. No es una firma digital con certificado (como la e.firma del SAT o el DNIe).' },
+        { q: '¿Puedo usar una foto de mi firma en papel?', a: 'Sí. Sube la foto y activa "Quitar fondo blanco" para que solo quede el trazo.' },
+      ],
+      keywords: ['firma', 'firmar', 'rubricar', 'firma digital', 'firma electrónica'],
+    },
+    en: {
+      name: 'Sign PDF', short: 'Draw, type or upload your signature and place it anywhere.', title: 'Sign PDF | PDF Libre',
+      description: 'Sign PDF documents by drawing, typing or uploading your signature.', h1: 'Sign PDF', intro: 'Create your signature and place it on the pages you need.', faq: [], keywords: ['sign', 'signature'],
+    },
+  }),
+  tool('rellenar-formulario-pdf', 'editar', 'form', 'fillForm', {
+    es: {
+      name: 'Rellenar formularios',
+      short: 'Completa los campos de un formulario PDF.',
+      title: 'Rellenar formularios PDF gratis | PDF Libre',
+      description: 'Completa formularios PDF rellenables desde el navegador, incluso en el celular. Opción para fijar las respuestas. Sin subir archivos.',
+      h1: 'Rellenar un formulario PDF',
+      intro: 'Completa los campos del formulario en una lista cómoda, incluso desde el celular, y revisa el resultado antes de descargar.',
+      faq: [
+        { q: '¿Qué significa "fijar las respuestas"?', a: 'Convierte los campos en texto normal: nadie podrá cambiarlos, y se verán igual en cualquier lector.' },
+        { q: 'Mi PDF no muestra campos', a: 'Si el formulario es solo una imagen o un documento normal, no tiene campos interactivos. Puedes firmarlo con "Firmar PDF".' },
+      ],
+      keywords: ['formulario', 'llenar', 'completar', 'campos', 'solicitud'],
+    },
+    en: {
+      name: 'Fill PDF forms', short: 'Fill in the fields of a PDF form.', title: 'Fill PDF forms | PDF Libre',
+      description: 'Fill in PDF forms in your browser.', h1: 'Fill a PDF form', intro: 'Fill in form fields comfortably, even on your phone.', faq: [], keywords: ['form', 'fill'],
+    },
+  }),
+  tool('proteger-pdf', 'seguridad', 'lock', 'protect', {
+    es: {
+      name: 'Proteger con contraseña',
+      short: 'Cifra tu PDF con AES-256 y limita impresión o copia.',
+      title: 'Proteger PDF con contraseña (AES-256) | PDF Libre',
+      description: 'Pon contraseña a tu PDF con cifrado AES-256 y decide si se puede imprimir o copiar. La contraseña nunca sale de tu dispositivo.',
+      h1: 'Proteger PDF con contraseña',
+      intro: 'Cifra tu PDF con AES-256: solo podrá abrirse con la contraseña. También puedes impedir que se imprima o se copie el texto.',
+      faq: [
+        { q: '¿Qué pasa si olvido la contraseña?', a: 'No hay forma de recuperarla: ni nosotros la conocemos, porque nunca sale de tu dispositivo. Guárdala en un lugar seguro.' },
+        { q: '¿Qué tan seguro es?', a: 'Usamos AES-256, el cifrado más fuerte que admite el formato PDF. La seguridad depende sobre todo de que la contraseña sea larga.' },
+      ],
+      keywords: ['contraseña', 'cifrar', 'encriptar', 'clave', 'bloquear', 'proteger'],
+    },
+    en: {
+      name: 'Protect PDF', short: 'Encrypt with AES-256 and restrict printing or copying.', title: 'Protect PDF with password | PDF Libre',
+      description: 'Encrypt your PDF with AES-256.', h1: 'Protect PDF with a password', intro: 'Encrypt your PDF so it only opens with the password.', faq: [], keywords: ['password', 'encrypt'],
+    },
+  }),
+  tool('desbloquear-pdf', 'seguridad', 'unlock', 'unlock', {
+    es: {
+      name: 'Quitar contraseña',
+      short: 'Si conoces la contraseña, guarda una copia sin ella.',
+      title: 'Quitar contraseña a un PDF (si la conoces) | PDF Libre',
+      description: 'Elimina la contraseña de un PDF del que conoces la clave y obtén una copia sin protección. En tu navegador, sin subir el documento.',
+      h1: 'Quitar la contraseña de un PDF',
+      intro: 'Escribe la contraseña del PDF y obtén una copia que se abre sin pedirla. También quita las restricciones de impresión y copia.',
+      faq: [
+        { q: '¿Pueden descifrar un PDF sin la contraseña?', a: 'No. Esta herramienta es para quien ya conoce la contraseña y no quiere escribirla cada vez.' },
+      ],
+      keywords: ['desbloquear', 'quitar contraseña', 'eliminar contraseña', 'desproteger', 'desencriptar'],
+    },
+    en: {
+      name: 'Unlock PDF', short: 'If you know the password, save a copy without it.', title: 'Unlock PDF | PDF Libre',
+      description: 'Remove the password from a PDF you know the password of.', h1: 'Remove a PDF password', intro: 'Enter the password and get a copy that opens without it.', faq: [], keywords: ['unlock', 'decrypt'],
+    },
+  }),
+  tool('ocultar-datos-pdf', 'seguridad', 'redact', 'redact', {
+    es: {
+      name: 'Ocultar datos sensibles',
+      short: 'Redacción real: el texto tapado se elimina del archivo.',
+      title: 'Ocultar datos de un PDF (redacción real) | PDF Libre',
+      description: 'Tacha datos sensibles de un PDF de verdad: el texto oculto se elimina del archivo, no solo se cubre. Busca correos, teléfonos o cualquier palabra. Sin subir archivos.',
+      h1: 'Ocultar datos sensibles (redacción real)',
+      intro: 'Marca zonas a mano o busca palabras, correos y teléfonos. Lo que ocultes se elimina del archivo: no basta con poner un rectángulo negro encima.',
+      faq: [
+        { q: '¿Por qué no basta con un rectángulo negro?', a: 'Porque el texto sigue debajo y se puede copiar o buscar. Aquí, las páginas con datos ocultos se rehacen como imagen con las zonas ya en negro: el texto original deja de existir. Al terminar verificamos que no queda rastro.' },
+        { q: '¿Las páginas siguen siendo buscables?', a: 'Las páginas sin cambios, sí. En las páginas con datos ocultos puedes activar el OCR para recuperar el texto visible que no tapaste.' },
+      ],
+      keywords: ['tachar', 'censurar', 'redactar', 'anonimizar', 'borrar datos', 'ocultar', 'datos personales'],
+    },
+    en: {
+      name: 'Redact PDF', short: 'True redaction: hidden text is removed from the file.', title: 'Redact PDF | PDF Libre',
+      description: 'Redact sensitive data from a PDF for real.', h1: 'Redact sensitive data', intro: 'Mark areas or search for words; what you hide is removed from the file.', faq: [], keywords: ['redact'],
+    },
+  }),
+  tool('eliminar-metadatos-pdf', 'seguridad', 'metadata', 'metadata', {
+    es: {
+      name: 'Eliminar metadatos',
+      short: 'Mira y borra autor, fechas y software ocultos en el PDF.',
+      title: 'Eliminar metadatos de un PDF (autor, fechas) | PDF Libre',
+      description: 'Descubre qué datos ocultos guarda tu PDF (autor, empresa, fechas, programa usado) y bórralos antes de compartirlo. Gratis y sin subir archivos.',
+      h1: 'Eliminar metadatos de un PDF',
+      intro: 'Mira qué información oculta guarda tu PDF —autor, fechas, programa usado— y elimínala antes de compartirlo.',
+      faq: [{ q: '¿Qué son los metadatos?', a: 'Datos que los programas guardan dentro del PDF sin que se vean: quién lo creó, cuándo, con qué programa, y a veces el nombre de la empresa o de la computadora.' }],
+      keywords: ['metadatos', 'autor', 'privacidad', 'propiedades', 'datos ocultos', 'anonimizar'],
+    },
+    en: {
+      name: 'Remove metadata', short: 'See and remove author, dates and software.', title: 'Remove PDF metadata | PDF Libre',
+      description: 'See and remove hidden PDF metadata.', h1: 'Remove PDF metadata', intro: 'See what hidden information your PDF contains and remove it.', faq: [], keywords: ['metadata'],
+    },
+  }),
+  tool('encabezado-pie-pagina-pdf', 'editar', 'numbers', 'pageNumbers', {
+    es: {
+      name: 'Encabezado y pie de página',
+      short: 'Añade un encabezado o pie a todas las páginas.',
+      title: 'Añadir encabezado y pie de página a un PDF | PDF Libre',
+      description: 'Añade un encabezado o pie de página con tu texto, número de página y fecha. Gratis y sin subir archivos.',
+      h1: 'Añadir encabezado y pie de página',
+      intro: 'Escribe el texto del encabezado o pie, con número de página y fecha si quieres.',
+      faq: [],
+      keywords: ['encabezado', 'pie de página', 'membrete'],
+    },
+    en: {
+      name: 'Header and footer', short: 'Add a header or footer to every page.', title: 'Add header and footer | PDF Libre',
+      description: 'Add a header or footer to a PDF.', h1: 'Add header and footer', intro: 'Type your header or footer text.', faq: [], keywords: ['header', 'footer'],
+    },
+  }, { focus: 'header' }, true),
 
   // ───────────── Fase 3 (próximamente) ─────────────
   soon('heic-a-jpg', 'convertir', 'image', 3, 'HEIC a JPG', 'Convierte fotos del iPhone a JPG.', 'HEIC to JPG', 'Convert iPhone photos to JPG.', ['iphone', 'heic']),
