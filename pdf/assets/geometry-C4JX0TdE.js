@@ -1,0 +1,4 @@
+import{d as o}from"./PDFButton-BDiEe7-2.js";function c(t){const e=t.getCropBox(),n=(t.getRotation().angle%360+360)%360;return{x:e.x,y:e.y,width:e.width,height:e.height,rotation:n}}function r(t){return t.rotation%180===0?{width:t.width,height:t.height}:{width:t.height,height:t.width}}function a(t,e,n){switch(t.rotation){case 90:return{x:t.x+n*t.width,y:t.y+e*t.height};case 180:return{x:t.x+(1-e)*t.width,y:t.y+n*t.height};case 270:return{x:t.x+(1-n)*t.width,y:t.y+(1-e)*t.height};default:return{x:t.x+e*t.width,y:t.y+(1-n)*t.height}}}function d(t,e){const n=r(t),i=a(t,e.u,e.v+e.h);return{x:i.x,y:i.y,width:e.w*n.width,height:e.h*n.height,rotate:o(t.rotation),angle:t.rotation}}const h=new WeakSet;function g(t){if(h.has(t))return;h.add(t);const e=t.doc.context,n=e.register(e.stream(`q
+`)),i=e.register(e.stream(`
+Q
+`));t.node.wrapContentStreams(n,i)}export{a,d as b,g as i,c as p,r as v};

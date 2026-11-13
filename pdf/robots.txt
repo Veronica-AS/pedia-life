@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://veronica-as.github.io/pedia-life/pdf/sitemap.xml
