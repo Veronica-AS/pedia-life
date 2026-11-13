@@ -1,9 +1,11 @@
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import Home from './pages/Home';
 import ToolPage from './pages/ToolPage';
 import NotFound from './pages/NotFound';
+
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -21,6 +23,14 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
+          <Route
+            path="historial"
+            element={
+              <Suspense fallback={null}>
+                <HistoryPage />
+              </Suspense>
+            }
+          />
           <Route path=":slug" element={<ToolPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

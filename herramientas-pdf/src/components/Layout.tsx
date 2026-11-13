@@ -1,4 +1,4 @@
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { History, Monitor, Moon, Sun } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import { useTheme, type ThemePref } from '../lib/theme';
@@ -37,6 +37,9 @@ export function Layout() {
             <span className="text-lg">PDF Libre</span>
           </Link>
           <div className="flex items-center gap-1">
+            <Link to="/historial" className="btn-icon" aria-label={lang === 'es' ? 'Historial local' : 'Local history'} title={lang === 'es' ? 'Historial local' : 'Local history'}>
+              <History className="h-5 w-5" aria-hidden="true" />
+            </Link>
             <button
               type="button"
               className="btn-icon text-sm font-bold"

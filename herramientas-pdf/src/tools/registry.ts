@@ -22,7 +22,12 @@ export type ComponentId =
   | 'protect'
   | 'unlock'
   | 'redact'
-  | 'metadata';
+  | 'metadata'
+  | 'batch'
+  | 'flows'
+  | 'scan'
+  | 'compare'
+  | 'imageConvert';
 
 export interface Faq {
   q: string;
@@ -109,26 +114,6 @@ export const COMMON_FAQ: Record<Lang, Faq[]> = {
     },
   ],
 };
-
-const soon = (
-  slug: string,
-  category: CategoryId,
-  icon: string,
-  phase: 2 | 3,
-  esName: string,
-  esShort: string,
-  enName: string,
-  enShort: string,
-  keywords: string[] = [],
-): ToolDef => ({
-  slug,
-  category,
-  icon,
-  status: 'soon',
-  phase,
-  es: { name: esName, short: esShort, title: '', description: '', h1: esName, intro: esShort, faq: [], keywords },
-  en: { name: enName, short: enShort, title: '', description: '', h1: enName, intro: enShort, faq: [], keywords },
-});
 
 function tool(
   slug: string,
@@ -733,13 +718,128 @@ export const TOOLS: ToolDef[] = [
     },
   }, { focus: 'header' }, true),
 
-  // ───────────── Fase 3 (próximamente) ─────────────
-  soon('heic-a-jpg', 'convertir', 'image', 3, 'HEIC a JPG', 'Convierte fotos del iPhone a JPG.', 'HEIC to JPG', 'Convert iPhone photos to JPG.', ['iphone', 'heic']),
-  soon('convertir-imagenes', 'convertir', 'image', 3, 'Convertir imágenes', 'Cambia entre JPG, PNG, WEBP y más.', 'Convert images', 'Between JPG, PNG, WEBP and more.', ['webp', 'png', 'jpg']),
-  soon('escanear-documento', 'avanzado', 'camera', 3, 'Escanear con la cámara', 'Detecta bordes, recorta y crea un PDF.', 'Scan with camera', 'Detect edges, crop, make a PDF.', ['escáner', 'cámara']),
-  soon('comparar-pdf', 'avanzado', 'compare', 3, 'Comparar PDF', 'Resalta diferencias de texto entre dos PDF.', 'Compare PDF', 'Highlight text differences.', ['diferencias']),
-  soon('procesar-por-lotes', 'avanzado', 'batch', 3, 'Procesar por lotes', 'Aplica una acción a muchos archivos y baja un ZIP.', 'Batch processing', 'One action, many files, one ZIP.', ['lote', 'zip', 'masivo']),
-  soon('flujos', 'avanzado', 'flow', 3, 'Flujos', 'Encadena acciones y guárdalas para reutilizar.', 'Workflows', 'Chain actions and save them.', ['automatizar']),
+  // ───────────── Fase 3 ─────────────
+  tool('heic-a-jpg', 'convertir', 'image', 'imageConvert', {
+    es: {
+      name: 'HEIC a JPG',
+      short: 'Convierte las fotos del iPhone a JPG, en lote.',
+      title: 'HEIC a JPG: convertir fotos del iPhone gratis | PDF Libre',
+      description: 'Convierte fotos HEIC del iPhone a JPG (o PNG) en tu navegador, varias a la vez, sin subirlas a internet. Elige calidad y tamaño.',
+      h1: 'Convertir HEIC a JPG',
+      intro: 'Pasa tus fotos HEIC del iPhone a JPG para abrirlas en cualquier computadora o app. Puedes convertir muchas a la vez.',
+      faq: [
+        { q: '¿Por qué mis fotos del iPhone son HEIC?', a: 'Es el formato que usa el iPhone para ahorrar espacio. Muchas computadoras y páginas web no lo abren, por eso conviene pasarlas a JPG.' },
+        { q: '¿Pierden calidad?', a: 'Con calidad 90% la diferencia no se nota. Si necesitas la máxima calidad, elige PNG (sin pérdida, pero más pesado).' },
+        { q: '¿Se conservan las fotos derechas?', a: 'Sí, se aplica la orientación con la que tomaste la foto.' },
+      ],
+      keywords: ['heic', 'iphone', 'heif', 'fotos iphone', 'convertir heic', 'abrir heic'],
+    },
+    en: {
+      name: 'HEIC to JPG', short: 'Convert iPhone photos to JPG, in batch.', title: 'HEIC to JPG | PDF Libre',
+      description: 'Convert iPhone HEIC photos to JPG in your browser.', h1: 'Convert HEIC to JPG', intro: 'Turn iPhone HEIC photos into JPG. Convert many at once.', faq: [], keywords: ['heic', 'iphone'],
+    },
+  }, { format: 'jpg' }, false, 3),
+  tool('convertir-imagenes', 'convertir', 'image', 'imageConvert', {
+    es: {
+      name: 'Convertir imágenes',
+      short: 'Entre JPG, PNG y WEBP, con calidad y tamaño a elegir.',
+      title: 'Convertir imágenes: JPG, PNG, WEBP, HEIC | PDF Libre',
+      description: 'Convierte imágenes entre JPG, PNG y WEBP (también desde HEIC, GIF, BMP y AVIF). Ajusta calidad y tamaño. En lote y sin subir archivos.',
+      h1: 'Convertir imágenes',
+      intro: 'Convierte una o muchas imágenes a JPG, PNG o WEBP. También puedes reducir su tamaño para enviarlas más rápido.',
+      faq: [{ q: '¿Qué formato elijo?', a: 'JPG para fotos y máxima compatibilidad; PNG para capturas, logos o si necesitas transparencia; WEBP para web (pesa menos, pero Safari no puede crearlo).' }],
+      keywords: ['webp', 'png', 'jpg', 'jpeg', 'convertir foto', 'cambiar formato', 'reducir imagen', 'redimensionar', 'avif', 'gif', 'bmp'],
+    },
+    en: {
+      name: 'Convert images', short: 'Between JPG, PNG and WEBP with quality and size options.', title: 'Convert images | PDF Libre',
+      description: 'Convert images between JPG, PNG and WEBP.', h1: 'Convert images', intro: 'Convert one or many images to JPG, PNG or WEBP.', faq: [], keywords: ['webp', 'png', 'jpg'],
+    },
+  }, undefined, false, 3),
+  tool('webp-a-jpg', 'convertir', 'image', 'imageConvert', {
+    es: {
+      name: 'WEBP a JPG', short: 'Convierte imágenes WEBP a JPG.', title: 'WEBP a JPG gratis y sin subir archivos | PDF Libre',
+      description: 'Convierte imágenes WEBP a JPG en tu navegador, varias a la vez.', h1: 'Convertir WEBP a JPG', intro: 'Pasa imágenes WEBP a JPG para abrirlas en cualquier programa.', faq: [], keywords: ['webp'],
+    },
+    en: { name: 'WEBP to JPG', short: 'Convert WEBP images to JPG.', title: 'WEBP to JPG | PDF Libre', description: 'Convert WEBP to JPG.', h1: 'WEBP to JPG', intro: 'Convert WEBP images to JPG.', faq: [], keywords: ['webp'] },
+  }, { format: 'jpg' }, true, 3),
+  tool('jpg-a-png', 'convertir', 'image', 'imageConvert', {
+    es: {
+      name: 'JPG a PNG', short: 'Convierte imágenes JPG a PNG.', title: 'JPG a PNG gratis | PDF Libre',
+      description: 'Convierte imágenes JPG a PNG sin pérdida, en tu navegador.', h1: 'Convertir JPG a PNG', intro: 'Pasa imágenes JPG a PNG.', faq: [], keywords: ['png'],
+    },
+    en: { name: 'JPG to PNG', short: 'Convert JPG images to PNG.', title: 'JPG to PNG | PDF Libre', description: 'Convert JPG to PNG.', h1: 'JPG to PNG', intro: 'Convert JPG images to PNG.', faq: [], keywords: ['png'] },
+  }, { format: 'png' }, true, 3),
+  tool('escanear-documento', 'avanzado', 'camera', 'scan', {
+    es: {
+      name: 'Escanear con la cámara',
+      short: 'Detecta bordes, endereza, mejora el contraste y crea un PDF.',
+      title: 'Escanear documentos con el celular a PDF | PDF Libre',
+      description: 'Usa la cámara del celular como escáner: detecta los bordes, corrige la perspectiva, mejora el contraste y crea un PDF de varias páginas. Sin apps ni registro.',
+      h1: 'Escanear documentos con la cámara',
+      intro: 'Toma fotos de tus documentos: detectamos los bordes, enderezamos la hoja y mejoramos el contraste para que se lean como un escaneo.',
+      faq: [
+        { q: '¿Necesito instalar una app?', a: 'No. Funciona en el navegador del celular. Si lo prefieres, puedes instalar PDF Libre en la pantalla de inicio desde el menú del navegador.' },
+        { q: '¿Cómo consigo el mejor resultado?', a: 'Coloca la hoja sobre una superficie oscura, con buena luz y sin sombras fuertes. Si los bordes no se detectan bien, arrastra las esquinas.' },
+        { q: '¿Puedo buscar texto en el PDF?', a: 'Sí: activa "Hacer el texto buscable" y aplicaremos OCR en español.' },
+      ],
+      keywords: ['escáner', 'escanear', 'cámara', 'foto a pdf', 'celular', 'documento', 'scanner'],
+    },
+    en: {
+      name: 'Scan with camera', short: 'Detect edges, straighten, enhance and create a PDF.', title: 'Scan documents with your phone | PDF Libre',
+      description: 'Use your phone camera as a scanner.', h1: 'Scan documents with your camera', intro: 'Take photos of documents; we detect edges, straighten and enhance them.', faq: [], keywords: ['scan', 'camera'],
+    },
+  }, undefined, false, 3),
+  tool('comparar-pdf', 'avanzado', 'compare', 'compare', {
+    es: {
+      name: 'Comparar PDF',
+      short: 'Resalta las diferencias de texto entre dos versiones.',
+      title: 'Comparar dos PDF y ver las diferencias | PDF Libre',
+      description: 'Compara dos versiones de un PDF y resalta qué texto se añadió o se eliminó, palabra por palabra. Descarga ambos PDF marcados. Sin subir archivos.',
+      h1: 'Comparar dos PDF',
+      intro: 'Sube la versión original y la nueva: verás palabra por palabra qué se añadió (verde) y qué se eliminó (rojo).',
+      faq: [
+        { q: '¿Compara también imágenes o diseño?', a: 'No: compara el texto. Es ideal para contratos, documentos legales y versiones de un mismo informe.' },
+        { q: '¿Funciona con escaneos?', a: 'Primero conviértelos con la herramienta OCR para que tengan texto.' },
+      ],
+      keywords: ['comparar', 'diferencias', 'cambios', 'versiones', 'contrato', 'diff'],
+    },
+    en: {
+      name: 'Compare PDF', short: 'Highlight text differences between two versions.', title: 'Compare two PDFs | PDF Libre',
+      description: 'Compare two PDF versions and highlight text changes.', h1: 'Compare two PDFs', intro: 'See word by word what was added (green) and removed (red).', faq: [], keywords: ['compare', 'diff'],
+    },
+  }, undefined, false, 3),
+  tool('procesar-por-lotes', 'avanzado', 'batch', 'batch', {
+    es: {
+      name: 'Procesar por lotes',
+      short: 'Aplica una acción a muchos PDF y descarga un ZIP.',
+      title: 'Procesar PDF por lotes: comprimir, numerar y más | PDF Libre',
+      description: 'Comprime, numera, rota, protege o limpia metadatos de muchos PDF a la vez y descárgalos en un ZIP. Sin límites y sin subir archivos.',
+      h1: 'Procesar PDF por lotes',
+      intro: 'Elige una acción y aplícala a todos tus PDF de una vez. Los resultados se descargan juntos en un ZIP.',
+      faq: [{ q: '¿Cuántos archivos puedo procesar?', a: 'Los que quieras: no hay límites artificiales. Se procesan uno tras otro para no saturar tu dispositivo.' }],
+      keywords: ['lote', 'lotes', 'masivo', 'muchos archivos', 'zip', 'varios pdf', 'batch'],
+    },
+    en: {
+      name: 'Batch processing', short: 'Apply one action to many PDFs and get a ZIP.', title: 'Batch process PDFs | PDF Libre',
+      description: 'Apply one action to many PDFs.', h1: 'Batch process PDFs', intro: 'Choose an action and apply it to all your PDFs at once.', faq: [], keywords: ['batch'],
+    },
+  }, undefined, false, 3),
+  tool('flujos', 'avanzado', 'flow', 'flows', {
+    es: {
+      name: 'Flujos',
+      short: 'Encadena acciones (unir → comprimir → numerar) y guárdalas.',
+      title: 'Flujos de trabajo PDF: encadena acciones | PDF Libre',
+      description: 'Crea flujos que encadenan acciones (unir, comprimir, numerar, proteger…) y reutilízalos con un clic. Se guardan solo en tu dispositivo.',
+      h1: 'Flujos: encadena acciones',
+      intro: 'Crea una receta de pasos (por ejemplo: unir → numerar → comprimir) y úsala siempre que quieras con nuevos archivos.',
+      faq: [{ q: '¿Dónde se guardan mis flujos?', a: 'Solo en este navegador. Se guarda la receta, nunca tus archivos ni tus contraseñas.' }],
+      keywords: ['flujo', 'automatizar', 'encadenar', 'receta', 'workflow', 'acciones'],
+    },
+    en: {
+      name: 'Workflows', short: 'Chain actions and save them for reuse.', title: 'PDF workflows | PDF Libre',
+      description: 'Chain PDF actions and reuse them.', h1: 'Workflows', intro: 'Create a recipe of steps and reuse it with new files.', faq: [], keywords: ['workflow'],
+    },
+  }, undefined, false, 3),
 ];
 
 export const readyTools = () => TOOLS.filter((t) => t.status === 'ready');

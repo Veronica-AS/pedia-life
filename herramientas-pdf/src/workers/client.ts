@@ -17,6 +17,7 @@ import type { FormInfo, FormValues } from '../tools/fill-form/fillForm';
 import type { Placement, SignatureImage } from '../tools/sign/sign';
 import type { OcrImagePage, OcrPage } from '../tools/ocr/textLayer';
 import type { RedactedPage } from '../tools/redact/redact';
+import type { Highlight } from '../tools/compare/highlight';
 
 let worker: Worker | null = null;
 let remote: Promise<Comlink.Remote<PdfWorkerApi> | null> | null = null;
@@ -90,6 +91,11 @@ export const pdfTasks = {
       (api) => api.organize(bytes, plan, p(onProgress)),
       async () => (await import('../tools/organize/organize')).organizePdf(bytes, plan, onProgress),
     ),
+  rotateAll: (bytes: Uint8Array, rotation: number) =>
+    call(
+      (api) => api.rotateAll(bytes, rotation),
+      async () => (await import('../tools/organize/organize')).rotateAllPages(bytes, rotation),
+    ),
   imagesToPdf: (images: PreparedImage[], opts: LayoutOptions, onProgress?: ProgressFn) =>
     call(
       (api) => api.imagesToPdf(images, opts, p(onProgress)),
@@ -155,5 +161,10 @@ export const pdfTasks = {
     call(
       (api) => api.redact(bytes, pages, p(onProgress)),
       async () => (await import('../tools/redact/redact')).assembleRedacted(bytes, pages, onProgress),
+    ),
+  highlight: (bytes: Uint8Array, marks: Highlight[]) =>
+    call(
+      (api) => api.highlight(bytes, marks),
+      async () => (await import('../tools/compare/highlight')).highlightPdf(bytes, marks),
     ),
 };

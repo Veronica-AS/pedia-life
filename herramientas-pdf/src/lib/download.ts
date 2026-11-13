@@ -16,6 +16,8 @@ export function downloadBlob(blob: Blob, fileName: string) {
   a.remove();
   // Safari necesita que la URL siga viva un momento después del clic
   setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  // Historial local opcional (solo si el usuario lo activó)
+  import('./history').then((h) => h.recordDownload(blob, fileName)).catch(() => {});
 }
 
 export interface OutputFile {

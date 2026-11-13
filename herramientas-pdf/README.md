@@ -34,6 +34,17 @@ Tus archivos nunca salen de tu dispositivo: no hay servidor, ni base de datos, n
 | `/ocultar-datos-pdf` | Redacción real: búsqueda (sin importar acentos), correos, teléfonos, identificaciones o zonas a mano; verificación final de que el texto ya no existe |
 | `/eliminar-metadatos-pdf` | Muestra y borra autor, fechas, programa, XMP y datos por página |
 
+## Herramientas de la fase 3
+
+| URL | Herramienta |
+|---|---|
+| `/procesar-por-lotes` | Una acción (comprimir, numerar, rotar, metadatos, proteger, quitar contraseña) aplicada a muchos PDF → ZIP. Un archivo que falla no detiene a los demás |
+| `/flujos` | Encadena pasos (p. ej. unir → numerar → comprimir → quitar metadatos), guárdalos en el dispositivo y reutilízalos. Las contraseñas nunca se guardan |
+| `/escanear-documento` | Cámara del celular (o fotos): detección automática de bordes, esquinas ajustables, corrección de perspectiva, filtros (color, grises, blanco y negro adaptativo), varias páginas, OCR opcional |
+| `/comparar-pdf` | Diferencias de texto palabra por palabra (lista y páginas lado a lado) y descarga de ambos PDF marcados |
+| `/heic-a-jpg`, `/convertir-imagenes`, `/webp-a-jpg`, `/jpg-a-png` | HEIC, JPG, PNG, WEBP, GIF, BMP, AVIF → JPG/PNG/WEBP, con calidad y tamaño, en lote |
+| `/historial` | Historial local **opcional** (desactivado por defecto) en IndexedDB: volver a descargar, borrar uno o todo |
+
 ## Correr en local
 
 Requisitos: Node.js 20 o superior.
@@ -121,6 +132,12 @@ tests/                  unitarias, e2e y archivos de prueba
   que los datos buscados ya no aparecen. Opcionalmente, OCR del texto visible de esas páginas.
 - **PDF a Word**: reconstruye párrafos, títulos (por tamaño de letra) y negritas; no reproduce columnas, tablas complejas ni imágenes.
 - **Firmar**: es una firma visual (imagen), no una firma digital con certificado (e.firma, DNIe…).
+- **Escáner**: visión por computadora propia en TypeScript (sin OpenCV, ~8 MB menos): umbral de Otsu, mayor región clara,
+  esquinas por diagonales extremas, homografía y umbral adaptativo. Funciona mejor con el papel sobre una superficie oscura;
+  si no detecta los bordes, el usuario arrastra las esquinas (también con el teclado). La cámara en vivo requiere HTTPS.
+- **Comparar**: algoritmo de Myers sobre palabras, con memoria acotada; compara texto, no diseño ni imágenes.
+- **Convertir a WEBP**: Safari no sabe generar WEBP; se detecta y se explica en lugar de entregar otro formato en silencio.
+- **Historial**: guarda las descargas (máx. 50 / 300 MB) solo si el usuario lo activa; nunca sale del navegador.
 - **Formularios**: AcroForm completo; los formularios XFA se rellenan en su versión estándar. Los textos usan Helvetica,
   que cubre el español; caracteres de otros alfabetos se sustituyen.
 - **HEIC**: Safari lo lee de forma nativa; en otros navegadores se usa `heic2any` (se descarga solo al necesitarlo).

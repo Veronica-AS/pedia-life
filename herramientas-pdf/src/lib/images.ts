@@ -198,3 +198,29 @@ export async function prepareImage(file: File): Promise<PreparedWithPreview> {
     previewUrl: URL.createObjectURL(new Blob([prepared.bytes], { type: prepared.kind === 'jpg' ? 'image/jpeg' : 'image/png' })),
   };
 }
+
+/**
+ * Decodifica cualquier imagen admitida a un ImageBitmap ya orientado (EXIF aplicado).
+ * HEIC: nativo en Safari; en otros navegadores se convierte a PNG (sin pérdida) con heic2any.
+ */
+export async function decodeImageFile(file: File): Promise<ImageBitmap> {
+  const head = new Uint8Array(await file.slice(0, 32).arrayBuffer());
+  if (file.size === 0) throw new AppError('empty-file', { fileName: file.name });
+  const kind = detectImageKind(head);
+  if (kind === 'unknown') throw new AppError('unsupported-file', { fileName: file.name });
+  if (kind === 'heic') {
+    try {
+      return await createImageBitmap(file);
+    } catch {
+      /* el navegador no lee HEIC: se usa heic2any */
+    }
+    try {
+      const { default: heic2any } = await import('heic2any');
+      const out = await heic2any({ blob: file, toType: 'image/png' });
+      return await createImageBitmap(Array.isArray(out) ? out[0] : out);
+    } catch (err) {
+      throw new AppError('heic-failed', { fileName: file.name, cause: err });
+    }
+  }
+  return decode(file, file.name);
+}

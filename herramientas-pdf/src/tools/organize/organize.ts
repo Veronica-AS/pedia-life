@@ -34,3 +34,11 @@ export async function organizePdf(bytes: Uint8Array, plan: PagePlan[], onProgres
   onProgress?.(1);
   return result;
 }
+
+/** Gira todas las páginas (para lotes y flujos) */
+export async function rotateAllPages(bytes: Uint8Array, rotation: number): Promise<Uint8Array> {
+  const doc = await loadPdf(bytes);
+  const extra = normRotation(rotation);
+  for (const page of doc.getPages()) page.setRotation(degrees(normRotation(page.getRotation().angle + extra)));
+  return doc.save(saveOptions);
+}

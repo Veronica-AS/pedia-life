@@ -6,7 +6,7 @@
 import * as Comlink from 'comlink';
 import { mergePdfs, type NamedBytes } from '../tools/merge/merge';
 import { splitPdf } from '../tools/split/split';
-import { organizePdf, type PagePlan } from '../tools/organize/organize';
+import { organizePdf, rotateAllPages, type PagePlan } from '../tools/organize/organize';
 import { imagesToPdf, type PreparedImage } from '../tools/images-to-pdf/imagesToPdf';
 import type { LayoutOptions } from '../tools/images-to-pdf/layout';
 import { compressPdf, createCanvasCodec, type CompressLevel } from '../tools/compress/compress';
@@ -16,6 +16,7 @@ import { cleanMetadata, readMetadata, type MetadataEdits } from '../tools/metada
 import { fillForm, readForm, type FormValues } from '../tools/fill-form/fillForm';
 import { signPdf, type Placement, type SignatureImage } from '../tools/sign/sign';
 import { addOcrToPdf, imagesToSearchablePdf, type OcrImagePage, type OcrPage } from '../tools/ocr/textLayer';
+import { highlightPdf, type Highlight } from '../tools/compare/highlight';
 import { assembleRedacted, type RedactedPage } from '../tools/redact/redact';
 
 const transfer = (b: Uint8Array) => Comlink.transfer(b, [b.buffer as ArrayBuffer]);
@@ -35,6 +36,9 @@ const api = {
   },
   async organize(bytes: Uint8Array, plan: PagePlan[], onProgress?: ProgressFn) {
     return transfer(await organizePdf(bytes, plan, onProgress));
+  },
+  async rotateAll(bytes: Uint8Array, rotation: number) {
+    return transfer(await rotateAllPages(bytes, rotation));
   },
   async imagesToPdf(images: PreparedImage[], opts: LayoutOptions, onProgress?: ProgressFn) {
     return transfer(await imagesToPdf(images, opts, onProgress));
@@ -67,6 +71,9 @@ const api = {
   },
   async redact(bytes: Uint8Array, pages: RedactedPage[], onProgress?: ProgressFn) {
     return transfer(await assembleRedacted(bytes, pages, onProgress));
+  },
+  async highlight(bytes: Uint8Array, marks: Highlight[]) {
+    return transfer(await highlightPdf(bytes, marks));
   },
 };
 

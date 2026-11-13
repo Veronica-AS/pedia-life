@@ -21,6 +21,8 @@ export type ErrorCode =
   | 'no-form-fields'
   | 'ocr-failed'
   | 'weak-password'
+  | 'format-unsupported'
+  | 'camera-unavailable'
   | 'unknown';
 
 const PREFIX = 'APPERR::';
@@ -138,6 +140,14 @@ export const ERROR_TEXT: Record<'es' | 'en', Record<ErrorCode, ErrorText>> = {
       title: 'No se pudo iniciar el reconocimiento de texto (OCR)',
       fix: 'La primera vez se necesita conexión para descargar el motor y los idiomas (unos 10 MB). Comprueba tu conexión y vuelve a intentarlo.',
     },
+    'camera-unavailable': {
+      title: 'No se pudo usar la cámara',
+      fix: 'Permite el acceso a la cámara en la configuración del navegador (icono junto a la dirección), o usa "Elegir fotos" para tomar la foto con la app de cámara.',
+    },
+    'format-unsupported': {
+      title: 'Tu navegador no puede crear imágenes en este formato',
+      fix: 'Safari no sabe generar WEBP. Elige JPG o PNG, o usa Chrome o Firefox para convertir a WEBP.',
+    },
     'weak-password': {
       title: 'Las contraseñas no coinciden o están vacías',
       fix: 'Escribe la misma contraseña en los dos campos.',
@@ -163,6 +173,8 @@ export const ERROR_TEXT: Record<'es' | 'en', Record<ErrorCode, ErrorText>> = {
     'not-encrypted': { title: 'This PDF has no password', fix: 'You can already open and edit it.' },
     'no-form-fields': { title: 'This PDF has no fillable fields', fix: 'It is a regular document. You can sign it with "Sign PDF".' },
     'ocr-failed': { title: 'Text recognition (OCR) could not start', fix: 'The first time, a connection is needed to download the engine (about 10 MB).' },
+    'camera-unavailable': { title: 'The camera could not be used', fix: 'Allow camera access in your browser settings, or use "Choose photos".' },
+    'format-unsupported': { title: 'Your browser cannot create this format', fix: 'Safari cannot create WEBP. Choose JPG or PNG, or use Chrome/Firefox.' },
     'weak-password': { title: 'Passwords are empty or do not match', fix: 'Type the same password in both fields.' },
     unknown: { title: 'Something went wrong', fix: 'Try again, or use an up-to-date Chrome, Firefox or Safari.' },
   },

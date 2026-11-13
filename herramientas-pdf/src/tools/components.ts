@@ -19,4 +19,9 @@ export const TOOL_COMPONENTS: Record<ComponentId, LazyExoticComponent<ComponentT
   unlock: lazy(() => import('./protect/UnlockTool')),
   redact: lazy(() => import('./redact/RedactTool')),
   metadata: lazy(() => import('./metadata/MetadataTool')),
+  batch: lazy(() => import('./flows/BatchTool')),
+  flows: lazy(() => import('./flows/FlowsTool')),
+  scan: lazy(() => import('./scan/ScanTool')),
+  compare: lazy(() => import('./compare/CompareTool')),
+  imageConvert: lazy(() => import('./image-convert/ImageConvertTool')),
 };

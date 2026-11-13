@@ -103,6 +103,18 @@ await save('large-150.pdf', await textPdf(150, 'Documento grande'));
   await save('datos.pdf', doc);
 }
 
+// 6c) Dos versiones de un contrato (para comparar)
+for (const [name, lines] of [
+  ['contrato-v1.pdf', ['CONTRATO DE ARRENDAMIENTO', 'La renta mensual será de $8,500 pagaderos el día uno de cada mes.', 'El plazo del contrato es de doce meses.', 'El inquilino no podrá tener mascotas.']],
+  ['contrato-v2.pdf', ['CONTRATO DE ARRENDAMIENTO', 'La renta mensual será de $9,000 pagaderos el día cinco de cada mes.', 'El plazo del contrato es de doce meses.', 'El inquilino podrá tener una mascota pequeña.', 'Se agrega un depósito de garantía.']],
+]) {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const page = doc.addPage([595.28, 841.89]);
+  lines.forEach((t, i) => page.drawText(t, { x: 50, y: 770 - i * 28, size: 13, font }));
+  await save(name, doc);
+}
+
 // 7) Protegido con contraseña de apertura y 8) solo con contraseña de propietario
 execFileSync('python3', [join(here, 'encrypt.py'), join(out, 'sample-3.pdf'), join(out, 'protected.pdf'), '1234', 'propietario']);
 execFileSync('python3', [join(here, 'encrypt.py'), join(out, 'sample-3.pdf'), join(out, 'owner-only.pdf'), '', 'propietario']);

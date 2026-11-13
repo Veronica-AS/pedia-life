@@ -72,3 +72,14 @@ except Exception as e:  # pillow-heif opcional
 
 # 6) Versión PNG reducida del escaneo (para PDF con imagen FlateDecode)
 Image.open(out / "scan.jpg").resize((1000, 1294)).save(out / "scan-small.png")
+
+# 7) "Foto" de un documento girado sobre una mesa oscura (para el escáner)
+doc = Image.open(out / "scan.jpg").convert("RGB").resize((850, 1100))
+rot = doc.rotate(11, expand=True, fillcolor=(0, 0, 0))
+mask = Image.new("L", doc.size, 255).rotate(11, expand=True, fillcolor=0)
+table = Image.new("RGB", (1600, 1300), (58, 44, 36))
+td = ImageDraw.Draw(table)
+for i in range(0, 1600, 7):  # vetas de madera
+    td.line([(i, 0), (i + 40, 1300)], fill=(66 + (i * 7) % 12, 50, 40), width=2)
+table.paste(rot, (330, 40), mask)
+table.save(out / "doc-photo.jpg", quality=90)
