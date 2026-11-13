@@ -3893,7 +3893,7 @@ function numIn(val,step,ph){ const i=document.createElement('input'); i.type='nu
 function selIn(opts,val){ const s=document.createElement('select'); opts.forEach(([v,t])=>{ const o=el('option',null,t); o.value=v; s.appendChild(o); }); if(val!=null) s.value=val; return s; }
 function fld(lbl,inp){ const w=el('label','cfld'); w.appendChild(el('span',null,lbl)); w.appendChild(inp); return w; }
 function ccard(g,cls,t,sub){ const b=el('div','box '+cls); if(sub) b.appendChild(el('p','csub',sub));
-  if(g.classList.contains('acclist')){ const key=g.dataset.v+':'+t.replace(/\s*\(.*$/,''), d=document.createElement('details'); d.className='acc'; d.dataset.s=t+' '+(sub||'');
+  if(g.classList.contains('acclist')){ const key=g.dataset.v+':'+t.replace(/\s*\(.*$/,''), d=document.createElement('details'); d.className='acc'; d.dataset.s=t+' '+(sub||''); d.dataset.sec=g.dataset.cursec||'';
     state.accOpen=state.accOpen||{}; if(state.accOpen[key]) d.open=true; const sm=document.createElement('summary'); sm.appendChild(el('span','accdot c-'+({adm:'blue',vig:'green',ci:'yellow',ra:'pink',dil:'blue'}[cls]||'blue'))); sm.appendChild(el('span','acct',t)); d.appendChild(sm); d.appendChild(b);
     d.addEventListener('toggle',()=>{ state.accOpen[key]=d.open; }); g.appendChild(d); return b; }
   b.insertBefore(el('h3',null,t),b.firstChild); g.appendChild(b); return b; }
@@ -3910,7 +3910,7 @@ function accList(h,v,ph){ // buscador + contenedor; cada ccard dentro se vuelve 
     g.querySelectorAll('.accsec').forEach(s=>{ let n=s.nextElementSibling, any=false; while(n&&!n.classList.contains('accsec')){ if(!n.hidden) any=true; n=n.nextElementSibling; } s.hidden=!any; }); };
   q.addEventListener('input',flt); setTimeout(flt,0); return g;
 }
-function accSec(g,t){ g.appendChild(el('div','accsec',t)); }
+function accSec(g,t){ g.dataset.cursec=t; g.appendChild(el('div','accsec',t)); }
 function chkList(b,items){ return items.map(t=>{ const l=el('label','chk'); const c=document.createElement('input'); c.type='checkbox'; l.append(c,document.createTextNode(t)); b.appendChild(l); return c; }); }
 
 /* calculadoras de laboratorio y de cabecera (no requieren peso) — Harriet Lane 2027 */
@@ -3974,6 +3974,179 @@ function labCards(g,P){
 }
 
 /* escalas nuevas — Harriet Lane 2027 */
+/* orden de las secciones de la lista: las tarjetas guardan su sección y aquí se agrupan */
+function accOrder(g,order){
+  const items=[...g.querySelectorAll(':scope > details.acc')], by={};
+  items.forEach(d=>{ (by[d.dataset.sec]=by[d.dataset.sec]||[]).push(d); });
+  g.querySelectorAll(':scope > .accsec, :scope > details.acc').forEach(n=>n.remove());
+  order.concat(Object.keys(by).filter(k=>!order.includes(k))).forEach(s=>{ if(!by[s]) return; g.appendChild(el('div','accsec',s)); by[s].forEach(d=>g.appendChild(d)); });
+}
+function srcLine(b,t,ext){ b.appendChild(el('p','src'+(ext?' out':''),(ext?'Fuente externa a los libros: ':'Fuente: ')+t)); }
+const ESC_ORDER=['Triage y evaluación inicial','Estado neurológico','Respiratorio','Fiebre e infección','Deshidratación','Abdomen','Trauma','Dolor','Neonatal','Metabólico'];
+
+function escMore(g,P){
+  const y=P.years;
+  /* ---- triage y evaluación inicial ---- */
+  accSec(g,'Triage y evaluación inicial');
+  { const b=ccard(g,'adm','Triángulo de evaluación pediátrica (TEP)','Observación rápida "desde la puerta", en segundos y sin equipo. Marque lo alterado en cada lado.');
+    b.appendChild(el('p','csub','Apariencia (tono, interacción, consuelo, mirada, habla o llanto):')); const a=chkList(b,['Apariencia anormal']);
+    b.appendChild(el('p','csub','Esfuerzo respiratorio (posición de olfateo o trípode, retracciones, ruidos respiratorios audibles):')); const r=chkList(b,['Respiración anormal']);
+    b.appendChild(el('p','csub','Circulación cutánea (palidez, piel marmórea, cianosis):')); const c=chkList(b,['Circulación anormal']);
+    liveOut(b,a.concat(r,c),()=>{ const A=a[0].checked,R=r[0].checked,C=c[0].checked, L=[];
+      if(!A&&!R&&!C) return ['Los tres lados normales: continúe con la evaluación sistemática.'];
+      const t=[A?'apariencia (estado neurológico o sistémico)':null,R?'respiración (problema respiratorio)':null,C?'circulación (problema circulatorio)':null].filter(Boolean);
+      L.push('⚠ Lados alterados: '+t.join(', ')+'. Identifique el tipo de problema fisiológico y la urgencia, e intervenga.');
+      if(A&&R&&C) L.push('⚠ Los tres lados alterados: situación potencialmente mortal; active el sistema de emergencia.');
+      return L; });
+    srcLine(b,'PALS 2023 (AHA), evaluación inicial con el TEP.'); }
+  { const b=ccard(g,'vig','Bedside PEWS (alerta de deterioro)','7 ítems con rangos por edad; total de 0 a 26. Útil para vigilar al paciente en observación u hospitalizado.');
+    const ag=selIn([['0','0–3 meses'],['1','3–12 meses'],['2','1–4 años'],['3','4–12 años'],['4','Más de 12 años']], y==null?'2': y<0.25?'0': y<1?'1': y<4?'2': y<12?'3':'4');
+    const fc=numIn(null,'1','lpm'), ta=numIn(null,'1','mmHg'), fr=numIn(null,'1','rpm'), sat=numIn(null,'1','%');
+    const ll=selIn([['0','Menos de 3 s'],['4','3 s o más']],'0'), ef=selIn([['0','Normal'],['1','Aumento leve'],['2','Aumento moderado'],['4','Aumento grave o cualquier apnea']],'0'), ox=selIn([['0','Aire ambiente'],['2','Cualquiera, <4 L/min o <50%'],['4','4 L/min o más, o 50% o más']],'0');
+    const m=el('div','mini'); m.append(fld('Edad',ag),fld('FC',fc),fld('TA sistólica',ta),fld('FR',fr),fld('SpO₂',sat),fld('Llenado capilar',ll),fld('Esfuerzo respiratorio',ef),fld('Oxígeno',ox)); b.appendChild(m);
+    // [a,b,c,d,e,f]: 0 si >a y <b; 1 si ≥b o ≤a; 2 si ≥c o ≤d; 4 si ≥e o ≤f (valores enteros)
+    const HR=[[110,150,180,90,190,80],[100,150,170,80,180,70],[90,120,150,70,170,60],[70,110,130,60,151,50],[60,100,120,49,140,40]];
+    const SB=[[60,80,100,50,130,45],[80,100,120,70,150,60],[90,110,125,75,160,65],[90,120,140,80,170,70],[100,130,150,85,190,75]];
+    const RR=[[29,61,81,19,91,15],[24,51,71,19,81,15],[19,41,61,15,71,12],[19,31,41,14,51,10],[11,17,23,10,30,9]];
+    const sc=(v,t)=> v>=t[4]||v<=t[5]?4: v>=t[2]||v<=t[3]?2: v>=t[1]||v<=t[0]?1:0;
+    liveOut(b,[ag,fc,ta,fr,sat,ll,ef,ox],()=>{ const i=+ag.value, F=nv(fc),T=nv(ta),R=nv(fr),S=nv(sat); if([F,T,R,S].some(x=>x==null)) return ['Capture FC, TA sistólica, FR y SpO₂.'];
+      const p=[sc(F,HR[i]),sc(T,SB[i]),+ll.value,sc(R,RR[i]),+ef.value,S>94?0:S>=91?1:2,+ox.value], tot=p.reduce((a,x)=>a+x,0);
+      return [(tot>=8?'⚠ ':'')+'Bedside PEWS: '+tot+'/26 (FC '+p[0]+', TA '+p[1]+', llenado '+p[2]+', FR '+p[3]+', esfuerzo '+p[4]+', SpO₂ '+p[5]+', O₂ '+p[6]+').', 'En el estudio de validación, un puntaje de 8 o más tuvo sensibilidad de 82% y especificidad de 93% para ingreso urgente a UCI. Use el umbral y la respuesta que defina su hospital.']; });
+    srcLine(b,'Parshuram CS, et al. Crit Care. 2009;13:R135 (tabla 1).',1); }
+
+  /* ---- estado neurológico ---- */
+  accSec(g,'Estado neurológico');
+  { const b=ccard(g,'adm','AVDI (AVPU)','Valoración rápida del nivel de conciencia.');
+    const s=selIn([['A','A · Alerta: despierto, activo, responde bien a cuidadores y estímulos'],['V','V · Responde solo a la voz'],['D','D · Responde solo al dolor (fricción esternal, pellizco del trapecio)'],['I','I · Inconsciente: no responde a ningún estímulo']],'A'); const f=fld('Nivel',s); f.classList.add('wide'); b.appendChild(f);
+    liveOut(b,[s],()=> s.value==='A'?['Alerta: valore según lo esperado para la edad y el desarrollo.']: ['⚠ Nivel de conciencia disminuido ('+s.value+'): evalúe vía aérea, respiración y circulación, glucosa, y busque la causa (fármacos, infección, metabólica, estructural). Complemente con Glasgow.']);
+    srcLine(b,'PALS 2023 (escala AVDI) y Harriet Lane 2027 (AVPU).'); }
+
+  /* ---- respiratorio ---- */
+  accSec(g,'Respiratorio');
+  { const b=ccard(g,'vig','Pulmonary Score (crisis asmática)','Tres ítems de 0 a 3 (total 0–9); la gravedad combina el puntaje con la SpO₂.');
+    const fr=selIn([['0','0 · <30 (menor de 6 años) / <20 (6 años o más)'],['1','1 · 31–45 / 21–35'],['2','2 · 46–60 / 36–50'],['3','3 · >60 / >50']],'0'), si=selIn([['0','0 · No'],['1','1 · Al final de la espiración'],['2','2 · Toda la espiración (con estetoscopio)'],['3','3 · Inspiración y espiración, sin estetoscopio']],'0'), ec=selIn([['0','0 · No'],['1','1 · Incremento leve'],['2','2 · Aumentado'],['3','3 · Actividad máxima']],'0'), sat=numIn(null,'1','%');
+    [fld('Frecuencia respiratoria',fr),fld('Sibilancias',si),fld('Uso del esternocleidomastoideo',ec)].forEach(f=>{ f.classList.add('wide'); b.appendChild(f); }); const m=el('div','mini'); m.append(fld('SpO₂ (%)',sat)); b.appendChild(m);
+    liveOut(b,[fr,si,ec,sat],()=>{ const s=+fr.value+(+si.value)+(+ec.value), S=nv(sat), gs=s<=3?0:s<=6?1:2, gS=S==null?-1:S>94?0:S>=91?1:2, gg=Math.max(gs,gS), N=['leve','moderada','grave'];
+      return ['Pulmonary Score: '+s+'/9 ('+N[gs]+').', S==null?'Capture la SpO₂ para la gravedad global.':(gg?'⚠ ':'')+'Gravedad global: '+N[gg]+' (si puntaje y SpO₂ no coinciden, se usa el más grave).','Si no hay sibilancias pero el esternocleidomastoideo está aumentado, las sibilancias valen 3.']; });
+    srcLine(b,'GEMA 5.3, Guía Española para el Manejo del Asma (2023): Pulmonary Score y SpO₂ (leve 0–3 y >94%; moderada 4–6 y 91–94%; grave 7–9 y <91%).',1); }
+  { const b=scaleCard(g,'ci','PRAM (crisis asmática, 2 a 17 años)',[
+      ['Retracción supraesternal',[[0,'No'],[2,'Sí']]],
+      ['Contracción de escalenos',[[0,'No'],[2,'Sí']]],
+      ['Entrada de aire (lado más afectado)',[[0,'Normal'],[1,'Disminuida en bases'],[2,'Disminución generalizada'],[3,'Ausente o mínima']]],
+      ['Sibilancias (lado más afectado)',[[0,'Ausentes'],[1,'Solo espiratorias'],[2,'Inspiratorias y espiratorias'],[3,'Audibles sin estetoscopio o tórax silente']]],
+      ['SpO₂',[[0,'95% o más'],[1,'92–94%'],[2,'Menos de 92%']]]],
+      s=>s+'/12 · '+(s<=4?'leve':s<=8?'moderada':'grave'));
+    srcLine(b,'Ducharme FM, et al. J Pediatr. 2008 (tabla reproducida en PMC3769957); rangos leve 0–4, moderada 5–8 y grave 9–12 (J Pediatr [Rio J] 2026).',1); }
+  { const b=scaleCard(g,'dil','Tal (bronquiolitis / sibilancias del lactante)',[
+      ['Frecuencia respiratoria',[[0,'Menos de 30'],[1,'30–45'],[2,'46–60'],[3,'Más de 60']]],
+      ['Sibilancias',[[0,'Ninguna'],[1,'Solo al final de la espiración'],[2,'Toda la espiración e inspiración, con estetoscopio'],[3,'Toda la espiración e inspiración, sin estetoscopio']]],
+      ['Cianosis',[[0,'Ninguna'],[1,'Peribucal solo al llorar'],[2,'Peribucal en reposo'],[3,'Generalizada en reposo']]],
+      ['Uso de músculos accesorios',[[0,'Ninguno'],[1,'Tiraje intercostal leve'],[2,'Tiraje intercostal moderado'],[3,'Tiraje moderado o intenso con cabeceo o tiraje traqueal']]]],
+      s=>s+'/12 · '+(s<=5?'leve':s<=10?'moderada':'grave')+' (rangos de la versión modificada).');
+    srcLine(b,'Escala de Tal (tabla en PMC4000565). La versión modificada (M-Tal) cambia la cianosis por la SpO₂; rangos leve ≤5, moderada 6–10 y grave ≥11 (Pediatr Rep 2026).',1); }
+
+  /* ---- fiebre e infección ---- */
+  accSec(g,'Fiebre e infección');
+  { const b=ccard(g,'ci','Lactante febril: Step-by-Step, Rochester y PECARN','Criterios de bajo riesgo de infección bacteriana. Requieren buen aspecto y ausencia de foco infeccioso en la exploración.');
+    const cs=chkList(b,['Buen aspecto, sin foco infeccioso en la exploración','Nació con 37 semanas o más','Sin antibióticos previos','Sin enfermedad crónica, hiperbilirrubinemia inexplicada ni estancia neonatal mayor que la de la madre']);
+    const ed=numIn(P.days!=null?Math.round(P.days):null,'1','días'), ua=numIn(null,'any','leuc/campo'), pct=numIn(null,'any','ng/mL'), pcr=numIn(null,'any','mg/L'), anc=numIn(null,'1','/µL'), leu=numIn(null,'1','/µL'), ban=numIn(null,'1','/µL');
+    const m=el('div','mini'); m.append(fld('Edad (días)',ed),fld('EGO: leucocitos/campo',ua),fld('Procalcitonina',pct),fld('PCR (mg/L)',pcr),fld('Neutrófilos totales',anc),fld('Leucocitos',leu),fld('Bandas totales',ban)); b.appendChild(m);
+    liveOut(b,cs.concat([ed,ua,pct,pcr,anc,leu,ban]),()=>{ const well=cs[0].checked, d=nv(ed), U=nv(ua), Pc=nv(pct), C=nv(pcr), A=nv(anc), W=nv(leu), B=nv(ban), L=[];
+      if(!well) return ['⚠ Con mal aspecto o foco infeccioso no aplica ninguna regla de bajo riesgo: estudio completo y tratamiento.'];
+      const ev=(nm,lim,ok,miss)=> miss.length? nm+': faltan '+miss.join(', ')+'.' : (ok?nm+': bajo riesgo.':'⚠ '+nm+': NO es de bajo riesgo.');
+      const ms=(o)=>Object.keys(o).filter(k=>o[k]==null);
+      L.push(ev('Step-by-Step (≤90 días; EGO <10, PCT <0.5, PCR ≤20, neutrófilos ≤10 000)',0,U<10&&Pc<0.5&&C<=20&&A<=10000,ms({EGO:U,PCT:Pc,PCR:C,neutrófilos:A})));
+      L.push(ev('Rochester (≤60 días; leucocitos 5000–15 000, bandas ≤1500, EGO ≤10)',0,cs[1].checked&&cs[2].checked&&cs[3].checked&&W>=5000&&W<=15000&&B<=1500&&U<=10,ms({leucocitos:W,bandas:B,EGO:U})));
+      L.push(ev('PECARN (≤60 días; EGO negativo, neutrófilos ≤4090, PCT ≤1.71)',0,U<10&&A<=4090&&Pc<=1.71,ms({EGO:U,neutrófilos:A,PCT:Pc})));
+      if(d!=null&&d>60) L.push('Rochester y PECARN se validaron hasta los 60 días.'); if(d!=null&&d>90) L.push('⚠ Más de 90 días: estas reglas no aplican.');
+      L.push('El algoritmo Step-by-Step completo también considera la edad (los menores de 22 días no son de bajo riesgo); revise el algoritmo y la guía de su unidad.');
+      return L; });
+    srcLine(b,'Criterios según Aronson PL, et al. J Pediatr 2021 (PMC8005434, tabla de criterios originales) y Kuppermann N, et al. JAMA Pediatr 2019 (PECARN).',1); }
+  { const b=ccard(g,'ra','Phoenix (sepsis y choque séptico, 2024)','Sepsis: infección sospechada y 2 puntos o más. Choque séptico: sepsis con 1 punto cardiovascular o más. No aplica en la hospitalización al nacer, en edad posconcepcional <37 semanas ni en mayores de 18 años.');
+    const sop=selIn([['0','Sin soporte respiratorio'],['1','Cualquier soporte (no invasivo)'],['2','Ventilación mecánica invasiva']],'0'), pa=numIn(null,'any','PaO₂'), sp=numIn(null,'any','SpO₂'), fi=numIn(null,'any','%'), va=selIn([['0','Ninguno'],['1','1 vasoactivo'],['2','2 o más']],'0'), la=numIn(null,'any','mmol/L'), tam=numIn(null,'any','mmHg'), pl=numIn(null,'any','×10³/µL'), inr=numIn(null,'any','INR'), dd=numIn(null,'any','mg/L FEU'), fb=numIn(null,'any','mg/dL'), gl=numIn(null,'1','GCS');
+    const pu=chkList(b,['Pupilas fijas bilaterales'])[0];
+    const m=el('div','mini'); m.append(fld('Soporte respiratorio',sop),fld('PaO₂ (opcional)',pa),fld('SpO₂ (si ≤97%)',sp),fld('FiO₂ (%)',fi),fld('Vasoactivos',va),fld('Lactato',la),fld('TAM',tam),fld('Plaquetas',pl),fld('INR',inr),fld('Dímero D',dd),fld('Fibrinógeno',fb),fld('Glasgow',gl)); b.insertBefore(m,pu.parentNode);
+    const MAP=[[1/12,30,17],[1,38,25],[2,43,31],[5,44,32],[12,48,36],[18,51,38]];
+    liveOut(b,[sop,pa,sp,fi,va,la,tam,pl,inr,dd,fb,gl,pu],()=>{ const L=[], S=+sop.value, F=nv(fi), PA=nv(pa), SP=nv(sp);
+      let re=0; if(F){ const fr=F/100; if(PA!=null){ const r=PA/fr; re= S===2&&r<100?3: S===2&&r<=200?2: S>=1&&r<400?1:0; } else if(SP!=null&&SP<=97){ const r=SP/fr; re= S===2&&r<148?3: S===2&&r<=220?2: S>=1&&r<292?1:0; } }
+      let cv=+va.value; const LA=nv(la); if(LA!=null) cv+= LA>=11?2: LA>=5?1:0; const T=nv(tam);
+      if(T!=null){ if(y==null) L.push('Capture la edad para puntuar la TAM.'); else { const r=MAP.find(x=>y<x[0])||MAP[5]; cv+= T<r[2]?2: T<=r[1]?1:0; } }
+      let co=0; const PL=nv(pl),IN=nv(inr),DD=nv(dd),FB=nv(fb); if(PL!=null&&PL<100) co++; if(IN!=null&&IN>1.3) co++; if(DD!=null&&DD>2) co++; if(FB!=null&&FB<100) co++; co=Math.min(co,2);
+      const G=nv(gl); const ne= pu.checked?2: (G!=null&&G<=10)?1:0;
+      const tot=re+cv+co+ne; L.unshift('Puntaje Phoenix: '+tot+' (respiratorio '+re+', cardiovascular '+cv+', coagulación '+co+', neurológico '+ne+').');
+      L.push(tot>=2? (cv>=1?'⚠ Con infección sospechada: CHOQUE SÉPTICO (sepsis con punto cardiovascular).':'⚠ Con infección sospechada: SEPSIS (2 puntos o más).') : 'Menos de 2 puntos: no cumple criterios de sepsis con los datos capturados.');
+      L.push('Respiratorio: SpO₂/FiO₂ solo si SpO₂ ≤97%. TAM por edad: 1 punto en el rango intermedio y 2 en el bajo; vasoactivos y lactato, 1 o 2 puntos. Coagulación máximo 2.');
+      return L; });
+    srcLine(b,'Schlapbach LJ, et al. Consenso internacional de sepsis pediátrica (criterios de Phoenix). JAMA. 2024;331(8):665-674.',1); }
+  { const b=ccard(g,'adm','Centor / McIsaac (faringoamigdalitis estreptocócica)','Un punto por criterio, más el ajuste por edad.');
+    const cs=chkList(b,['Sin tos','Adenopatías cervicales anteriores dolorosas e inflamadas','Temperatura mayor de 38 °C','Exudado o inflamación amigdalina']);
+    const ag=selIn([['1','3 a 14 años (+1)'],['0','15 a 44 años (0)'],['-1','45 años o más (−1)']], y!=null&&y>=15?'0':'1'); b.appendChild(fld('Edad',ag));
+    liveOut(b,cs.concat([ag]),()=>{ const s=cs.filter(c=>c.checked).length+(+ag.value);
+      return ['McIsaac: '+s+' puntos.', s<=1?'0 a 1: no se requieren pruebas ni antibiótico.': s<=3?'2 a 3: hacer prueba rápida de estreptococo o cultivo y tratar según el resultado.':'4 a 5: la fuente indica iniciar antibiótico sin más pruebas; verifique la guía de su unidad.']; });
+    srcLine(b,'McIsaac WJ, et al. CMAJ 1998;158:75-83 (criterios según Ciuffo L, Handbook of Outpatient Medicine 2017, PMC7121545).',1); }
+
+  /* ---- deshidratación ---- */
+  accSec(g,'Deshidratación');
+  { const b=scaleCard(g,'ci','Clinical Dehydration Scale (CDS, 1 a 36 meses)',[
+      ['Aspecto general',[[0,'Normal'],[1,'Sediento, inquieto o letárgico pero irritable al tocarlo'],[2,'Somnoliento, flácido, frío o sudoroso; con o sin coma']]],
+      ['Ojos',[[0,'Normales'],[1,'Ligeramente hundidos'],[2,'Muy hundidos']]],
+      ['Mucosas (lengua)',[[0,'Húmedas'],[1,'Pegajosas'],[2,'Secas']]],
+      ['Lágrimas',[[0,'Presentes'],[1,'Disminuidas'],[2,'Ausentes']]]],
+      s=>s+'/8 · '+(s===0?'sin deshidratación':s<=4?'algún grado de deshidratación':'deshidratación moderada o grave'));
+    srcLine(b,'Friedman JN, et al. J Pediatr 2004; tabla reproducida en Tam RK, et al. BMC Pediatr 2014 (PMC4081489).',1); }
+  { const b=ccard(g,'ci','Gorelick (1 mes a 5 años)','Marque los signos presentes. Los 4 marcados con * forman la escala corta.');
+    const cs=chkList(b,['* Aspecto: inquieto, letárgico o inconsciente','* Llenado capilar prolongado o mínimo','* Lágrimas ausentes','* Mucosas secas o muy secas','Ojos hundidos o muy hundidos','Respiración profunda, o profunda y rápida','Pulsos débiles, filiformes o no palpables','Piel con retracción lenta (más de 2 s)','Taquicardia','Diuresis reducida o sin orina por muchas horas']);
+    liveOut(b,cs,()=>{ const n10=cs.filter(c=>c.checked).length, n4=cs.slice(0,4).filter(c=>c.checked).length;
+      return ['Escala de 10: '+n10+' signos → '+(n10>=7?'⚠ 10% o más de deshidratación':n10>=3?'⚠ 5% o más':'menos de 5%')+'.','Escala de 4: '+n4+' signos → '+(n4>=3?'⚠ 10% o más':n4>=2?'⚠ 5% o más':'menos de 5%')+'.']; });
+    srcLine(b,'Gorelick MH, et al. Pediatrics 1997 (escalas de 10 y 4 puntos reproducidas en PMC3182880).',1); }
+  { const b=ccard(g,'ci','Deshidratación según la OMS','Elija la columna que describe cada signo.');
+    const mk=(l,o)=>{ const s=selIn([['A','A · '+o[0]],['B','B · '+o[1]],['C','C · '+o[2]]],'A'); const f=fld(l,s); f.classList.add('wide'); b.appendChild(f); return s; };
+    const ss=[mk('Estado general',['Bien, alerta','Inquieto, irritable','Letárgico o inconsciente']),mk('Ojos',['Normales','Hundidos','Hundidos']),mk('Sed',['Bebe normal, sin sed','Sediento, bebe con avidez','Bebe mal o no puede beber']),mk('Pliegue cutáneo',['Regresa rápido','Regresa lento','Regresa muy lento'])];
+    liveOut(b,ss,()=>{ const C=ss.filter(s=>s.value==='C').length, B=ss.filter(s=>s.value==='B').length;
+      return [C>=2?'⚠ 2 o más signos de la columna C: deshidratación grave (más de 10%).': (B+C)>=2?'⚠ 2 o más signos de las columnas B o C: deshidratación moderada (5–10%).':'Menos de 2 signos de B o C: sin signos de deshidratación (menos de 5%).']; });
+    srcLine(b,'Escala de la OMS según Jauregui J, et al. (tabla en PMC4008432).',1); }
+
+  /* ---- abdomen ---- */
+  accSec(g,'Abdomen');
+  const apx=(t,items,cut,src,cls)=>{ const b=ccard(g,cls,t,'Marque lo presente.'); const cs=chkList(b,items.map(x=>x[0]+' ('+x[1]+')'));
+    liveOut(b,cs,()=>{ const s=cs.reduce((a,c,i)=>a+(c.checked?items[i][1]:0),0); return [s+'/10 · '+cut(s)]; }); srcLine(b,src,1); };
+  apx('Pediatric Appendicitis Score (Samuel)',[['Migración del dolor a fosa ilíaca derecha',1],['Anorexia',1],['Náusea o vómito',1],['Dolor en fosa ilíaca derecha',2],['Dolor con la tos, la percusión o al saltar',2],['Fiebre de 38 °C o más',1],['Leucocitos 10 000/µL o más',1],['Neutrófilos más de 75%',1]],
+    s=>s<=3?'riesgo bajo':s<=7?'riesgo intermedio (observación o ultrasonido)':'⚠ riesgo alto (valoración quirúrgica)','Samuel M. J Pediatr Surg 2002; puntos y cortes según Pediatr Rep 2026 (PMC13516179).','vig');
+  apx('Alvarado (MANTRELS)',[['Migración del dolor a fosa ilíaca derecha',1],['Anorexia',1],['Náusea o vómito',1],['Dolor en fosa ilíaca derecha',2],['Rebote',1],['Temperatura de 37.3 °C o más',1],['Leucocitos 10 000/µL o más',2],['Neutrófilos más de 75%',1]],
+    s=>s<5?'riesgo bajo':s<=6?'riesgo intermedio (observación o ultrasonido)':'⚠ riesgo alto (valoración quirúrgica)','Alvarado A. Ann Emerg Med 1986; puntos y cortes según Pediatr Rep 2026 (PMC13516179).','vig');
+
+  /* ---- trauma ---- */
+  accSec(g,'Trauma');
+  { const b=ccard(g,'ci','CATCH (TCE leve, 0 a 16 años)','Para Glasgow de 13 a 15 con pérdida de conciencia, amnesia, desorientación, vómito persistente o irritabilidad (menores de 2 años), en las primeras 24 h.');
+    b.appendChild(el('p','csub','Alto riesgo (necesidad de intervención neuroquirúrgica):')); const hi=chkList(b,['No alcanza Glasgow 15 en las 2 horas siguientes','Sospecha de fractura de cráneo abierta o deprimida','Cefalea que empeora','Irritabilidad en la exploración']);
+    b.appendChild(el('p','csub','Riesgo medio (lesión cerebral en la TC):')); const md=chkList(b,['Hematoma de cuero cabelludo grande y blando','Signos de fractura de base de cráneo','Mecanismo peligroso']);
+    liveOut(b,hi.concat(md),()=> hi.some(c=>c.checked)? ['⚠ Alto riesgo: TC de cráneo.'] : md.some(c=>c.checked)? ['⚠ Riesgo medio: TC de cráneo.'] : ['Sin factores CATCH.']);
+    srcLine(b,'Osmond MH, et al. CATCH. CMAJ 2010;182:341-8.',1); }
+  { const b=ccard(g,'ci','CHALICE (TCE, todas las edades)','Se indica TC si hay cualquiera de estos criterios.');
+    const cs=chkList(b,['Pérdida de conciencia presenciada de más de 5 minutos','Amnesia (anterógrada o retrógrada) de más de 5 minutos','Somnolencia anormal (mayor de la esperada por el médico)','3 o más vómitos después del traumatismo','Sospecha de lesión no accidental','Convulsión después del traumatismo, sin epilepsia previa','Glasgow menor de 14, o menor de 15 en menores de 1 año','Sospecha de lesión penetrante o deprimida del cráneo, o fontanela tensa','Signos de fractura de base de cráneo','Focalización neurológica (motora, sensitiva, coordinación o reflejos)','Menor de 1 año: hematoma, edema o herida de más de 5 cm','Accidente vehicular a alta velocidad (peatón, ciclista u ocupante)','Caída de más de 3 m','Lesión por proyectil u objeto a alta velocidad']);
+    liveOut(b,cs,()=> cs.some(c=>c.checked)? ['⚠ Cumple criterio CHALICE: TC de cráneo.'] : ['Sin criterios CHALICE: riesgo bajo de lesión intracraneal.']);
+    srcLine(b,'Dunning J, et al. CHALICE. Arch Dis Child 2006;91:885-91 (regla de derivación).',1); }
+  { const b=ccard(g,'ci','PECARN cervical (columna)','Considere imagen de columna cervical si hay cualquiera de estos datos.');
+    const cs=chkList(b,['Alteración del estado mental','Déficit neurológico focal','Dolor de cuello','Tortícolis','Lesión importante del torso','Condición predisponente (síndrome de Down, Ehlers-Danlos, lesión o cirugía cervical previa)','Accidente vehicular de alto riesgo (expulsión, muerte de otro pasajero o volcadura)','Accidente por clavado']);
+    liveOut(b,cs,()=> cs.some(c=>c.checked)? ['⚠ Considere imagen de columna cervical.'] : ['Sin criterios PECARN cervicales.']);
+    srcLine(b,'Harriet Lane 2027, cap. 2 (criterios PECARN de columna cervical).'); }
+
+  /* ---- dolor ---- */
+  accSec(g,'Dolor');
+  { const b=ccard(g,'ra','Dolor autorreportado: caras (desde 3 años) y numérica (desde 7 años)','Desde los 3 años el niño señala la cara que describe su dolor (Wong-Baker FACES o FPS-R). Desde los 7 años puede usar la escala de 0 (sin dolor) a 10 (el peor dolor).');
+    const s=selIn([['0','0 · Sin dolor'],['2','2 · Duele un poco'],['4','4 · Duele un poco más'],['6','6 · Duele todavía más'],['8','8 · Duele mucho'],['10','10 · El peor dolor']],'0'); const f=fld('Cara o número señalado',s); f.classList.add('wide'); b.appendChild(f);
+    liveOut(b,[s],()=>['Dolor referido: '+s.value+'/10. Es una autoevaluación: no la debe asignar otra persona por el paciente; en preverbales use FLACC.']);
+    srcLine(b,'Harriet Lane 2027, cap. 6 (fig. 6.1 y escala de 0 a 10). Wong-Baker FACES® es marca registrada; use las caras oficiales impresas.'); }
+
+  /* ---- metabólico ---- */
+  accSec(g,'Metabólico');
+  { const b=ccard(g,'vig','Cetoacidosis diabética · gravedad (ISPAD)','Por pH venoso o bicarbonato. El manejo completo con peso está en Calculadoras.');
+    const ph=numIn(null,'0.01','pH'), hc=numIn(null,'any','HCO₃'); const m=el('div','mini'); m.append(fld('pH',ph),fld('HCO₃ (mEq/L)',hc)); b.appendChild(m);
+    liveOut(b,[ph,hc],()=>{ const p=nv(ph), h=nv(hc); if(p==null&&h==null) return ['Capture pH o HCO₃.'];
+      return [(p!=null&&p<7.1)||(h!=null&&h<5)?'⚠ Grave (pH <7.1 o HCO₃ <5).':(p!=null&&p<7.2)||(h!=null&&h<10)?'⚠ Moderada (pH <7.2 o HCO₃ <10).':(p!=null&&p<7.3)||(h!=null&&h<15)?'Leve (pH <7.3 o HCO₃ <15).':'No cumple criterio de acidosis de CAD (pH ≥7.3 y HCO₃ ≥15).']; });
+    srcLine(b,'ISPAD 2022 y Harriet Lane 2027, cap. 10.'); }
+}
+
 function escNew(g,P){
   accSec(g,'Neonatal');
   scaleCard(g,'dil','APGAR',[
@@ -3983,7 +4156,7 @@ function escNew(g,P){
     ['Irritabilidad refleja (aspiración nasal)',[[0,'Sin respuesta'],[1,'Mueca'],[2,'Tos o estornudo']]],
     ['Color',[[0,'Azul o pálido'],[1,'Acrocianosis'],[2,'Completamente rosado']]]],
     s=>s+'/10. Se valora al minuto y a los 5 minutos; si a los 5 minutos es menor de 7, repetir cada 5 minutos.');
-  accSec(g,'Urgencias');
+  accSec(g,'Trauma');
   { const lt2=P.years!=null&&P.years<2;
     const b=ccard(g,'ci','PECARN · traumatismo craneoencefálico leve','Decide si se necesita TC de cráneo. Elija la edad y marque lo que tenga el paciente.');
     const ag=selIn([['lt2','Menor de 2 años'],['ge2','2 años o más']],lt2?'lt2':'ge2'); const f=fld('Edad',ag); b.appendChild(f);
@@ -3999,10 +4172,12 @@ function escNew(g,P){
       hi.concat(md).forEach(c=>c.addEventListener('change',up)); up(); };
     ag.addEventListener('change',draw); draw();
     b.appendChild(el('p','csub','Alteración del estado mental: agitación, somnolencia, preguntas repetitivas o respuesta lenta. Mecanismo grave: accidente vehicular con expulsión, muerte de otro pasajero o volcadura; peatón o ciclista sin casco atropellado; caída de más de 0.9 m (menores de 2 años) o de 1.5 m (2 años o más); golpe con objeto de alto impacto.')); }
+  accSec(g,'Neonatal');
   { const b=ccard(g,'vig','BRUE · evento breve resuelto inexplicable','Menor de 1 año con episodio súbito, breve (menos de 1 minuto) y ya resuelto de cianosis o palidez, respiración ausente, disminuida o irregular, cambio marcado del tono, o alteración del estado de alerta. No es BRUE si hay otros síntomas, signos vitales anormales o una explicación.');
     b.appendChild(el('p','csub','Criterios de bajo riesgo (deben cumplirse todos):'));
     const cs=chkList(b,['Edad mayor de 60 días','Nació con 32 semanas o más y tiene edad posconcepcional de 45 semanas o más','No requirió RCP por personal médico capacitado','El evento duró menos de 1 minuto','Primer evento','Sin datos preocupantes en la historia ni en la exploración']);
     liveOut(b,cs,()=> cs.every(c=>c.checked)? ['Bajo riesgo: tranquilizar y educar a la familia, ofrecer capacitación en RCP; considerar observación breve con oximetría continua, ECG y prueba de tos ferina. Por lo general no se necesitan más estudios.'] : ['⚠ Mayor riesgo (o faltan criterios por marcar): manejo individualizado.']); }
+  accSec(g,'Fiebre e infección');
   { const b=ccard(g,'ra','Kawasaki · criterios diagnósticos','Fiebre sin otra explicación y características clínicas principales.');
     const fd=numIn(null,'1','días'); const m=el('div','mini'); m.append(fld('Días de fiebre',fd)); b.appendChild(m);
     const cs=chkList(b,['Conjuntivitis bulbar bilateral sin exudado, que respeta el limbo','Cambios en la mucosa oral: eritema, lengua en fresa o labios rojos y agrietados','Exantema polimorfo','Cambios en extremidades: edema o eritema de manos y pies (agudo); descamación periungueal (subagudo)','Adenopatía cervical de 1.5 cm o más, casi siempre unilateral']);
@@ -4353,7 +4528,7 @@ function renderEsc(){
   const h=$('#v-escalas'); h.textContent=''; h.appendChild(el('div','eyebrow','Evaluación')); h.appendChild(el('h2',null,'Escalas rápidas'));
   const P=pt(); const g=accList(h,'esc','Buscar escala…');
   const lact=P.years!=null&&P.years<2;
-  accSec(g,'Neurológica');
+  accSec(g,'Estado neurológico');
   scaleCard(g,'adm','Glasgow '+(lact?'(lactante <2 años)':'pediátrico'),[
     ['Apertura ocular',[[4,'Espontánea'],[3,'Al hablarle'],[2,'Al dolor'],[1,'Ninguna']]],
     ['Respuesta verbal',lact?[[5,'Balbucea, sonríe, sigue objetos'],[4,'Llanto irritable, consolable'],[3,'Llora al dolor'],[2,'Gime al dolor'],[1,'Ninguna']]:[[5,'Orientado'],[4,'Confuso'],[3,'Palabras inapropiadas'],[2,'Sonidos incomprensibles'],[1,'Ninguna']]],
@@ -4391,8 +4566,8 @@ function renderEsc(){
     ['Piernas',[[0,'Relajadas'],[1,'Flexión / extensión']]],
     ['Estado de alerta',[[0,'Dormido / tranquilo'],[1,'Inquieto']]]],
     s=>s<=2?'Sin dolor o dolor leve':s<=4?'Dolor leve a moderado':'Dolor intenso');
-  escNew(g,P);
-  h.appendChild(el('p','src','Glasgow, FLACC, APGAR (tabla 18.1), PECARN (tabla 2.1), BRUE (fig. 25.11) y Kawasaki (cap. 7): Harriet Lane 2027. Wood-Downes, Westley y NIPS: uso clínico habitual. Los signos vitales por edad están en su propia pestaña.'));
+  escNew(g,P); escMore(g,P); accOrder(g,ESC_ORDER);
+  h.appendChild(el('p','src','Glasgow, FLACC, APGAR (tabla 18.1), PECARN (tabla 2.1), BRUE (fig. 25.11) y Kawasaki (cap. 7): Harriet Lane 2027. Wood-Downes, Westley y NIPS: uso clínico habitual. Cada escala nueva muestra su fuente; las rosas no vienen de los libros (artículo original o guía). Los signos vitales por edad están en su propia pestaña.'));
 }
 
 /* ---------- equipo por peso (Harriet Lane) ---------- */
