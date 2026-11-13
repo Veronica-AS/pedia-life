@@ -256,6 +256,19 @@ footer i{color:var(--aqua)}
 .svsmall{font-size:12px;margin-top:2px}
 .svbig{max-width:640px;font-size:20px;margin-top:18px}.svbig th,.svbig td{padding:8px 14px;border:2px solid var(--ink);text-align:center}.svbig th{font-size:16px;font-weight:700;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--lilac)}.svbig td:first-child{font-weight:700;text-align:left;background:var(--sky)}.copybtn:disabled{opacity:.45;cursor:not-allowed}
 #v-signos{overflow-x:auto}
+.acclist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.accq{margin-top:6px;max-width:520px}
+.accsec{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 4px 2px}
+details.acc{background:#fff;border:2px solid var(--ash);border-radius:20px;overflow:hidden}
+details.acc[open]{border-color:var(--ink)}
+details.acc>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 18px;font-weight:700;font-size:16px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::after{content:"›";margin-left:auto;font-size:22px;line-height:1;transition:transform .15s;color:var(--ink)}
+details.acc[open]>summary::after{transform:rotate(90deg)}
+details.acc>summary:hover{background:var(--sky)}
+.accdot{width:12px;height:12px;border-radius:50%;flex:none;border:2px solid}
+details.acc>.box{border:0;border-top:2px solid var(--ash);border-radius:0;margin:0}
+label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 0;cursor:pointer}label.chk input{margin-top:3px;flex:none;width:18px;height:18px}
 .hidden{display:none}
 </style>
 </head>
@@ -3879,20 +3892,139 @@ function vhead(h,eb,title){ h.textContent=''; h.appendChild(el('div','eyebrow',e
 function numIn(val,step,ph){ const i=document.createElement('input'); i.type='number'; i.step=step||'any'; if(val!=null) i.value=val; if(ph) i.placeholder=ph; return i; }
 function selIn(opts,val){ const s=document.createElement('select'); opts.forEach(([v,t])=>{ const o=el('option',null,t); o.value=v; s.appendChild(o); }); if(val!=null) s.value=val; return s; }
 function fld(lbl,inp){ const w=el('label','cfld'); w.appendChild(el('span',null,lbl)); w.appendChild(inp); return w; }
-function ccard(g,cls,t,sub){ const b=el('div','box '+cls); b.appendChild(el('h3',null,t)); if(sub) b.appendChild(el('p','csub',sub)); g.appendChild(b); return b; }
+function ccard(g,cls,t,sub){ const b=el('div','box '+cls); if(sub) b.appendChild(el('p','csub',sub));
+  if(g.classList.contains('acclist')){ const key=g.dataset.v+':'+t.replace(/\s*\(.*$/,''), d=document.createElement('details'); d.className='acc'; d.dataset.s=t+' '+(sub||'');
+    state.accOpen=state.accOpen||{}; if(state.accOpen[key]) d.open=true; const sm=document.createElement('summary'); sm.appendChild(el('span','accdot c-'+({adm:'blue',vig:'green',ci:'yellow',ra:'pink',dil:'blue'}[cls]||'blue'))); sm.appendChild(el('span','acct',t)); d.appendChild(sm); d.appendChild(b);
+    d.addEventListener('toggle',()=>{ state.accOpen[key]=d.open; }); g.appendChild(d); return b; }
+  b.insertBefore(el('h3',null,t),b.firstChild); g.appendChild(b); return b; }
 function liveOut(b,ins,fn){ const o=el('div','cout'); b.appendChild(o); const up=()=>{ o.textContent=''; const r=fn(); (r||[]).forEach(x=>{ if(x==null) return; const p=el('p',x.startsWith('⚠')?'cwarn':null,x); o.appendChild(p); }); }; ins.forEach(i=>i.addEventListener('input',up)); ins.forEach(i=>i.addEventListener('change',up)); up(); }
 const nv=i=>{ const v=parseFloat(String(i.value).replace(',','.')); return isFinite(v)?v:null; };
 function actFrac(P){ if(P.days!=null&&P.days<=28) return 0.8; if(P.years!=null&&P.years<1) return 0.7; return 0.6; }
 
+/* ---------- lista desplegable de calculadoras y escalas ---------- */
+function accList(h,v,ph){ // buscador + contenedor; cada ccard dentro se vuelve un elemento que se abre al tocarlo
+  const q=document.createElement('input'); q.type='search'; q.className='search accq'; q.placeholder=ph; q.value=(state.accQ&&state.accQ[v])||''; h.appendChild(q);
+  const g=el('div','acclist'); g.dataset.v=v; h.appendChild(g);
+  const flt=()=>{ const t=norm(q.value).trim(); state.accQ=state.accQ||{}; state.accQ[v]=q.value;
+    g.querySelectorAll('details.acc').forEach(d=>{ d.hidden= !!t && !norm(d.dataset.s).includes(t); });
+    g.querySelectorAll('.accsec').forEach(s=>{ let n=s.nextElementSibling, any=false; while(n&&!n.classList.contains('accsec')){ if(!n.hidden) any=true; n=n.nextElementSibling; } s.hidden=!any; }); };
+  q.addEventListener('input',flt); setTimeout(flt,0); return g;
+}
+function accSec(g,t){ g.appendChild(el('div','accsec',t)); }
+function chkList(b,items){ return items.map(t=>{ const l=el('label','chk'); const c=document.createElement('input'); c.type='checkbox'; l.append(c,document.createTextNode(t)); b.appendChild(l); return c; }); }
+
+/* calculadoras de laboratorio y de cabecera (no requieren peso) — Harriet Lane 2027 */
+function labCards(g,P){
+  const w=state.w;
+  accSec(g,'Ácido-base y electrolitos');
+  { const b=ccard(g,'adm','Brecha aniónica (anion gap) y delta gap','BA = Na − (Cl + HCO₃). Normal 12 ± 2 mEq/L. Opcional: albúmina para corregir.');
+    const na=numIn(null,'any','Na'), cl=numIn(null,'any','Cl'), hc=numIn(null,'any','HCO₃'), al=numIn(null,'any','g/dL');
+    const m=el('div','mini'); m.append(fld('Na (mEq/L)',na),fld('Cl (mEq/L)',cl),fld('HCO₃ (mEq/L)',hc),fld('Albúmina (opcional)',al)); b.appendChild(m);
+    liveOut(b,[na,cl,hc,al],()=>{ const N=nv(na),C=nv(cl),H=nv(hc),A=nv(al); if(N==null||C==null||H==null) return ['Capture Na, Cl y HCO₃.'];
+      const ag=N-(C+H), L=['Brecha aniónica: '+fmt(Math.round(ag*10)/10)+' mEq/L (normal 12 ± 2).'];
+      let agc=ag; if(A!=null){ agc=ag+2.5*(4-A); L.push('Corregida por albúmina: '+fmt(Math.round(agc*10)/10)+' mEq/L (BA + 2.5 × [4 − albúmina]; se toma 4 g/dL como albúmina normal).'); }
+      if(agc>20) L.push('⚠ Mayor de 20: acidosis metabólica con brecha elevada primaria, sin importar el pH o el HCO₃.');
+      else if(agc>15) L.push('⚠ Mayor de 15: acidosis metabólica con brecha aniónica elevada.');
+      else if(agc<12) L.push('Menor de 12: si hay acidosis metabólica, es sin brecha elevada (hiperclorémica).');
+      if(agc>15){ const dg=(agc-12)-(24-H); L.push('Delta gap = (BA − 12) − (24 − HCO₃) = '+fmt(Math.round(dg*10)/10)+(dg>6?' → mayor de 6: acidosis con brecha + alcalosis metabólica.':dg<-6?' → menor de −6: acidosis con brecha + acidosis sin brecha.':' → sin otro trastorno metabólico agregado.')); }
+      return L; }); }
+  { const b=ccard(g,'adm','Osmolalidad sérica y brecha osmolar','Osm calculada = 2 × Na + glucosa / 18 + BUN / 2.8. Brecha osmolar normal: hasta 10 mOsm/kg.');
+    const na=numIn(null,'any','Na'), gl=numIn(null,'any','mg/dL'), bu=numIn(null,'any','mg/dL'), om=numIn(null,'any','mOsm/kg');
+    const m=el('div','mini'); m.append(fld('Na (mEq/L)',na),fld('Glucosa',gl),fld('BUN',bu),fld('Osm medida (opcional)',om)); b.appendChild(m);
+    liveOut(b,[na,gl,bu,om],()=>{ const N=nv(na),G=nv(gl),U=nv(bu),O=nv(om); if(N==null||G==null||U==null) return ['Capture Na, glucosa y BUN.'];
+      const c=2*N+G/18+U/2.8, L=['Osmolalidad calculada: '+fmt(Math.round(c))+' mOsm/kg.'];
+      if(O!=null){ const gap=O-c; L.push((gap>10?'⚠ ':'')+'Brecha osmolar: '+fmt(Math.round(gap))+' mOsm/kg'+(gap>10?' → elevada (mayor de 10): buscar osmoles no medidos (p. ej., alcoholes tóxicos).':' (normal hasta 10).')); }
+      return L; }); }
+  { const b=ccard(g,'adm','Sodio corregido por hiperglucemia','El Na baja 1.6 mEq/L por cada 100 mg/dL que sube la glucosa (se toma 100 mg/dL como glucosa basal).');
+    const na=numIn(null,'any','Na'), gl=numIn(null,'any','mg/dL'); const m=el('div','mini'); m.append(fld('Na medido (mEq/L)',na),fld('Glucosa (mg/dL)',gl)); b.appendChild(m);
+    liveOut(b,[na,gl],()=>{ const N=nv(na),G=nv(gl); if(N==null||G==null) return ['Capture Na y glucosa.']; const c=N+1.6*Math.max(0,G-100)/100;
+      return ['Na corregido: '+fmt(Math.round(c*10)/10)+' mEq/L.','La hiponatremia por hiperglucemia se corrige sola conforme se normaliza la glucosa.']; }); }
+  { const b=ccard(g,'adm','Calcio corregido por albúmina','Ca corregido = 0.8 × (albúmina normal − albúmina del paciente) + Ca sérico. Se toma 4 g/dL como albúmina normal.');
+    const ca=numIn(null,'any','mg/dL'), al=numIn(null,'any','g/dL'); const m=el('div','mini'); m.append(fld('Ca total (mg/dL)',ca),fld('Albúmina (g/dL)',al)); b.appendChild(m);
+    liveOut(b,[ca,al],()=>{ const C=nv(ca),A=nv(al); if(C==null||A==null) return ['Capture calcio y albúmina.']; return ['Ca corregido: '+fmt(Math.round((0.8*(4-A)+C)*100)/100)+' mg/dL.','La acidosis aumenta el calcio iónico; si es posible, mida calcio iónico.']; }); }
+  accSec(g,'Renal');
+  { const b=ccard(g,'vig','Fracción excretada de sodio (FENa)','FENa = (Na urinario / Na plasmático) ÷ (Cr urinaria / Cr plasmática) × 100.');
+    const un=numIn(null,'any','mEq/L'), pn=numIn(null,'any','mEq/L'), uc=numIn(null,'any','mg/dL'), pc=numIn(null,'any','mg/dL');
+    const m=el('div','mini'); m.append(fld('Na urinario',un),fld('Na plasmático',pn),fld('Cr urinaria',uc),fld('Cr plasmática',pc)); b.appendChild(m);
+    liveOut(b,[un,pn,uc,pc],()=>{ const a=nv(un),bb=nv(pn),c=nv(uc),d=nv(pc); if([a,bb,c,d].some(x=>x==null)) return ['Capture los cuatro valores.']; const f=(a/bb)/(c/d)*100;
+      return ['FENa: '+fmt(Math.round(f*100)/100)+'%.', f<1?'Menor de 1%: sugiere azoemia prerrenal.': f>2?'Mayor de 2%: sugiere necrosis tubular aguda o causa posrenal.':'Entre 1 y 2%: indeterminado.','Neonato a término con depleción de volumen: lo esperado es menor de 3%. Con diuréticos o aporte de sodio, la FENa pierde valor.']; }); }
+  { const b=ccard(g,'vig','TFG estimada (Schwartz)','TFGe (mL/min/1.73 m²) = k × talla (cm) / creatinina (mg/dL).');
+    const t=numIn(P.talla!=null?P.talla:null,'any','cm'), cr=numIn(null,'any','mg/dL'), mt=selIn([['enz','Enzimático (k = 0.413, 1–16 años)'],['0.33','Jaffe · bajo peso al nacer, primer año (k = 0.33)'],['0.45','Jaffe · término, primer año (k = 0.45)'],['0.55','Jaffe · niños y adolescentes mujeres (k = 0.55)'],['0.70','Jaffe · adolescentes hombres (k = 0.70)']],'enz');
+    const m=el('div','mini'); m.append(fld('Talla (cm)',t),fld('Creatinina (mg/dL)',cr)); b.appendChild(m); const f=fld('Método de creatinina',mt); f.classList.add('wide'); b.appendChild(f);
+    liveOut(b,[t,cr,mt],()=>{ const T=nv(t),C=nv(cr); if(T==null||C==null) return ['Capture talla y creatinina.']; const k=mt.value==='enz'?0.413:+mt.value;
+      return ['TFGe: '+fmt(Math.round(k*T/C*10)/10)+' mL/min/1.73 m² (k = '+k+').','Con creatinina enzimática, k = 0.413 de 1 a 16 años. Las fórmulas subestiman la función cerca de lo normal (≥75).']; }); }
+  accSec(g,'Respiratorio');
+  { const b=ccard(g,'dil','Gradiente alveolo-arterial e índice de oxigenación','PAO₂ = FiO₂ × (Patm − 47) − PaCO₂ / 0.8. Gradiente A-a = PAO₂ − PaO₂. IO = Paw × FiO₂ × 100 / PaO₂.');
+    const fi=numIn(21,'any','%'), po=numIn(null,'any','mmHg'), pc=numIn(null,'any','mmHg'), pa=numIn(760,'any','mmHg'), pw=numIn(null,'any','Paw');
+    const m=el('div','mini'); m.append(fld('FiO₂ (%)',fi),fld('PaO₂',po),fld('PaCO₂',pc),fld('Patm (760 a nivel del mar)',pa),fld('Paw (opcional)',pw)); b.appendChild(m);
+    liveOut(b,[fi,po,pc,pa,pw],()=>{ const F=nv(fi),O=nv(po),C=nv(pc),A=nv(pa)||760,W=nv(pw); if(F==null||O==null) return ['Capture FiO₂ y PaO₂.']; const fr=F/100, L=[];
+      if(C!=null){ const PA=fr*(A-47)-C/0.8, g2=PA-O; L.push('PAO₂: '+fmt(Math.round(PA))+' mmHg · gradiente A-a: '+fmt(Math.round(g2))+' mmHg.'); L.push('Normal: 5–20 mmHg al aire ambiente; 20–65 mmHg con O₂ al 100%. Aumenta con hipoventilación, trastornos de difusión, cortocircuito y alteración V/Q.'); }
+      else L.push('Capture la PaCO₂ para el gradiente A-a.');
+      if(W!=null){ const oi=W*fr*100/O; L.push((oi>40?'⚠ ':'')+'Índice de oxigenación: '+fmt(Math.round(oi*10)/10)+(oi>40?' → mayor de 40 en falla respiratoria hipoxémica: se considera indicación de ECMO.':'.')); }
+      return L; }); }
+  accSec(g,'Líquidos');
+  { const b=ccard(g,'ci','Deshidratación · estimación clínica y déficit','Si no se conoce la pérdida de peso, estime el grado con la clínica. 1% de deshidratación = 10 mL/kg de déficit.');
+    const ag=selIn([['lac','Lactante'],['may','Niño mayor']],P.years!=null&&P.years>=1?'may':'lac'), gr=selIn([['','Elija el grado…'],['1','Leve'],['2','Moderada'],['3','Grave']],''), pp=numIn(null,'any','kg');
+    const m=el('div','mini'); m.append(fld('Edad',ag),fld('Grado clínico',gr),fld('Peso previo (opcional)',pp)); b.appendChild(m);
+    const tb=document.createElement('table'); tb.className='sctab'; [['','Leve','Moderada','Grave'],['% lactante / niño mayor','5 / 3%','10 / 6%','15 / 9%'],['Conducta','Consolable','Irritable','Letárgico'],['Fontanela','Normal','Algo deprimida','Hundida'],['Ojos','Normales','Hundidos','Muy hundidos'],['Lágrimas','Presentes','Disminuidas','Ausentes'],['Mucosas','Normales','Secas','Muy secas, agrietadas'],['FC','Normal','Aumentada','Aumentada'],['Pulso','Normal','Débil','Disminuido'],['TA','Normal','Normal u ortostática','Hipotensión'],['Respiración','Normal','Profunda, quizá rápida','Profunda y rápida'],['Turgencia de piel','Normal','Disminuida','Signo del pliegue'],['Llenado capilar','Normal','3–5 s','Más de 5 s'],['Diuresis','Normal','Oliguria','Oliguria grave o anuria']].forEach((r,i)=>{ const tr=document.createElement('tr'); r.forEach(c=>tr.appendChild(el(i?'td':'th',null,c))); tb.appendChild(tr); }); b.appendChild(tb);
+    liveOut(b,[ag,gr,pp],()=>{ const L=[]; const P2=nv(pp);
+      if(P2!=null&&w){ const d=P2-w; L.push('Déficit por pérdida de peso: '+fmt(Math.round(d*1000))+' mL ('+fmt(Math.round(d/P2*1000)/10)+'% del peso previo).'); }
+      if(gr.value){ const pc=(ag.value==='lac'?[5,10,15]:[3,6,9])[+gr.value-1]; L.push('Deshidratación '+['leve','moderada','grave'][+gr.value-1]+': ~'+pc+'%'+(w?' → déficit ≈ '+fmt(pc*10*w)+' mL ('+pc*10+' mL/kg × '+fmt(w)+' kg).':'. Escriba el peso para calcular el déficit en mL.')); }
+      if(!L.length) L.push('Elija el grado clínico o capture el peso previo.'); return L; }); }
+}
+
+/* escalas nuevas — Harriet Lane 2027 */
+function escNew(g,P){
+  accSec(g,'Neonatal');
+  scaleCard(g,'dil','APGAR',[
+    ['Frecuencia cardiaca',[[0,'Ausente'],[1,'Menos de 100 lpm'],[2,'Más de 100 lpm']]],
+    ['Esfuerzo respiratorio',[[0,'Ausente'],[1,'Lento o irregular'],[2,'Bueno, llanto']]],
+    ['Tono muscular',[[0,'Flácido'],[1,'Cierta flexión de extremidades'],[2,'Movimiento activo']]],
+    ['Irritabilidad refleja (aspiración nasal)',[[0,'Sin respuesta'],[1,'Mueca'],[2,'Tos o estornudo']]],
+    ['Color',[[0,'Azul o pálido'],[1,'Acrocianosis'],[2,'Completamente rosado']]]],
+    s=>s+'/10. Se valora al minuto y a los 5 minutos; si a los 5 minutos es menor de 7, repetir cada 5 minutos.');
+  accSec(g,'Urgencias');
+  { const lt2=P.years!=null&&P.years<2;
+    const b=ccard(g,'ci','PECARN · traumatismo craneoencefálico leve','Decide si se necesita TC de cráneo. Elija la edad y marque lo que tenga el paciente.');
+    const ag=selIn([['lt2','Menor de 2 años'],['ge2','2 años o más']],lt2?'lt2':'ge2'); const f=fld('Edad',ag); b.appendChild(f);
+    const box=el('div'); b.appendChild(box); const out=el('div','cout'); b.appendChild(out);
+    const draw=()=>{ box.textContent=''; const y=ag.value==='lt2';
+      box.appendChild(el('p','csub','Alto riesgo:'));
+      const hi=chkList(box,y?['Glasgow ≤14','Otros signos de alteración del estado mental','Fractura de cráneo palpable']:['Glasgow ≤14','Otros signos de alteración del estado mental','Signos de fractura de base de cráneo']);
+      box.appendChild(el('p','csub','Riesgo intermedio:'));
+      const md=chkList(box,y?['Pérdida del estado de alerta ≥5 s','Hematoma occipital, parietal o temporal','No actúa normal según los padres','Mecanismo grave']:['Pérdida del estado de alerta','Vómito','Mecanismo grave','Cefalea intensa']);
+      const up=()=>{ out.textContent=''; const H=hi.some(c=>c.checked), M=md.some(c=>c.checked);
+        const t= H? '⚠ Alto riesgo: hacer TC de cráneo (riesgo de lesión cerebral clínicamente importante '+(y?'4.4':'4.3')+'%).' : M? 'Riesgo intermedio: TC u observación de 4 a 6 horas (riesgo 0.9%).' : 'Sin criterios: riesgo muy bajo ('+(y?'<0.02':'<0.05')+'%); la TC no está indicada.';
+        out.appendChild(el('p',t.startsWith('⚠')?'cwarn':null,t)); };
+      hi.concat(md).forEach(c=>c.addEventListener('change',up)); up(); };
+    ag.addEventListener('change',draw); draw();
+    b.appendChild(el('p','csub','Alteración del estado mental: agitación, somnolencia, preguntas repetitivas o respuesta lenta. Mecanismo grave: accidente vehicular con expulsión, muerte de otro pasajero o volcadura; peatón o ciclista sin casco atropellado; caída de más de 0.9 m (menores de 2 años) o de 1.5 m (2 años o más); golpe con objeto de alto impacto.')); }
+  { const b=ccard(g,'vig','BRUE · evento breve resuelto inexplicable','Menor de 1 año con episodio súbito, breve (menos de 1 minuto) y ya resuelto de cianosis o palidez, respiración ausente, disminuida o irregular, cambio marcado del tono, o alteración del estado de alerta. No es BRUE si hay otros síntomas, signos vitales anormales o una explicación.');
+    b.appendChild(el('p','csub','Criterios de bajo riesgo (deben cumplirse todos):'));
+    const cs=chkList(b,['Edad mayor de 60 días','Nació con 32 semanas o más y tiene edad posconcepcional de 45 semanas o más','No requirió RCP por personal médico capacitado','El evento duró menos de 1 minuto','Primer evento','Sin datos preocupantes en la historia ni en la exploración']);
+    liveOut(b,cs,()=> cs.every(c=>c.checked)? ['Bajo riesgo: tranquilizar y educar a la familia, ofrecer capacitación en RCP; considerar observación breve con oximetría continua, ECG y prueba de tos ferina. Por lo general no se necesitan más estudios.'] : ['⚠ Mayor riesgo (o faltan criterios por marcar): manejo individualizado.']); }
+  { const b=ccard(g,'ra','Kawasaki · criterios diagnósticos','Fiebre sin otra explicación y características clínicas principales.');
+    const fd=numIn(null,'1','días'); const m=el('div','mini'); m.append(fld('Días de fiebre',fd)); b.appendChild(m);
+    const cs=chkList(b,['Conjuntivitis bulbar bilateral sin exudado, que respeta el limbo','Cambios en la mucosa oral: eritema, lengua en fresa o labios rojos y agrietados','Exantema polimorfo','Cambios en extremidades: edema o eritema de manos y pies (agudo); descamación periungueal (subagudo)','Adenopatía cervical de 1.5 cm o más, casi siempre unilateral']);
+    liveOut(b,[fd].concat(cs),()=>{ const d=nv(fd), n=cs.filter(c=>c.checked).length, inf=P.days!=null&&P.days<183, L=[n+' de 5 características.'];
+      if(d==null) return L.concat('Capture los días de fiebre.');
+      if(d>=4&&n>=4) L.push('⚠ Cumple criterios de Kawasaki completo (fiebre ≥4 días y ≥4 de 5 características).');
+      else if(d>=4&&n>=2) L.push('⚠ Sospecha de Kawasaki incompleto: fiebre ≥4 días con 2 a 3 características → evaluar laboratorio y ecocardiograma.');
+      else if(inf&&d>=7) L.push('⚠ Lactante menor de 6 meses con fiebre ≥7 días sin explicación: evaluar Kawasaki incompleto y considerar ecocardiograma aunque no haya criterios.');
+      else L.push('No cumple criterios con los datos actuales; reevaluar si la fiebre persiste.');
+      if(inf) L.push('Edad ≤6 meses: criterio de alto riesgo de aneurisma coronario.');
+      return L; }); }
+}
+
 /* ---------- calculadoras ---------- */
 function renderCalc(){
   const h=$('#v-calc'); vhead(h,'Urgencias','Calculadoras');
-  if(!state.w){ h.appendChild(el('p','nocalc','Escriba el peso arriba para calcular.')); return; }
+  const g=accList(h,'calc','Buscar calculadora…');
+  if(!state.w){ g.appendChild(el('p','nocalc','Escriba el peso arriba para ver también las calculadoras por peso (sodio, glucosa, potasio, bicarbonato, CAD, hemoderivados y quemados).')); labCards(g,pt()); h.appendChild(el('p','src','Fuente: Harriet Lane Handbook 2027 (cap. 1, 11 y 19).')); return; }
   const w=state.w, P=pt(), act=actFrac(P), neo=(P.days!=null?P.days<=28:state.pob==='neo');
   const sc=P.bsa||(4*w+7)/(w+90);
-  const g=el('div','fgrid'); h.appendChild(g);
+  accSec(g,'Por peso: electrolitos y glucosa');
 
-  // Hipernatremia
   { const b=ccard(g,'adm','Hipernatremia · déficit de agua libre','Agua corporal total = '+fmt(act)+' × peso = '+fmt(act*w)+' L');
     const na=numIn(160), meta=numIn(140), sol=selIn([['0','Agua libre / SG5% (Na 0)'],['34','Sol. 0.2% (Na 34)'],['77','Sol. 0.45% (Na 77)'],['130','Hartmann (Na 130)'],['154','SN 0.9% (Na 154)']],'77');
     const m=el('div','mini'); m.append(fld('Na actual',na),fld('Na meta',meta),fld('Solución',sol)); b.appendChild(m);
@@ -3945,6 +4077,7 @@ function renderCalc(){
         '⚠ Solo con ventilación adecuada. No indicado de rutina en CAD ni en paro (salvo hiperK, tóxicos o acidosis grave documentada).']; }); }
 
   // CAD
+  accSec(g,'Por peso: urgencias');
   { const b=ccard(g,'vig','Cetoacidosis diabética (Harriet Lane 2027 / ISPAD 2022)','Diagnóstico: glucosa >200 mg/dL (o DM conocida) + pH <7.3 o HCO₃ <15 + cetonuria/cetonemia.');
     b.style.gridColumn='span 2';
     const ph=numIn(7.15), hco=numIn(8), deh=selIn([['5','Deshidratación 5%'],['7','7%'],['10','10%']],'7'), bolo=numIn(10), ins=selIn([['0.1','0.1 U/kg/h'],['0.05','0.05 U/kg/h (<2 años o leve)']],(P.years!=null&&P.years<2)?'0.05':'0.1');
@@ -3983,8 +4116,9 @@ function renderCalc(){
       L.push('Meta de diuresis: '+fmt(w<30?1*w:0.5*w)+' mL/h ('+(w<30?'1':'0.5')+' mL/kg/h). Ajustar el ritmo según diuresis.');
       L.push('Lund-Browder: cabeza 19% (<1 a), 17% (1–4 a), 13% (5–9 a), 11% (10–14 a); cada muslo 5.5 / 6.5 / 8 / 8.5%; cada pierna 5 / 5 / 5.5 / 6%; tronco ant. y post. 13% c/u; palma del paciente ≈1%.');
       return L; }); }
+  labCards(g,P);
 
-  h.appendChild(el('p','src','Fuentes: Harriet Lane Handbook 2027 (cap. 1 urgencias, cap. 2 quemaduras, cap. 10 CAD, cap. 11 líquidos y electrolitos, tabla de reanimación), PALS 2023 (choque, hemoderivados) e ISPAD 2022 (gravedad de CAD). Galveston y Lund-Browder: uso habitual.'));
+  h.appendChild(el('p','src','Fuentes: Harriet Lane Handbook 2027 (cap. 1 urgencias y gases, cap. 2 quemaduras, cap. 10 CAD, cap. 11 líquidos, electrolitos y ácido-base, cap. 19 FENa y TFG, tabla de reanimación), PALS 2023 (choque, hemoderivados) e ISPAD 2022 (gravedad de CAD). Galveston y Lund-Browder: uso habitual.'));
   h.appendChild(el('p','src out','⚠ Herramienta de apoyo: verificar con el protocolo de su unidad.'));
 }
 
@@ -4217,13 +4351,15 @@ function renderSV(){
 }
 function renderEsc(){
   const h=$('#v-escalas'); h.textContent=''; h.appendChild(el('div','eyebrow','Evaluación')); h.appendChild(el('h2',null,'Escalas rápidas'));
-  const P=pt(); const g=el('div','fgrid'); h.appendChild(g);
+  const P=pt(); const g=accList(h,'esc','Buscar escala…');
   const lact=P.years!=null&&P.years<2;
+  accSec(g,'Neurológica');
   scaleCard(g,'adm','Glasgow '+(lact?'(lactante <2 años)':'pediátrico'),[
     ['Apertura ocular',[[4,'Espontánea'],[3,'Al hablarle'],[2,'Al dolor'],[1,'Ninguna']]],
     ['Respuesta verbal',lact?[[5,'Balbucea, sonríe, sigue objetos'],[4,'Llanto irritable, consolable'],[3,'Llora al dolor'],[2,'Gime al dolor'],[1,'Ninguna']]:[[5,'Orientado'],[4,'Confuso'],[3,'Palabras inapropiadas'],[2,'Sonidos incomprensibles'],[1,'Ninguna']]],
     ['Respuesta motora',[[6,lact?'Movimientos espontáneos':'Obedece órdenes'],[5,lact?'Retira al tacto':'Localiza el dolor'],[4,'Retira al dolor'],[3,'Flexión anormal (decorticación)'],[2,'Extensión (descerebración)'],[1,'Ninguna']]]],
     s=>s>=13?'Leve':s>=9?'Moderado':'Grave (≤8: proteger vía aérea)', lact?'Versión para lactantes (según la edad capturada).':'Escriba una edad <2 años para la versión de lactante.');
+  accSec(g,'Respiratorio');
   scaleCard(g,'vig','Wood-Downes (bronquiolitis / asma)',[
     ['Sibilancias',[[0,'No'],[1,'Final de la espiración'],[2,'Toda la espiración'],[3,'Inspiración y espiración']]],
     ['Tiraje',[[0,'No'],[1,'Subcostal / intercostal inferior'],[2,'+ supraclavicular / aleteo nasal'],[3,'+ intercostal superior / supraesternal']]],
@@ -4239,6 +4375,7 @@ function renderEsc(){
     ['Cianosis',[[0,'No'],[4,'Con agitación'],[5,'En reposo']]],
     ['Nivel de conciencia',[[0,'Normal'],[5,'Desorientado']]]],
     s=>s<=2?'Leve':s<=7?'Moderado':s<=11?'Grave':'Falla respiratoria inminente');
+  accSec(g,'Dolor');
   scaleCard(g,'ra','FLACC (dolor, 2 meses – 7 años o no verbal)',[
     ['Cara',[[0,'Sin expresión o sonríe'],[1,'Muecas ocasionales, retraído'],[2,'Temblor de mentón, mandíbula apretada']]],
     ['Piernas',[[0,'Relajadas'],[1,'Inquietas, tensas'],[2,'Patea o encoge']]],
@@ -4254,7 +4391,8 @@ function renderEsc(){
     ['Piernas',[[0,'Relajadas'],[1,'Flexión / extensión']]],
     ['Estado de alerta',[[0,'Dormido / tranquilo'],[1,'Inquieto']]]],
     s=>s<=2?'Sin dolor o dolor leve':s<=4?'Dolor leve a moderado':'Dolor intenso');
-  h.appendChild(el('p','src','Glasgow y FLACC: Harriet Lane 2027. Wood-Downes, Westley y NIPS: uso clínico habitual. Los signos vitales por edad están en su propia pestaña.'));
+  escNew(g,P);
+  h.appendChild(el('p','src','Glasgow, FLACC, APGAR (tabla 18.1), PECARN (tabla 2.1), BRUE (fig. 25.11) y Kawasaki (cap. 7): Harriet Lane 2027. Wood-Downes, Westley y NIPS: uso clínico habitual. Los signos vitales por edad están en su propia pestaña.'));
 }
 
 /* ---------- equipo por peso (Harriet Lane) ---------- */
