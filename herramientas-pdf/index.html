@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>PDF Libre: herramientas PDF gratis, privadas y sin límites</title>
+    <meta name="description" content="Une, divide, comprime y convierte PDF e imágenes gratis directamente en tu navegador. Tus archivos nunca salen de tu dispositivo." />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="PDF Libre" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PDF Libre" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content="PDF Libre: herramientas PDF gratis, privadas y sin límites" />
+    <meta property="og:description" content="Une, divide, comprime y convierte PDF e imágenes gratis directamente en tu navegador. Tus archivos nunca salen de tu dispositivo." />
+    <!--seo-head-->
+    <script>
+      // Aplica el tema antes de pintar para evitar el destello blanco en modo oscuro
+      (function () {
+        try {
+          var p = localStorage.getItem('pdflibre.theme');
+          var d = p === 'dark' || (p !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (d) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>PDF Libre necesita JavaScript activado: todo el procesamiento ocurre en tu navegador.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
