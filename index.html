@@ -378,6 +378,18 @@ footer i{color:var(--durazno)}
 .apic{width:18px;height:18px;fill:var(--coralc);flex:none}
 .apoyof{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;padding:14px 18px;border-radius:18px;background:rgba(255,255,255,.08)}
 .apoyof span{font-weight:500}
+.igcard{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;background:#fff;color:var(--marino);border-radius:18px;padding:10px 14px;margin:0 0 14px;max-width:640px}
+.igtile{width:38px;height:38px;border-radius:12px;background:var(--lav-tin);color:var(--marino);display:grid;place-items:center;flex:none}
+.igtile .igic{width:22px;height:22px}
+.igtx{flex:1;min-width:180px;display:flex;flex-direction:column;line-height:1.3}.igtx b{font-size:14.5px;font-weight:600}.igtx span{font-size:12.5px;color:var(--muted)}
+.igfollow{display:inline-flex;align-items:center;padding:7px 16px;font-size:13.5px;border-radius:999px;background:var(--marino);color:#fff;font-weight:600;text-decoration:none;white-space:nowrap}
+.igfollow:hover{background:var(--lav-t)}
+.fbrow{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;padding:0 4px}
+.fbbtn{display:inline-flex;align-items:center;padding:8px 18px;border-radius:999px;border:2px solid #fff;color:#fff;font-weight:600;font-size:14px;text-decoration:none}
+.fbbtn:hover{background:#fff;color:var(--marino)}
+.fbbtn.alt{border-color:var(--marino);color:var(--marino)}.fbbtn.alt:hover{background:var(--marino);color:#fff}
+p.report{margin-top:18px}
+.fupd{margin:0;opacity:.85;font-size:13px}
 </style>
 </head>
 <body>
@@ -492,8 +504,13 @@ footer i{color:var(--durazno)}
 
   <footer>
     <div class="apoyof"><span>Pedia Life es gratis y sin anuncios. Si te ayuda en la guardia, puedes invitarme un café.</span><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a></div>
-    <p class="igfoot"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg>Más herramientas y contenido para residentes en Instagram: <a href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">@pedia.life</a></p>
-    Fuentes: Micromedex NeoFax® Essentials 2020 (dosificación neonatal) y Taketomo CK, Hodding JH, Kraus DM. <i>Manual de prescripción pediátrica y neonatal</i>, 18.ª ed., Lexicomp (dosificación pediátrica); The Harriet Lane Handbook, 24.ª ed. (2027), Johns Hopkins Hospital / Elsevier (formulario y capítulos clínicos); American Heart Association, PALS 2023 (Soporte Vital Avanzado Pediátrico); AAP/AHA, Textbook of Neonatal Resuscitation (NRP), 9.ª ed. Los textos son resúmenes, no transcripciones. Presentaciones: Cuadro Básico de Medicamentos del IMSS (agosto 2019).<br>Última actualización del contenido: 16 de noviembre de 2026.
+    <div class="igcard">
+      <span class="igtile"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg></span>
+      <div class="igtx"><b>Más herramientas y contenido para residentes</b><span>Dosis, escalas y tips de guardia en Instagram</span></div>
+      <a class="igfollow" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">Seguir @pedia.life</a>
+    </div>
+    <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
+    <p class="fupd">Última actualización del contenido: 16 de noviembre de 2026.</p>
   </footer>
 </div>
 
@@ -4947,21 +4964,19 @@ function nrpBlock(h,w,P){
 /* ---------- reporte de errores ---------- */
 let DBP=null, USR=null;
 (async()=>{ try{ if(window.claude&&claude.use){ DBP=await claude.use('db'); USR=await claude.use('user'); if(USR&&USR.isOwner&&(await USR.isOwner())) ownerReports(); } }catch(e){} })();
+// Formulario de Google para errores y sugerencias (FORM_URL: enlace del formulario;
+// FORM_MED: id «entry.NNN» del campo «Medicamento o sección» para prellenarlo, opcional)
+const FORM_URL='https://forms.gle/RSDNKTn9XNb8CeHKA';
+const FORM_MED='';
+function formLink(what){ if(!FORM_URL) return ''; if(!FORM_MED||!what) return FORM_URL;
+  return FORM_URL.replace(/\?.*$/,'')+'?usp=pp_url&'+FORM_MED+'='+encodeURIComponent(what); }
 function reportBlock(host,d){
-  const det=document.createElement('details'); det.className='report'; const sm=document.createElement('summary'); sm.textContent='⚑ Reportar un error en este medicamento'; det.appendChild(sm);
-  const ta=document.createElement('textarea'); ta.rows=3; ta.placeholder='¿Qué está mal? (dosis, presentación, dilución, texto…). No escriba datos del paciente.'; ta.className='ordtxt'; ta.readOnly=false; det.appendChild(ta);
-  const b=el('button','copybtn','Enviar reporte'); b.type='button'; const msg=el('p','csub',''); det.appendChild(b); det.appendChild(msg);
-  b.addEventListener('click',async()=>{ const txt=ta.value.trim(); if(!txt){ msg.textContent='Escriba qué encontró.'; return; }
-    const rep={med:d.id,nombre:d.n,texto:txt.slice(0,1500),peso:state.w||null,fecha:new Date().toISOString()};
-    b.disabled=true; msg.textContent='Enviando…';
-    let ok=false;
-    try{ if(DBP&&USR){ const id=await USR.id(); if(!id) throw 0; const ref=DBP.collection('reportes').doc(id); let prev=[]; try{ const s=await ref.get(); const dd=s&&(s.data?s.data():s); if(dd&&Array.isArray(dd.items)) prev=dd.items; }catch(e){} await ref.set({items:prev.concat(rep).slice(-50)}); ok=true; } }catch(e){ ok=false; }
-    b.disabled=false;
-    if(ok){ msg.textContent='✓ Reporte enviado a la autora. Gracias.'; ta.value=''; }
-    else { const t='Reporte de error – '+d.n+': '+txt; try{ navigator.clipboard.writeText(t).catch(()=>{}); }catch(e){} msg.textContent='No se pudo enviar desde aquí (necesita iniciar sesión y permiso de colaborador). Se copió el reporte: envíelo a la autora por mensaje.'; }
-  });
-  host.appendChild(det);
+  const u=formLink(d.n); if(!u) return;
+  const p=el('p','report');
+  const a=document.createElement('a'); a.className='fbbtn alt'; a.href=u; a.target='_blank'; a.rel='noopener'; a.textContent='⚑ Reportar un error o sugerencia';
+  p.appendChild(a); p.appendChild(el('span','csub',' No escriba datos del paciente.')); host.appendChild(p);
 }
+{ const f=document.getElementById('fbfoot'); if(f){ if(FORM_URL) f.href=formLink(''); else document.getElementById('fbrow').hidden=true; } }
 async function ownerReports(){
   try{ const snap=await DBP.collection('reportes').get(); const docs=snap&&snap.docs?snap.docs:(Array.isArray(snap)?snap:[]);
     const items=[]; docs.forEach(x=>{ const dd=x.data?x.data():x; (dd&&dd.items||[]).forEach(i=>items.push(i)); });
