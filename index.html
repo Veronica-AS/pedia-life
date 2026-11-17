@@ -3661,6 +3661,12 @@ function volLbl(v){ v=v||''; const o=/VO|oral|sonda/i.test(v), p=/IV|IM|IO|SC|\b
 /* presentaciones del Cuadro Básico sin la clave IMSS (– 010.000.0000.00 / 0000.00 …) */
 function noClave(s){ return String(s).replace(/\s*[–-]\s*(clave\s*)?\d{3}\.\d{3}\.\d{4}\.\d{2}(\s*(\/|,|y|o)\s*(\d{3}\.\d{3}\.)?\d{4}\.\d{2})*/gi,''); }
 function volVerb(v){ v=v||''; const o=/VO|oral|sonda/i.test(v), p=/IV|IM|IO|SC|\bET\b|\bIN\b|infusi/i.test(v); return o&&!p?'tomar ':p&&!o?'aplicar ':''; }
+// Dosis diaria con frecuencia en rango («c/12–24 h»): la dosis por aplicación depende del intervalo,
+// así que se da explícita para cada intervalo y nunca un solo número con un rango de frecuencias.
+function freqSplit(r){ if(r.t!=='dia'||!r.f) return null;
+  const m=r.f.match(/^\s*(?:dividid[oa]\s+)?c\/(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*h\b/i); if(!m) return null;
+  const n=r.div||1, h0=24/n, ends=[+m[1],+m[2]];
+  return {h0, alts:ends.filter(h=>Math.abs(h-h0)>1e-9), rest:r.f.slice(m[0].length)}; }
 function buildCalc(d,r,i){
   const w=state.w;
   const box=el('div','calc');
@@ -3693,7 +3699,9 @@ function buildCalc(d,r,i){
     box.appendChild(el('div','lbl','Total por día'));
     box.appendChild(el('div','big',rng(lo,hi,r.u+'/día')));
     if(r.div){ const pl=lo/r.div, ph=hi/r.div;
-      addLine(doseLbl(r.v)+' (÷'+r.div+'):',rng(pl,ph,r.u)+alt(pl,ph,r.u),true);
+      const fs=freqSplit(r);
+      addLine(doseLbl(r.v)+(fs?' c/'+fmt(fs.h0)+' h':'')+' (÷'+r.div+'):',rng(pl,ph,r.u)+alt(pl,ph,r.u),true);
+      if(fs) fs.alts.forEach(h=>addLine('Si se da c/'+fmt(h)+' h (÷'+fmt(24/h)+'):',rng(lo*h/24,hi*h/24,r.u),true));
       const vb=volBlock(d,r,pl,ph,r.u,volLbl(r.v)); if(vb) box.appendChild(vb); else if(r.c) addLine('Volumen por dosis:',rng(pl/r.c,ph/r.c,'mL')+'  ('+fmt(r.c)+' '+r.u+'/mL)');
     }
     if(r.f) addLine('Esquema:',r.f);
@@ -3845,8 +3853,10 @@ function orderText(d,r,i,k){
   case 'd':{ const iv=intvFor(r); if(iv&&iv.k&&state.ord[d.id+':'+i+':manual']!==true) k=iv.k; let dose=k*w; if(r.mx!=null&&dose>r.mx) dose=r.mx; if(r.mn!=null&&dose<r.mn) dose=r.mn;
     const ff= iv? ' c/'+iv.h+' h' : f;
     return nm+' '+fmt(dose)+' '+r.u+volTxt(dose,r.u)+' '+r.v+ff+dilTail(d,r,dose,r.u)+' ['+fmt(k)+' '+r.u+'/kg/dosis]'; }
-  case 'dia':{ let day=k*w; if(r.mxd!=null&&day>r.mxd) day=r.mxd; const n=r.div||1; const dose=day/n;
-    return nm+' '+fmt(dose)+' '+r.u+volTxt(dose,r.u)+' '+r.v+(r.f?' '+r.f:(n>1?' c/'+fmt(24/n)+' h':' c/24 h'))+dilTail(d,r,dose,r.u)+' ['+fmt(k)+' '+r.u+'/kg/día'+(n>1?' ÷ '+n:'')+' = '+fmt(day)+' '+r.u+'/día]'; }
+  case 'dia':{ let day=k*w; if(r.mxd!=null&&day>r.mxd) day=r.mxd; const n=r.div||1; const dose=day/n; const fs=freqSplit(r);
+    const fq= fs? ' c/'+fmt(fs.h0)+' h (o '+fs.alts.map(h=>fmt(day*h/24)+' '+r.u+' c/'+fmt(h)+' h').join(', ')+')'+fs.rest
+      : r.f? ' '+r.f.replace(/^\s*dividid[oa]\s+(?=c\/)/i,'') : (n>1?' c/'+fmt(24/n)+' h':' c/24 h');
+    return nm+' '+fmt(dose)+' '+r.u+volTxt(dose,r.u)+' '+r.v+fq+dilTail(d,r,dose,r.u)+' ['+fmt(k)+' '+r.u+'/kg/día'+(n>1?' ÷ '+n:'')+' = '+fmt(day)+' '+r.u+'/día]'; }
   case 'inf': case 'infh':{
     const base=r.u.split('/')[0]; const munit=(r.mez&&r.mez.unit)||'mg';
     if(!r.mez) return nm+' en infusión continua a '+fmt(k)+' '+r.u+' ('+fmt(k*w)+' '+base+(r.t==='inf'?'/min':'/h')+') '+r.v+'.';
