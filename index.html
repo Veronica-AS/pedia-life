@@ -510,7 +510,7 @@ p.report{margin-top:18px}
       <a class="igfollow" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">Seguir @pedia.life</a>
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
-    <p class="fupd">Última actualización del contenido: 16 de noviembre de 2026.</p>
+    <p class="fupd">Última actualización del contenido: 17 de noviembre de 2026.</p>
   </footer>
 </div>
 
@@ -4966,7 +4966,7 @@ let DBP=null, USR=null;
 (async()=>{ try{ if(window.claude&&claude.use){ DBP=await claude.use('db'); USR=await claude.use('user'); if(USR&&USR.isOwner&&(await USR.isOwner())) ownerReports(); } }catch(e){} })();
 // Formulario de Google para errores y sugerencias (FORM_URL: enlace del formulario;
 // FORM_MED: id «entry.NNN» del campo «Medicamento o sección» para prellenarlo, opcional)
-const FORM_URL='https://forms.gle/RSDNKTn9XNb8CeHKA';
+const FORM_URL='https://forms.gle/Kg1GRJDkBE4XJFgy5';
 const FORM_MED='';
 function formLink(what){ if(!FORM_URL) return ''; if(!FORM_MED||!what) return FORM_URL;
   return FORM_URL.replace(/\?.*$/,'')+'?usp=pp_url&'+FORM_MED+'='+encodeURIComponent(what); }
