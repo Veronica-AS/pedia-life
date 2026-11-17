@@ -368,10 +368,16 @@ footer i{color:var(--durazno)}
 .ptmini button{border-color:var(--marino);color:var(--marino)}
 .buser{text-decoration:none}.buser:hover{text-decoration:underline}
 .igic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;flex:none}.igic .dot{fill:currentColor;stroke:none}
-.igbtn{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:8px 18px;border-radius:999px;border:2px solid var(--marino);color:var(--marino);font-weight:600;font-size:14px;text-decoration:none;background:#fff}
+.bacc{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.igbtn{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;border:2px solid var(--marino);color:var(--marino);font-weight:600;font-size:14px;text-decoration:none;background:#fff}
 .igbtn:hover{background:var(--marino);color:#fff}
 .igfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;font-weight:500}.igfoot a{color:var(--durazno);font-weight:600}
 .igtip{margin:10px 0 0;font-size:13px;color:var(--muted)}.igtip a{color:var(--lav-t);font-weight:600}
+.apoyo{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;border:2px solid var(--coral-tin);background:var(--coral-tin);color:var(--coral-t);font-weight:600;font-size:14px;text-decoration:none}
+.apoyo:hover{border-color:var(--coral-t)}
+.apic{width:18px;height:18px;fill:var(--coralc);flex:none}
+.apoyof{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;padding:14px 18px;border-radius:18px;background:rgba(255,255,255,.08)}
+.apoyof span{font-weight:500}
 </style>
 </head>
 <body>
@@ -409,7 +415,7 @@ footer i{color:var(--durazno)}
       <div class="bdiv" aria-hidden="true"><span class="p t"></span><span class="l"></span><svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z" stroke-linejoin="round"/></svg><span class="l"></span><span class="p d"></span></div>
       <div class="eyebrow">Herramienta para personal de salud</div>
       <h1>Dosis pediátricas y neonatales</h1>
-      <a class="igbtn" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg><span>Sígueme en Instagram</span></a>
+      <div class="bacc"><a class="igbtn" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg><span>Sígueme en Instagram</span></a><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a></div>
     </div>
     <span class="bdeco" aria-hidden="true"><svg class="st1" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg><svg class="st2" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg><i class="d1"></i><i class="d2"></i></span>
     <div class="hicons" aria-hidden="true">
@@ -485,6 +491,7 @@ footer i{color:var(--durazno)}
   <section class="panel view hidden" id="v-signos"></section>
 
   <footer>
+    <div class="apoyof"><span>Pedia Life es gratis y sin anuncios. Si te ayuda en la guardia, puedes invitarme un café.</span><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a></div>
     <p class="igfoot"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg>Más herramientas y contenido para residentes en Instagram: <a href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">@pedia.life</a></p>
     Fuentes: Micromedex NeoFax® Essentials 2020 (dosificación neonatal) y Taketomo CK, Hodding JH, Kraus DM. <i>Manual de prescripción pediátrica y neonatal</i>, 18.ª ed., Lexicomp (dosificación pediátrica); The Harriet Lane Handbook, 24.ª ed. (2027), Johns Hopkins Hospital / Elsevier (formulario y capítulos clínicos); American Heart Association, PALS 2023 (Soporte Vital Avanzado Pediátrico); AAP/AHA, Textbook of Neonatal Resuscitation (NRP), 9.ª ed. Los textos son resúmenes, no transcripciones. Presentaciones: Cuadro Básico de Medicamentos del IMSS (agosto 2019).<br>Última actualización del contenido: 16 de noviembre de 2026.
   </footer>
