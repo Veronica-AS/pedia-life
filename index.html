@@ -4964,12 +4964,14 @@ function nrpBlock(h,w,P){
 /* ---------- reporte de errores ---------- */
 let DBP=null, USR=null;
 (async()=>{ try{ if(window.claude&&claude.use){ DBP=await claude.use('db'); USR=await claude.use('user'); if(USR&&USR.isOwner&&(await USR.isOwner())) ownerReports(); } }catch(e){} })();
-// Formulario de Google para errores y sugerencias (FORM_URL: enlace del formulario;
-// FORM_MED: id «entry.NNN» del campo «Medicamento o sección» para prellenarlo, opcional)
-const FORM_URL='https://forms.gle/Kg1GRJDkBE4XJFgy5';
-const FORM_MED='';
-function formLink(what){ if(!FORM_URL) return ''; if(!FORM_MED||!what) return FORM_URL;
-  return FORM_URL.replace(/\?.*$/,'')+'?usp=pp_url&'+FORM_MED+'='+encodeURIComponent(what); }
+// Formulario de Google para errores y sugerencias. FORM_URL: enlace del formulario (la URL larga de viewform,
+// porque el enlace corto forms.gle no conserva los parámetros). Desde un medicamento se prellena el tipo
+// («Reporte de error», FORM_TIPO) y la descripción con el nombre del medicamento (FORM_MED).
+const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSfCpP5LW3uCNyCtu7qYZkU4T95WcSojD1ElhuY-Cwg-XwVcWA/viewform';
+const FORM_MED='entry.38435315';
+const FORM_TIPO='entry.298760085';
+function formLink(what){ if(!FORM_URL) return ''; if(!what) return FORM_URL;
+  return FORM_URL+'?usp=pp_url&'+FORM_TIPO+'='+encodeURIComponent('Reporte de error')+'&'+FORM_MED+'='+encodeURIComponent('Medicamento: '+what+'. '); }
 function reportBlock(host,d){
   const u=formLink(d.n); if(!u) return;
   const p=el('p','report');
