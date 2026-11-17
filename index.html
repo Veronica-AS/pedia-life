@@ -206,6 +206,13 @@ header.top h1{font-weight:700;font-size:56px;line-height:1.05;letter-spacing:0;c
 @media (max-width:860px){header.top{padding:20px}header.top h1{font-size:32px}}
 .disclaimer{border-radius:var(--rc);border:2px solid var(--yellow);padding:14px 20px}
 .panel,.patient{border:0;border-radius:var(--rc)}
+.ptmini{display:none}
+@media (max-width:860px){.patient{position:static}
+ .ptmini.show{display:flex;position:fixed;top:0;left:0;right:0;z-index:20;background:#fff;box-shadow:var(--sh);padding:8px 16px;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:15px;color:var(--ink);border-radius:0 0 20px 20px}}
+.ptmini button{border:2px solid var(--ink);border-radius:52px;background:#fff;color:var(--ink);font-weight:600;padding:4px 14px;font-family:inherit;cursor:pointer}
+.wwarn{display:block;margin-top:6px;color:var(--ink);background:var(--blush);border:1px solid var(--pink);border-radius:12px;padding:6px 10px;font-weight:600}
+.newpt{margin:0}
+.item.tool{background:var(--cream)}
 .patient{box-shadow:var(--sh)}
 .weight input{border:2px solid var(--ink);border-radius:28px;padding:6px 16px}
 .seg{border:2px solid var(--ink);border-radius:52px}
@@ -314,7 +321,8 @@ label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 
   </header>
   <div class="disclaimer"><b>Herramienta de apoyo para personal de salud.</b> Verifique siempre la dosis, la presentación disponible en su unidad y la función renal/hepática del paciente. No sustituye el juicio clínico ni los protocolos institucionales. Los esquemas con etiqueta rosa no provienen de los libros fuente. SC por Mosteller o (4P+7)/(P+90).</div>
 
-  <section class="patient" aria-label="Datos del paciente">
+  <div class="ptmini" id="ptmini" aria-live="polite"><span id="ptminit"></span><button type="button" id="ptedit">Editar</button></div>
+  <section class="patient" id="patient" aria-label="Datos del paciente">
     <div>
       <label for="peso">Peso</label>
       <div class="weight">
@@ -334,6 +342,7 @@ label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 
       </div>
     </div>
     <div class="wnote" id="wnote">Escriba el peso para ver las dosis calculadas.</div>
+    <button type="button" class="addbtn newpt" id="newpt" title="Borra peso, edad, talla, creatinina y la hoja del paciente">Nuevo paciente</button>
     <details class="moredet" id="moredet"><summary>Sexo, edad, EG, talla y creatinina (opcional)</summary><div class="more" aria-label="Datos opcionales">
       <div class="fld"><label for="sexo">Sexo</label><select id="sexo" aria-label="Sexo"><option value="">—</option><option value="f">Femenino</option><option value="m">Masculino</option></select></div>
       <div class="fld"><label for="edad">Edad</label><input id="edad" type="number" min="0" step="any" inputmode="decimal"> <select id="edadu" aria-label="Unidad de edad"><option value="d">días</option><option value="m">meses</option><option value="a" selected>años</option></select></div>
@@ -356,7 +365,7 @@ label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 
 
   <div class="layout">
     <aside class="panel side">
-      <input id="q" class="search" type="search" placeholder="Buscar medicamento, sinónimo o uso…" autocomplete="off" aria-label="Buscar medicamento">
+      <input id="q" class="search" type="search" placeholder="Buscar medicamento, calculadora o escala…" autocomplete="off" aria-label="Buscar medicamento">
       <select id="groups" class="search grpsel" aria-label="Filtrar por grupo"><option value="">Todos los grupos</option></select>
       <div class="count" id="count"></div>
       <div class="list" id="list" role="listbox" aria-label="Medicamentos"></div>
@@ -374,7 +383,7 @@ label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 
   <section class="panel view hidden" id="v-signos"></section>
 
   <footer>
-    Fuentes: Micromedex NeoFax® Essentials 2020 (dosificación neonatal) y Taketomo CK, Hodding JH, Kraus DM. <i>Manual de prescripción pediátrica y neonatal</i>, 18.ª ed., Lexicomp (dosificación pediátrica); The Harriet Lane Handbook, 24.ª ed. (2027), Johns Hopkins Hospital / Elsevier (formulario y capítulos clínicos); American Heart Association, PALS 2023 (Soporte Vital Avanzado Pediátrico); AAP/AHA, Textbook of Neonatal Resuscitation (NRP), 9.ª ed. Los textos son resúmenes, no transcripciones. Presentaciones: Cuadro Básico de Medicamentos del IMSS (agosto 2019).<br>Última actualización del contenido: 31 de octubre de 2026.
+    Fuentes: Micromedex NeoFax® Essentials 2020 (dosificación neonatal) y Taketomo CK, Hodding JH, Kraus DM. <i>Manual de prescripción pediátrica y neonatal</i>, 18.ª ed., Lexicomp (dosificación pediátrica); The Harriet Lane Handbook, 24.ª ed. (2027), Johns Hopkins Hospital / Elsevier (formulario y capítulos clínicos); American Heart Association, PALS 2023 (Soporte Vital Avanzado Pediátrico); AAP/AHA, Textbook of Neonatal Resuscitation (NRP), 9.ª ed. Los textos son resúmenes, no transcripciones. Presentaciones: Cuadro Básico de Medicamentos del IMSS (agosto 2019).<br>Última actualización del contenido: 16 de noviembre de 2026.
   </footer>
 </div>
 
@@ -2932,6 +2941,151 @@ F('sulfacetamida','Sulfacetamida sódica oftálmica 10%','Oftalmología','sulfac
 // Reagrupar psiquiatría
 DB.forEach(d=>{ if(['fluoxetina','metilfenidato','haloperidol'].includes(d.id)) d.g='Psiquiatría y conducta'; });
 
+// Fase 5 – Harriet Lane 2027: antipsicóticos, inmunosupresores sistémicos, rifaximina, isotretinoína, anticoagulantes orales directos y valproato IV/rectal
+// ——— Psiquiatría y conducta ———
+F('risperidona','Risperidona','Psiquiatría y conducta','risperdal antipsicotico atipico autismo irritabilidad bipolar esquizofrenia',['Tabletas 1, 2, 3 mg','Solución oral 1 mg/mL'],'Irritabilidad asociada a trastorno del espectro autista, trastorno bipolar (manía o episodio mixto) y esquizofrenia en adolescentes.',
+ [{p:'ped',i:'Irritabilidad en autismo (5–17 años), <20 kg',v:'VO',t:'fijo',txt:'Inicio 0.25 mg/día (1 vez al día o dividido c/12 h) por ≥4 días; luego 0.5 mg/día. Aumentar 0.25 mg/día cada ≥14 días si no hay respuesta. Máximo 1 mg/día.',cond:{age:[5,18],wt:[0,19.99]},s:HL},
+  {p:'ped',i:'Irritabilidad en autismo (5–17 años), ≥20 kg',v:'VO',t:'fijo',txt:'Inicio 0.5 mg/día por ≥4 días; luego 1 mg/día. Aumentar 0.5 mg/día cada ≥14 días si no hay respuesta. Máximo 2.5 mg/día (20–45 kg) o 3 mg/día (>45 kg).',cond:{age:[5,18],wt:[20,999]},s:HL},
+  {p:'ped',i:'Trastorno bipolar (10–17 años)',v:'VO',t:'fijo',txt:'Inicio 0.5 mg 1 vez al día; aumentar 0.5–1 mg/día cada ≥24 h hasta la meta de 2.5 mg/día. No se ha demostrado mayor beneficio por arriba de 2.5 mg/día (estudiado hasta 6 mg/día).',cond:{age:[10,18]},s:HL},
+  {p:'ped',i:'Esquizofrenia (13–17 años)',v:'VO',t:'fijo',txt:'Inicio 0.5 mg 1 vez al día; aumentar 0.5–1 mg/día cada ≥24 h hasta la meta de 3 mg/día. Por arriba de 3 mg/día no hay más beneficio y sí más efectos adversos.',cond:{age:[13,18]},s:HL}],
+ 'Con o sin alimentos. La solución puede mezclarse con agua, jugo de naranja, leche o café (no con té ni refrescos de cola). Si hay somnolencia, dar la dosis por la noche o dividirla en 2 tomas.',
+ 'Vía oral; no requiere dilución.',
+ 'Aumento de peso y del apetito, somnolencia, sialorrea, síntomas extrapiramidales, hiperprolactinemia (ginecomastia, galactorrea, amenorrea), hiperglucemia y dislipidemia, hipotensión ortostática, prolongación del QT, síndrome neuroléptico maligno (raro).',
+ 'Hipersensibilidad a risperidona o paliperidona.',
+ 'Peso, IMC y perímetro abdominal; glucosa y perfil de lípidos al inicio, a los 3 meses y luego cada año; TA; movimientos anormales; prolactina si hay síntomas. Ajustar dosis en insuficiencia renal o hepática.',
+ {conc:[['Solución 1 mg/mL',1,'mg','oral']],renal:1});
+
+F('aripiprazol','Aripiprazol','Psiquiatría y conducta','abilify antipsicotico atipico autismo irritabilidad tourette tics bipolar esquizofrenia',['Tabletas 2, 5, 10, 15, 20, 30 mg','Tabletas bucodispersables 10, 15 mg','Solución oral 1 mg/mL'],'Irritabilidad asociada a autismo, síndrome de Tourette, esquizofrenia en adolescentes y trastorno bipolar I (manía o episodio mixto).',
+ [{p:'ped',i:'Irritabilidad en autismo (6–17 años)',v:'VO',t:'fijo',txt:'2 mg 1 vez al día por 7 días; luego 5 mg/día. Aumentar 5 mg/día cada ≥7 días según respuesta. Dosis habitual 5–15 mg/día; máximo 15 mg/día.',cond:{age:[6,18]},s:HL},
+  {p:'ped',i:'Síndrome de Tourette (6–18 años), <50 kg',v:'VO',t:'fijo',txt:'2 mg 1 vez al día por 2 días; luego meta de 5 mg/día. Si no hay control, puede aumentarse a 10 mg/día con intervalo ≥7 días.',cond:{age:[6,18],wt:[0,49.99]},s:HL},
+  {p:'ped',i:'Síndrome de Tourette (6–18 años), ≥50 kg',v:'VO',t:'fijo',txt:'2 mg 1 vez al día por 2 días; luego 5 mg/día por 5 días; meta 10 mg/día en el día 8. Aumentar 5 mg/día cada ≥7 días hasta máximo 20 mg/día.',cond:{age:[6,18],wt:[50,999]},s:HL},
+  {p:'ped',i:'Esquizofrenia (13–17 años) y trastorno bipolar I (10–17 años)',v:'VO',t:'fijo',txt:'2 mg 1 vez al día por 2 días; luego 5 mg/día por 2 días; meta 10 mg/día. Aumentar 5 mg/día según respuesta; máximo 30 mg/día.',cond:{age:[10,18]},s:HL}],
+ 'Una vez al día, con o sin alimentos. La solución oral se puede sustituir por la tableta mg por mg hasta 25 mg; para dosis de 30 mg en tableta, usar 25 mg de solución.',
+ 'Vía oral; no requiere dilución.',
+ 'Somnolencia, cefalea, náusea, vómito, acatisia y otros síntomas extrapiramidales, aumento de peso (menor que otros atípicos), hiperglucemia, dislipidemia, conductas compulsivas (juego, alimentación), síndrome neuroléptico maligno (raro).',
+ 'Hipersensibilidad al aripiprazol.',
+ 'Peso, IMC, glucosa y lípidos al inicio y en seguimiento; movimientos anormales; ideación suicida. Reducir la dosis con inhibidores potentes de CYP2D6 o CYP3A4 y aumentarla con inductores de CYP3A4.',
+ {conc:[['Solución 1 mg/mL',1,'mg','oral']]});
+
+F('quetiapina','Quetiapina','Psiquiatría y conducta','seroquel antipsicotico atipico bipolar mania esquizofrenia',['Tabletas 25, 100, 200, 300 mg (liberación inmediata)','Tabletas de liberación prolongada 50, 150, 200, 300, 400 mg'],'Manía aguda del trastorno bipolar I y esquizofrenia en adolescentes.',
+ [{p:'ped',i:'Manía bipolar (≥10 años), liberación inmediata',v:'VO',t:'fijo',txt:'Titulación dividida c/12 h: día 1, 25 mg; día 2, 50 mg; día 3, 100 mg; día 4, 150 mg; día 5, 200 mg (cada una 2 veces al día = 50, 100, 200, 300 y 400 mg/día). Después aumentar ≤100 mg/día. Dosis habitual 400–600 mg/día; máximo 600 mg/día.',cond:{age:[10,18]},s:HL},
+  {p:'ped',i:'Esquizofrenia (13–17 años), liberación inmediata',v:'VO',t:'fijo',txt:'Misma titulación de 5 días (50, 100, 200, 300 y 400 mg/día divididos c/12 h, o c/8 h). Después aumentar ≤100 mg/día. Dosis habitual 400–800 mg/día; máximo 800 mg/día.',cond:{age:[13,18]},s:HL},
+  {p:'ped',i:'Liberación prolongada (bipolar ≥10 años; esquizofrenia 13–17 años)',v:'VO',t:'fijo',txt:'1 vez al día: día 1, 50 mg; día 2, 100 mg; día 3, 200 mg; día 4, 300 mg; día 5, 400 mg. Dosis habitual 400–600 mg/día (bipolar) o 400–800 mg/día (esquizofrenia).',cond:{age:[10,18]},s:HL}],
+ 'La de liberación inmediata, con o sin alimentos. La de liberación prolongada se toma entera, sin alimentos o con una comida ligera, de preferencia por la noche.',
+ 'Vía oral; no requiere dilución.',
+ 'Somnolencia, mareo, aumento de peso y del apetito, hiperglucemia, dislipidemia, aumento de la TA en niños y adolescentes, hipotensión ortostática, taquicardia, prolongación del QT, hipotiroidismo, cataratas, síndrome neuroléptico maligno (raro).',
+ 'Hipersensibilidad a quetiapina.',
+ 'TA al inicio y periódicamente (en niños puede subir), peso, glucosa, lípidos, función tiroidea; examen ocular al inicio y cada 6 meses; ideación suicida. Ajustar con inductores o inhibidores de CYP3A4 y en insuficiencia hepática.',
+ {});
+
+// ——— Inmunosupresores sistémicos ———
+F('ciclosporina','Ciclosporina (sistémica)','Inmunosupresores','sandimmun neoral inmunosupresor trasplante inhibidor calcineurina',['Emulsión oral (microemulsión) 100 mg/mL','Cápsulas (microemulsión) 25, 100 mg','Ampolleta 50 mg/mL (IV)'],'Prevención y tratamiento del rechazo de trasplante de órgano sólido; otras indicaciones inmunológicas por especialista (síndrome nefrótico, anemia aplásica, dermatitis grave).',
+ [{p:'ped',i:'Trasplante – oral (inicio)',v:'VO',t:'dia',u:'mg',min:15,max:15,div:1,f:'1 dosis 4–12 h antes del trasplante y la misma dosis diaria después por 1–2 semanas; luego bajar 5% por semana hasta mantenimiento de 3–10 mg/kg/día dividido c/12–24 h',s:HL},
+  {p:'ped',i:'Trasplante – oral (mantenimiento)',v:'VO',t:'dia',u:'mg',min:3,max:10,div:2,f:'c/12 h (o c/24 h); ajustar por niveles',s:HL},
+  {p:'ped',i:'Trasplante – IV',v:'IV',t:'dia',u:'mg',min:5,max:6,div:1,f:'c/24 h',n:'Pasar a VO en cuanto sea posible. Los niños pueden requerir 2–3 veces la dosis por kg de los adultos. La dosis IV equivale a ~1/3 de la oral.',s:HL}],
+ 'Las presentaciones de microemulsión (modificada) y la convencional no son bioequivalentes: no intercambiar sin vigilar niveles. Tomar siempre a la misma hora y en relación igual con los alimentos. La emulsión oral se mezcla en vaso de vidrio con leche o jugo a temperatura ambiente (no jugo de toronja).',
+ 'IV: diluir a 0.5–2.5 mg/mL en SG 5% o SN 0.9% e infundir en 2–6 h. Usar envases de vidrio o sin PVC.',
+ 'Nefrotoxicidad, hipertensión, hiperpotasemia, hipomagnesemia, hipertricosis, hiperplasia gingival, temblor, cefalea, convulsiones y encefalopatía posterior reversible, hepatotoxicidad, infecciones y riesgo de linfoma. Anafilaxia con la forma IV (por el vehículo).',
+ 'Hipersensibilidad a ciclosporina o al aceite de ricino polioxietilado (IV). Hipertensión no controlada o insuficiencia renal en indicaciones no trasplantológicas.',
+ 'Nivel valle según protocolo del centro de trasplante, creatinina, K, Mg, TA, PFH, lípidos. Múltiples interacciones por CYP3A4 (azoles, macrólidos, rifampicina, anticonvulsivantes, toronja).',
+ {conc:[['Emulsión oral 100 mg/mL',100,'mg','oral'],['Ampolleta 50 mg/mL',50,'mg','iny']],dilx:{c:2.5,cu:'mg',sol:'SG 5% o SN 0.9%',t:'infundir en 2–6 h'},high:1,renal:1});
+
+F('tacrolimus','Tacrolimus (sistémico)','Inmunosupresores','prograf fk506 inmunosupresor trasplante inhibidor calcineurina',['Cápsulas 0.5, 1, 5 mg','Ampolleta 5 mg/mL (IV)','Ungüento 0.03%, 0.1%'],'Prevención del rechazo en trasplante hepático, renal y cardiaco. El ungüento se usa en dermatitis atópica moderada a grave.',
+ [{p:'ped',i:'Trasplante hepático – oral',v:'VO',t:'dia',u:'mg',min:0.15,max:0.2,div:2,f:'c/12 h; iniciar ≥6 h después del trasplante',s:HL},
+  {p:'ped',i:'Trasplante hepático – IV continua',v:'IV',t:'dia',u:'mg',min:0.03,max:0.05,div:1,f:'c/24 h',n:'Solo si no tolera la VO.',s:HL},
+  {p:'ped',i:'Trasplante renal – oral',v:'VO',t:'dia',u:'mg',min:0.2,max:0.3,div:2,f:'c/12 h',s:HL},
+  {p:'ped',i:'Trasplante renal – IV continua',v:'IV',t:'dia',u:'mg',min:0.06,max:0.06,div:1,f:'c/24 h',s:HL},
+  {p:'ped',i:'Trasplante cardiaco – oral',v:'VO',t:'dia',u:'mg',min:0.1,max:0.3,div:2,f:'c/12 h',s:HL},
+  {p:'ped',i:'Trasplante cardiaco – IV continua',v:'IV',t:'dia',u:'mg',min:0.01,max:0.03,div:1,f:'c/24 h',s:HL},
+  {p:'ped',i:'Dermatitis atópica – ungüento 0.03% (2–15 años)',v:'Tópica',t:'fijo',txt:'Capa delgada 2 veces al día en las zonas afectadas; suspender al resolver. Usar la concentración 0.1% solo a partir de los 16 años.',cond:{age:[2,16]},s:HL}],
+ 'Oral con el estómago vacío o siempre igual respecto a los alimentos; evitar toronja. Las cápsulas de liberación prolongada no son intercambiables con las de liberación inmediata.',
+ 'IV: diluir a 0.004–0.02 mg/mL en SN 0.9% o SG 5% e infundir en 24 h. Usar envases de vidrio o polietileno (no PVC).',
+ 'Nefrotoxicidad, hipertensión, hiperpotasemia, hipomagnesemia, hiperglucemia y diabetes postrasplante, temblor, cefalea, convulsiones, encefalopatía posterior reversible, prolongación del QT, infecciones, enfermedad linfoproliferativa. Anafilaxia con la forma IV (por el vehículo).',
+ 'Hipersensibilidad a tacrolimus o al aceite de ricino polioxietilado (IV).',
+ 'Nivel valle meta (HL 2027): trasplante hepático 5–20 ng/mL; renal 7–20 ng/mL los primeros 3 meses y 5–15 ng/mL después (ajustar al protocolo del centro). Creatinina, K, Mg, glucosa, TA, PFH. Múltiples interacciones por CYP3A4 (azoles, macrólidos, rifampicina, anticonvulsivantes, toronja). No usar junto con ciclosporina.',
+ {conc:[['Ampolleta 5 mg/mL',5,'mg','iny']],dilx:{c:0.02,cu:'mg',sol:'SN 0.9% o SG 5%',t:'pasar en infusión continua de 24 h',only:/IV/},high:1,renal:1});
+
+// ——— Gastroenterología ———
+F('rifaximina','Rifaximina','Gastroenterología','xifaxan antibiotico intestinal sobrecrecimiento bacteriano sibo colon irritable diarrea del viajero clostridioides',['Tabletas 200, 550 mg','Suspensión 100 mg/5 mL'],'Sobrecrecimiento bacteriano del intestino delgado, síndrome de intestino irritable con diarrea, diarrea del viajero no invasiva y C. difficile recurrente (adyuvante). Prácticamente no se absorbe.',
+ [{p:'ped',i:'Sobrecrecimiento bacteriano (3–<8 años)',v:'VO',t:'fijo',txt:'200 mg c/8 h por 7–14 días.',cond:{age:[3,8]},s:HL},
+  {p:'ped',i:'Sobrecrecimiento bacteriano (≥8 años)',v:'VO',t:'fijo',txt:'200–550 mg c/8 h por 7–14 días.',cond:{age:[8,18]},s:HL},
+  {p:'ped',i:'Intestino irritable con diarrea (≥8 años)',v:'VO',t:'dia',u:'mg',min:10,max:30,div:3,mxd:1200,f:'c/8 h',cond:{age:[8,18]},s:HL},
+  {p:'ped',i:'Diarrea del viajero (3–11 años)',v:'VO',t:'fijo',txt:'100 mg c/6 h hasta por 5 días.',cond:{age:[3,12]},s:HL},
+  {p:'ped',i:'Diarrea del viajero (≥12 años)',v:'VO',t:'fijo',txt:'200 mg c/8 h por 3 días.',cond:{age:[12,18]},s:HL},
+  {p:'ped',i:'C. difficile recurrente (<12 años)',v:'VO',t:'dia',u:'mg',min:15,max:30,div:3,mxd:1200,f:'c/8 h por 20 días (después del tratamiento estándar)',cond:{age:[0,12]},s:HL},
+  {p:'ped',i:'C. difficile recurrente (≥12 años)',v:'VO',t:'fijo',txt:'400 mg c/8 h por 20 días (después del tratamiento estándar).',cond:{age:[12,18]},s:HL}],
+ 'Con o sin alimentos.',
+ 'Vía oral; no requiere dilución.',
+ 'Náusea, distensión, flatulencia, dolor abdominal, cefalea, mareo, edema periférico; colitis por C. difficile (rara). Puede teñir la orina de rojo.',
+ 'Hipersensibilidad a rifaximina u otras rifamicinas. No usar en diarrea con fiebre o sangre (disentería) ni si se sospecha patógeno invasivo.',
+ 'Respuesta clínica; suspender si los síntomas empeoran o duran más de 24–48 h en diarrea del viajero.',
+ {});
+
+// ——— Dermatología ———
+F('isotretinoina','Isotretinoína','Dermatología','roaccutan acne noduloquistico retinoide',['Cápsulas 10, 20, 40 mg','Cápsulas micronizadas 8, 16, 24, 32 mg'],'Acné nodular o quístico grave recalcitrante que no respondió a tratamiento convencional con antibióticos sistémicos.',
+ [{p:'ped',i:'Acné grave (≥12 años) – cápsulas convencionales',v:'VO',t:'dia',u:'mg',min:0.5,max:2,div:2,f:'c/12 h con alimentos por 15–20 semanas (o hasta reducir 70% las lesiones)',cond:{age:[12,18]},n:'Se puede dar un segundo ciclo tras ≥2 meses sin tratamiento.',s:HL},
+  {p:'ped',i:'Acné grave (≥12 años) – cápsulas micronizadas',v:'VO',t:'dia',u:'mg',min:0.4,max:0.8,div:2,f:'c/12 h, con o sin alimentos, por 20 semanas',cond:{age:[12,18]},s:HL}],
+ 'Las cápsulas convencionales se toman con alimentos (mejor absorción). Tragar enteras con un vaso de agua. Las micronizadas no son intercambiables mg por mg.',
+ 'Vía oral; no requiere dilución.',
+ 'TERATÓGENO GRAVE. Queilitis, xerosis, epistaxis, conjuntivitis, fotosensibilidad, hipertrigliceridemia, elevación de transaminasas, mialgias, hipertensión intracraneal idiopática, cambios del estado de ánimo, depresión e ideación suicida, alteración de la visión nocturna.',
+ 'Embarazo o posibilidad de embarazo sin anticoncepción eficaz (dos métodos), lactancia, hipersensibilidad (incluye alergia a la soya o al parabeno de algunas presentaciones). No combinar con tetraciclinas (hipertensión intracraneal) ni con vitamina A.',
+ 'Prueba de embarazo negativa antes de iniciar y cada mes; programa de prevención del embarazo. Lípidos y PFH al inicio y a las 4–8 semanas; estado de ánimo en cada consulta. No donar sangre durante el tratamiento ni 1 mes después.',
+ {});
+
+// ——— Hematología: anticoagulantes orales directos ———
+F('rivaroxaban','Rivaroxabán','Hematología','xarelto anticoagulante oral directo inhibidor factor xa trombosis tromboembolia fontan',['Tabletas 2.5, 10, 15, 20 mg','Suspensión oral 1 mg/mL (granulado)'],'Tratamiento de tromboembolia venosa y reducción del riesgo de recurrencia, después de ≥5 días de anticoagulación parenteral; tromboprofilaxis tras procedimiento de Fontan.',
+ [{p:'ambos',i:'TEV, 2.6–2.9 kg (≥37 SDG)',v:'VO',t:'fijo',txt:'0.8 mg c/8 h (2.4 mg/día).',cond:{wt:[2.6,2.99]},s:HL},
+  {p:'ambos',i:'TEV, 3–3.9 kg',v:'VO',t:'fijo',txt:'0.9 mg c/8 h (2.7 mg/día).',cond:{wt:[3,3.99]},s:HL},
+  {p:'ambos',i:'TEV, 4–4.9 kg',v:'VO',t:'fijo',txt:'1.4 mg c/8 h (4.2 mg/día).',cond:{wt:[4,4.99]},s:HL},
+  {p:'ped',i:'TEV, 5–6.9 kg',v:'VO',t:'fijo',txt:'1.6 mg c/8 h (4.8 mg/día).',cond:{wt:[5,6.99]},s:HL},
+  {p:'ped',i:'TEV, 7–7.9 kg',v:'VO',t:'fijo',txt:'1.8 mg c/8 h (5.4 mg/día).',cond:{wt:[7,7.99]},s:HL},
+  {p:'ped',i:'TEV, 8–8.9 kg',v:'VO',t:'fijo',txt:'2.4 mg c/8 h (7.2 mg/día).',cond:{wt:[8,8.99]},s:HL},
+  {p:'ped',i:'TEV, 9–9.9 kg',v:'VO',t:'fijo',txt:'2.8 mg c/8 h (8.4 mg/día).',cond:{wt:[9,9.99]},s:HL},
+  {p:'ped',i:'TEV, 10–11.9 kg',v:'VO',t:'fijo',txt:'3 mg c/8 h (9 mg/día).',cond:{wt:[10,11.99]},s:HL},
+  {p:'ped',i:'TEV, 12–29.9 kg',v:'VO',t:'fijo',txt:'5 mg c/12 h (10 mg/día).',cond:{wt:[12,29.99]},s:HL},
+  {p:'ped',i:'TEV, 30–49.9 kg',v:'VO',t:'fijo',txt:'15 mg c/24 h.',cond:{wt:[30,49.99]},s:HL},
+  {p:'ped',i:'TEV, ≥50 kg',v:'VO',t:'fijo',txt:'20 mg c/24 h.',cond:{wt:[50,999]},s:HL},
+  {p:'ped',i:'Profilaxis post-Fontan (≥2 años), 7–19.9 kg',v:'VO',t:'fijo',txt:'7–7.9 kg: 1.1 mg c/12 h. 8–9.9 kg: 1.6 mg c/12 h. 10–11.9 kg: 1.7 mg c/12 h. 12–19.9 kg: 2 mg c/12 h.',cond:{age:[2,18],wt:[7,19.99]},s:HL},
+  {p:'ped',i:'Profilaxis post-Fontan (≥2 años), ≥20 kg',v:'VO',t:'fijo',txt:'20–29.9 kg: 2.5 mg c/12 h. 30–49.9 kg: 7.5 mg c/24 h. ≥50 kg: 10 mg c/24 h.',cond:{age:[2,18],wt:[20,999]},s:HL}],
+ 'Iniciar tras ≥5 días de anticoagulación parenteral. Dar con alimentos (en las dosis c/8 h y c/12 h, y con la toma o en los 30 min siguientes). Usar la suspensión en <30 kg; medir con la jeringa dosificadora. Si vomita o escupe la dosis en los primeros 30 min, repetirla.',
+ 'Vía oral; no requiere dilución.',
+ 'Sangrado (mucosas, menorragia, gastrointestinal), anemia, náusea, dolor abdominal, elevación de transaminasas, hematoma espinal/epidural con punción neuroaxial.',
+ 'Sangrado activo clínicamente significativo, válvulas cardiacas mecánicas, insuficiencia hepática con coagulopatía. En niños, evitar con TFGe <50 mL/min/1.73 m². No combinar con inhibidores e inductores potentes de CYP3A4 y P-gp (azoles, ritonavir, rifampicina, carbamazepina, fenitoína).',
+ 'Signos de sangrado, BH, creatinina/TFGe, PFH. No requiere monitoreo rutinario de coagulación.',
+ {conc:[['Suspensión 1 mg/mL',1,'mg','oral']],high:1,renal:1});
+
+F('dabigatran','Dabigatrán','Hematología','pradaxa anticoagulante oral directo inhibidor directo trombina trombosis tromboembolia',['Cápsulas 75, 110, 150 mg','Gránulos recubiertos (sobres) 20, 30, 40, 50, 110, 150 mg'],'Tratamiento de tromboembolia venosa después de ≥5 días de anticoagulación parenteral y prevención de recurrencia.',
+ [{p:'ped',i:'TEV, gránulos (3 meses–<2 años)',v:'VO',t:'fijo',txt:'Dosis por peso y edad según la tabla del fabricante (c/12 h). Consultar con hematología pediátrica.',cond:{age:[0.25,2]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), 7–<9 kg',v:'VO',t:'fijo',txt:'70 mg c/12 h.',cond:{age:[2,12],wt:[7,8.99]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), 9–<11 kg',v:'VO',t:'fijo',txt:'90 mg c/12 h.',cond:{age:[2,12],wt:[9,10.99]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), 11–<13 kg',v:'VO',t:'fijo',txt:'110 mg c/12 h.',cond:{age:[2,12],wt:[11,12.99]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), 13–<16 kg',v:'VO',t:'fijo',txt:'140 mg c/12 h.',cond:{age:[2,12],wt:[13,15.99]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), 16–<21 kg',v:'VO',t:'fijo',txt:'170 mg c/12 h.',cond:{age:[2,12],wt:[16,20.99]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), 21–<41 kg',v:'VO',t:'fijo',txt:'220 mg c/12 h.',cond:{age:[2,12],wt:[21,40.99]},s:HL},
+  {p:'ped',i:'TEV, gránulos (2–<12 años), ≥41 kg',v:'VO',t:'fijo',txt:'260 mg c/12 h.',cond:{age:[2,12],wt:[41,999]},s:HL},
+  {p:'ped',i:'TEV, cápsulas (8–<18 años), 11–<16 kg',v:'VO',t:'fijo',txt:'75 mg c/12 h.',cond:{age:[8,18],wt:[11,15.99]},s:HL},
+  {p:'ped',i:'TEV, cápsulas (8–<18 años), 16–<26 kg',v:'VO',t:'fijo',txt:'110 mg c/12 h.',cond:{age:[8,18],wt:[16,25.99]},s:HL},
+  {p:'ped',i:'TEV, cápsulas (8–<18 años), 26–<41 kg',v:'VO',t:'fijo',txt:'150 mg c/12 h.',cond:{age:[8,18],wt:[26,40.99]},s:HL},
+  {p:'ped',i:'TEV, cápsulas (8–<18 años), 41–<61 kg',v:'VO',t:'fijo',txt:'185 mg c/12 h.',cond:{age:[8,18],wt:[41,60.99]},s:HL},
+  {p:'ped',i:'TEV, cápsulas (8–<18 años), 61–<81 kg',v:'VO',t:'fijo',txt:'220 mg c/12 h.',cond:{age:[8,18],wt:[61,80.99]},s:HL},
+  {p:'ped',i:'TEV, cápsulas (8–<18 años), ≥81 kg',v:'VO',t:'fijo',txt:'260 mg c/12 h.',cond:{age:[8,18],wt:[81,999]},s:HL}],
+ 'Gránulos y cápsulas NO son intercambiables. Las cápsulas se tragan enteras (no abrir: aumenta mucho la absorción). Los gránulos se mezclan con alimento blando o jugo de manzana y se dan en los 30 min siguientes; no usar sonda.',
+ 'Vía oral; no requiere dilución.',
+ 'Sangrado, dispepsia, dolor abdominal, gastritis, náusea; hematoma espinal/epidural con punción neuroaxial. Antídoto: idarucizumab.',
+ 'Sangrado activo, válvulas cardiacas mecánicas, TFGe <50 mL/min/1.73 m² en niños, uso con inhibidores potentes de P-gp (ketoconazol sistémico, ciclosporina, dronedarona).',
+ 'Signos de sangrado, BH, creatinina/TFGe. No requiere monitoreo rutinario de coagulación.',
+ {high:1,renal:1});
+
+// ——— Valproato IV y rectal detallados (HL 2027) ———
+(function(){ const d=DB.find(x=>x.id==='valproato'); if(!d) return;
+ d.reg.push(
+  {p:'ped',i:'IV (solo si no es posible la VO)',v:'IV',t:'fijo',txt:'La misma dosis diaria total que por VO, dividida c/6 h. Infundir en 60 min (sin pasar de 20 mg/min). Pasar a VO en cuanto sea posible; no se ha estudiado por más de 14 días.',s:HL},
+  {p:'ped',i:'Rectal – impregnación',v:'Rectal',t:'d',u:'mg',min:20,max:20,f:'Dosis única (usar la solución IV o el jarabe diluido 1:1 con agua, en enema de retención)',s:HL},
+  {p:'ped',i:'Rectal – mantenimiento',v:'Rectal',t:'d',u:'mg',min:10,max:15,f:'c/8 h',s:HL},
+  {p:'ped',i:'Profilaxis de migraña (≥5 años)',v:'VO',t:'dia',u:'mg',min:10,max:15,div:2,mxd:1000,f:'c/12 h (máx. inicial 250 mg/dosis); aumentar hasta 40–45 mg/kg/día según respuesta',cond:{age:[5,18]},s:HL});
+ if(!/50–100/.test(d.vig||'')) d.vig=(d.vig?d.vig+' ':'')+'Nivel valle meta en epilepsia: 50–100 mg/L (HL 2027).';
+})();
+
 // Signos vitales por edad (datos numéricos de las fuentes; ver SV.src).
 // FC/FR: Bonafide 2013 (niños hospitalizados fuera de UCI). TA 1–17 años: AAP 2017 (Flynn), vía Harriet Lane 2027 tablas 19.5/19.6. TA neonatal: Dionne 2012.
 const SV={
@@ -3235,7 +3389,14 @@ Object.assign(CBM,{
  aminocaproico:['Ácido aminocaproico sol. iny. 5 g/20 mL – 010.000.4237.00'],
  alopurinol:['Alopurinol tab. 300 mg – 010.000.3451.00'],
  'sulfadiazina-plata':['Sulfadiazina de plata crema 1% – 010.000.4126.00'],
- sulfacetamida:['Sulfacetamida sódica solución oftálmica 10% – 010.000.2829.00']
+ sulfacetamida:['Sulfacetamida sódica solución oftálmica 10% – 010.000.2829.00'],
+ risperidona:['Risperidona tab. 2 mg – 040.000.3258.00','Risperidona solución oral 1 mg/mL – 040.000.3262.00'],
+ quetiapina:['Quetiapina tab. 100 mg – 010.000.5489.00'],
+ ciclosporina:['Ciclosporina emulsión oral (microemulsión) 100 mg/mL – 010.000.4294.00','Ciclosporina cáps. (microemulsión) 100 mg – 010.000.4298.00'],
+ tacrolimus:['Tacrolimus cáps. 1 mg – 010.000.5084.00','Tacrolimus cáps. 5 mg – 010.000.5082.00','Tacrolimus sol. iny. 5 mg – 010.000.5083.00'],
+ rifaximina:['Rifaximina tab. 200 mg – 010.000.5671.00'],
+ isotretinoina:['Isotretinoína cáps. 20 mg – 040.000.4129.00'],
+ rivaroxaban:['Rivaroxabán tab. 10 mg – 010.000.5544.00','Rivaroxabán tab. 15 mg – 010.000.5735.01','Rivaroxabán tab. 20 mg – 010.000.5736.01']
 });
 const CBM_CONC={
  valproato:[['Valproato de magnesio solución 186 mg/mL',186,'mg','oral'],['Valproato IV 100 mg/mL (no está en el Cuadro Básico)',100,'mg','iny']],
@@ -3360,11 +3521,29 @@ function filtered(){
   return res
     .sort((a,b)=>{ if(!terms.length) return 0; const qa=norm(a.n).startsWith(terms[0])?0:1, qb=norm(b.n).startsWith(terms[0])?0:1; return qa-qb||a.n.localeCompare(b.n,'es');});
 }
+// búsqueda global: calculadoras, escalas y otras secciones
+let TOOLIX=null;
+function toolIndex(){ if(TOOLIX) return TOOLIX; const w0=state.w; state.w=state.w||10; const R=[];
+  try{ renderCalc(); renderEsc(); [['calc','calc','yellow','Calculadora'],['escalas','clip','pink','Escala']].forEach(([v,ic,c,lab])=>{ document.querySelectorAll('#v-'+v+' details.acc').forEach(d=>{ const t=d.querySelector('.acct').textContent; R.push({v,t,ic,c,lab,s:norm(t+' '+(d.dataset.s||'')+' '+(d.dataset.sec||'')+' '+lab)}); }); }); }catch(e){}
+  state.w=w0;
+  [['reanimacion','heart','pink','Reanimación (PALS, NRP, equipo por peso)','reanimacion rcp paro pals nrp neonatal equipo tubo adrenalina desfibrilacion cardioversion'],
+   ['liquidos','drop','blue','Líquidos (Holliday-Segar, electrolitos, VIG)','liquidos holliday segar mantenimiento superficie corporal electrolitos neonatales vig glucosa'],
+   ['infus','ivbag','green','Infusiones (regla del 6)','infusiones regla del 6 goteo bomba vasoactivos'],
+   ['signos','thermo','pink','Signos vitales y crecimiento OMS (percentiles, PDF)','signos vitales percentiles frecuencia cardiaca respiratoria presion arterial tension crecimiento oms peso talla imc z score'],
+   ['hoja','sheet','green','Hoja del paciente','hoja paciente indicaciones copiar pdf']].forEach(([v,ic,c,t,k])=>R.push({v,t,ic,c,lab:'Sección',s:norm(t+' '+k)}));
+  TOOLIX=R; return R; }
+function openTool(x){ showView(x.v); if(x.lab==='Sección') { window.scrollTo({top:0}); return; }
+  const d=[...document.querySelectorAll('#v-'+x.v+' details.acc')].find(e=>e.querySelector('.acct').textContent===x.t);
+  if(d){ d.open=true; setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),50); } }
 function renderList(){
   const list=$('#list'); list.textContent='';
   const f=filtered();
+  const qt=norm(state.q).split(/\s+/).filter(Boolean);
+  const tools= qt.length && !state.grp ? toolIndex().filter(x=>qt.every(t=>x.s.includes(t))).slice(0,8) : [];
+  tools.forEach(x=>{ const b=el('button','item tool'); b.type='button'; b.appendChild(tile(x.ic,x.c)); const tx=el('div'); b.appendChild(tx);
+    tx.appendChild(el('div','nm',x.t)); tx.appendChild(el('div','gp',x.lab)); b.addEventListener('click',()=>openTool(x)); list.appendChild(b); });
   const common=!norm(state.q).trim() && !state.grp && !state.allList;
-  $('#count').textContent= common? 'Más usados · escriba para buscar entre los '+DB.length : f.length+' de '+DB.length+' medicamentos';
+  $('#count').textContent= common? 'Más usados · escriba para buscar entre los '+DB.length : f.length+' de '+DB.length+' medicamentos'+(tools.length?' · '+tools.length+' herramienta'+(tools.length>1?'s':''):'');
   f.forEach(d=>{
     const b=el('button','item'); b.type='button'; b.setAttribute('role','option');
     b.appendChild(gtile(d.g)); const tx=el('div'); b.appendChild(tx);
@@ -3414,6 +3593,7 @@ function condMatch(c){ // 1 coincide, 0 no coincide, null sin datos
 function intvFor(r){ if(!r.intv) return null; for(const e of r.intv){ const c={}; ['epm','pna','ga','wt'].forEach(k=>{if(e[k]) c[k]=e[k];}); if(condMatch(c)===1) return e; } return null; }
 function regStatus(r){ if(r.intv){ return intvFor(r)? 1 : null; } return condMatch(r.cond); }
 function patientNote(){
+  wCheck(); ptMini(); savePt();
   const p=pt(); const parts=[]; if(p.sx) parts.push(p.sx==='f'?'Femenino':'Masculino');
   if(p.days!=null) parts.push(p.days<60? Math.round(p.days)+' días de vida' : p.years<2? fmt(p.days/30.44)+' meses' : fmt(p.years)+' años');
   if(p.epm!=null) parts.push('EPM '+fmt(p.epm)+' sem');
@@ -3425,6 +3605,21 @@ function patientNote(){
   if(!parts.length){ n.textContent='Opcional: con edad (y en neonatos la EG) la página elige el intervalo y resalta el esquema que corresponde; con talla y creatinina calcula SC y TFG.'; return; }
   const b=el('b',null,parts.join(' · ')); n.appendChild(b);
 }
+// aviso si el peso no es plausible para la edad (peso para la edad OMS fuera de ±3 Z)
+function wCheck(){
+  const n=$('#wnote'), o=n.querySelector('.wwarn'); if(o) o.remove();
+  if(!state.w) return; const P=pt(); if(P.days==null) return;
+  const zs=[]; (P.sx?[P.sx]:['f','m']).forEach(s=>{ const r=whoCalc(P,s,state.w); const x=r.R&&r.R.find(q=>/^Peso para la edad/.test(q.nm)); if(x) zs.push(x.z); });
+  if(!zs.length) return; const lo=zs.every(z=>z<-3), hi=zs.every(z=>z>3); if(!lo&&!hi) return;
+  n.appendChild(el('span','wwarn','⚠ Peso '+(lo?'muy bajo':'muy alto')+' para la edad ('+(P.sx?'Z '+fmt(zs[0]):'Z '+(lo?'< −3':'> +3')+' en ambos sexos')+', OMS). Verifique el peso, la unidad y la edad.'));
+}
+// datos del paciente guardados en este navegador (sin nombre)
+const PTF=['#peso','#sexo','#edad','#edadu','#eg','#talla','#cr'];
+function savePt(){ try{ const o={}; PTF.forEach(id=>{ o[id]=$(id).value; }); localStorage.setItem('dosis_pt',JSON.stringify(o)); }catch(e){} }
+function ptMini(){ const P=pt(), a=[]; a.push(state.w? fmt(state.w)+' kg' : 'Sin peso');
+  if(P.days!=null) a.push(P.days<60? Math.round(P.days)+' d' : P.years<2? fmt(Math.floor(P.days/30.44))+' m' : fmt(Math.floor(P.years))+' a');
+  if(P.sx) a.push(P.sx==='f'?'F':'M'); if(P.talla!=null) a.push(fmt(P.talla)+' cm');
+  $('#ptminit').textContent=a.join(' · '); }
 ['#sexo','#edad','#edadu','#eg','#talla','#cr'].forEach(id=>{$(id).addEventListener('input',()=>{patientNote(); renderCurrent();}); $(id).addEventListener('change',()=>{patientNote(); renderCurrent();});});
 
 /* ---------- cálculo ---------- */
@@ -3599,7 +3794,7 @@ function buildCalc(d,r,i){
     return box;}
   case 'fijo': default:{
     box.appendChild(el('div','line',r.txt||''));
-    box.appendChild(el('div','rmeta','Dosis fija (no depende del peso).'));
+    box.appendChild(el('div','rmeta', r.cond&&r.cond.wt? 'Dosis por rango de peso.' : 'Dosis fija (no depende del peso).'));
     return box;}
   }
 }
@@ -4068,7 +4263,7 @@ function escMore(g,P){
     const m=el('div','mini'); m.append(fld('Soporte respiratorio',sop),fld('PaO₂ (opcional)',pa),fld('SpO₂ (si ≤97%)',sp),fld('FiO₂ (%)',fi),fld('Vasoactivos',va),fld('Lactato',la),fld('TAM',tam),fld('Plaquetas',pl),fld('INR',inr),fld('Dímero D',dd),fld('Fibrinógeno',fb),fld('Glasgow',gl)); b.insertBefore(m,pu.parentNode);
     const MAP=[[1/12,30,17],[1,38,25],[2,43,31],[5,44,32],[12,48,36],[18,51,38]];
     liveOut(b,[sop,pa,sp,fi,va,la,tam,pl,inr,dd,fb,gl,pu],()=>{ const L=[], S=+sop.value, F=nv(fi), PA=nv(pa), SP=nv(sp);
-      let re=0; if(F){ const fr=F/100; if(PA!=null){ const r=PA/fr; re= S===2&&r<100?3: S===2&&r<=200?2: S>=1&&r<400?1:0; } else if(SP!=null&&SP<=97){ const r=SP/fr; re= S===2&&r<148?3: S===2&&r<=220?2: S>=1&&r<292?1:0; } }
+      let re=0; if(F){ const fr=F/100; if(PA!=null){ const r=PA/fr; re= S===2&&r<100?3: S===2&&r<200?2: S>=1&&r<400?1:0; } else if(SP!=null&&SP<=97){ const r=SP/fr; re= S===2&&r<148?3: S===2&&r<220?2: S>=1&&r<292?1:0; } }
       let cv=+va.value; const LA=nv(la); if(LA!=null) cv+= LA>=11?2: LA>=5?1:0; const T=nv(tam);
       if(T!=null){ if(y==null) L.push('Capture la edad para puntuar la TAM.'); else { const r=MAP.find(x=>y<x[0])||MAP[5]; cv+= T<r[2]?2: T<=r[1]?1:0; } }
       let co=0; const PL=nv(pl),IN=nv(inr),DD=nv(dd),FB=nv(fb); if(PL!=null&&PL<100) co++; if(IN!=null&&IN>1.3) co++; if(DD!=null&&DD>2) co++; if(FB!=null&&FB<100) co++; co=Math.min(co,2);
@@ -4077,7 +4272,19 @@ function escMore(g,P){
       L.push(tot>=2? (cv>=1?'⚠ Con infección sospechada: CHOQUE SÉPTICO (sepsis con punto cardiovascular).':'⚠ Con infección sospechada: SEPSIS (2 puntos o más).') : 'Menos de 2 puntos: no cumple criterios de sepsis con los datos capturados.');
       L.push('Respiratorio: SpO₂/FiO₂ solo si SpO₂ ≤97%. TAM por edad: 1 punto en el rango intermedio y 2 en el bajo; vasoactivos y lactato, 1 o 2 puntos. Coagulación máximo 2.');
       return L; });
-    srcLine(b,'Schlapbach LJ, et al. Consenso internacional de sepsis pediátrica (criterios de Phoenix). JAMA. 2024;331(8):665-674.',1); }
+    srcLine(b,'Schlapbach LJ, et al. JAMA 2024;331:665-74 (criterios de Phoenix; tabla de puntos verificada en PMC11223841 y PMC12750560). Adoptados por la Surviving Sepsis Campaign pediátrica 2026 (Weiss SL, et al. Intensive Care Med 2026;52:937-83).',1); }
+  { const w=state.w, b=ccard(g,'ra','Sepsis y choque séptico · manejo inicial (SSC 2026)','Guía internacional Surviving Sepsis Campaign para niños, 2026. Resumen de las recomendaciones principales.');
+    const L=['Mida lactato en la evaluación inicial de toda sospecha de sepsis o choque séptico (recomendación fuerte). Un lactato ≥5 mmol/L ya es disfunción cardiovascular en Phoenix, pero elevaciones menores pueden justificar tratar como choque.',
+      'Antimicrobianos: en choque séptico, lo antes posible e idealmente en la primera hora (fuerte). En sepsis probable sin choque, evaluación rápida y, si se confirma la sospecha, antes de 3 horas (condicional). Si la evaluación se va a retrasar, considere darlos cuanto antes.',
+      'Líquidos con acceso a terapia intensiva: hasta 40–60 mL/kg en bolos de 10–20 mL/kg durante la primera hora'+(w?' (bolo de '+fmt(10*w)+'–'+fmt(20*w)+' mL; hasta '+fmt(40*w)+'–'+fmt(60*w)+' mL)':'')+', revalorando después de cada bolo (condicional).',
+      'Sin acceso a terapia intensiva: sin hipotensión, no dar bolos e iniciar líquidos de mantenimiento (fuerte, certeza alta); con hipotensión, hasta 40 mL/kg en bolos de 10–20 mL/kg en la primera hora'+(w?' (hasta '+fmt(40*w)+' mL)':'')+'.',
+      'Prefiera cristaloides balanceados (Hartmann) sobre solución salina 0.9% (condicional). Guíe la reanimación con TA, FC, llenado capilar, estado de alerta, diuresis, pulsos y temperatura de extremidades; ultrasonido cardiaco y pulmonar si hay entrenamiento.',
+      'Vasoactivos: no hay preferencia demostrada entre adrenalina y norepinefrina como primera línea; pueden iniciarse por vena periférica sin esperar el acceso central (condicional). Con dosis altas de catecolaminas, agregar vasopresina o seguir titulando.',
+      'Con acceso venoso central, meta de ScvO₂ ≥70%. Tras la reanimación, meta de SpO₂ 88–92% en lugar de más de 94% (condicional).',
+      'Evite etomidato para intubar. No use hidrocortisona si la estabilidad se recupera con líquidos y vasoactivos; en choque que persiste a pesar de ellos no hay evidencia suficiente para recomendar.',
+      'No use de rutina inmunoglobulina IV, vitamina C, tiamina ni levotiroxina. Retire el catéter que sea la fuente de la infección. Considere ECMO venovenosa en hipoxemia refractaria y venoarterial solo como rescate.'];
+    L.forEach(t=>b.appendChild(el('p','csub',t)));
+    srcLine(b,'Weiss SL, et al. Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children 2026. Intensive Care Med 2026;52(5):937-983.',1); }
   { const b=ccard(g,'adm','Centor / McIsaac (faringoamigdalitis estreptocócica)','Un punto por criterio, más el ajuste por edad.');
     const cs=chkList(b,['Sin tos','Adenopatías cervicales anteriores dolorosas e inflamadas','Temperatura mayor de 38 °C','Exudado o inflamación amigdalina']);
     const ag=selIn([['1','3 a 14 años (+1)'],['0','15 a 44 años (0)'],['-1','45 años o más (−1)']], y!=null&&y>=15?'0':'1'); b.appendChild(fld('Edad',ag));
@@ -4462,11 +4669,11 @@ function svTableEl(b){ const t=document.createElement('table'); t.className='sct
 const PDFW={r:[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584],
   b:[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584]};
 const PDFMAP={'–':150,'—':151,'•':149,'…':133,'‘':145,'’':146,'“':147,'”':148,'€':128};
-function pdfTxt(s){ return String(s).replace(/≥/g,'>=').replace(/≤/g,'<=').replace(/≈/g,'~').replace(/⚠\s*/g,'').replace(/−/g,'-'); }
+function pdfTxt(s){ return String(s).replace(/≥/g,'>=').replace(/≤/g,'<=').replace(/≈/g,'~').replace(/⚠\s*/g,'').replace(/−/g,'-').replace(/→/g,'->').replace(/₂/g,'2').replace(/₃/g,'3').replace(/₄/g,'4').replace(/[‐‑]/g,'-'); }
 function pdfW(s,size,bold){ const W=bold?PDFW.b:PDFW.r; let w=0; for(const ch of pdfTxt(s)){ const c=ch.normalize('NFD').charCodeAt(0); w+= c>=32&&c<=126? W[c-32] : 556; } return w*size/1000; }
 function pdfEsc(s){ let o=''; for(const ch of pdfTxt(s)){ let c=ch.charCodeAt(0); if(PDFMAP[ch]) c=PDFMAP[ch]; else if(c>255) c=63;
   o+= c===40||c===41||c===92? '\\'+ch : c<32||c>126? '\\'+c.toString(8).padStart(3,'0') : ch; } return o; }
-function svPDF(D){
+function svPDF(D,title){
   const PW=612, PH=792, M=26, CW=PW-2*M, pages=[]; let ops=[], y=M;
   const page=()=>{ if(ops.length) pages.push(ops.join('\n')); ops=[]; y=M; };
   const need=h=>{ if(y+h>PH-M) page(); };
@@ -4475,7 +4682,7 @@ function svPDF(D){
   const wrap=(s,size,bold,w)=>{ const out=[]; let ln=''; String(s).split(/\s+/).forEach(wd=>{ const t=ln?ln+' '+wd:wd; if(pdfW(t,size,bold)>w&&ln){ out.push(ln); ln=wd; } else ln=t; }); if(ln) out.push(ln); return out; };
   const para=(s,size,bold,x,w,lead)=>{ wrap(s,size,bold,w).forEach(l=>{ need(lead); text(x,y+size,l,size,bold); y+=lead; }); };
   text(M,y+8,'PEDIA LIFE · DOSIS PEDIÁTRICAS Y NEONATALES',7,false); y+=12;
-  text(M,y+19,'Signos vitales del paciente',19,true); y+=26;
+  text(M,y+19,title||'Signos vitales del paciente',19,true); y+=26;
   D.forEach(b=>{
     if(b.k==='blank'){ const w=CW/b.l.length; b.l.forEach((l,i)=>{ const x=M+i*w; text(x,y+14,l+':',9,true); ops.push('0.4 G 0.6 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S'); }); y+=22; }
     else if(b.k==='pt'){ para(b.t,9,true,M,CW,12); y+=6; }
@@ -4487,6 +4694,7 @@ function svPDF(D){
           text(j||b.small? x+(w-tw)/2 : x+6, y+rh/2+fs*0.35, s, fs, bb); x+=w; }); y+=rh; };
       row(b.head,true,0.9); b.rows.forEach(r=>row(r,false,null)); y+=b.small?12:6; }
     else if(b.k==='note'){ para(b.t,8.5,false,M,CW,11); y+=5; }
+    else if(b.k==='li'){ need(14); text(M,y+10,b.n+'.',10,true); para(b.t,10,false,M+18,CW-18,13); y+=5; }
     else if(b.k==='src'){ y+=4; need(12); text(M,y+8,'Fuentes',8,true); y+=11; b.l.forEach(s=>para(s,7,false,M,CW,9)); }
   });
   y+=6; para('Herramienta de apoyo; no sustituye el juicio clínico ni los protocolos institucionales.',8,false,M,CW,10);
@@ -4501,8 +4709,8 @@ function svPDF(D){
   out+='trailer\n<< /Size '+(objs.length+1)+' /Root 1 0 R >>\nstartxref\n'+xr+'\n%%EOF\n';
   return out;
 }
-async function svDownload(D,name,msg){
-  const blob=new Blob([svPDF(D)],{type:'application/pdf'});
+async function svDownload(D,name,msg,title){
+  const blob=new Blob([svPDF(D,title)],{type:'application/pdf'});
   try{ const dl=window.claude&&claude.use? await claude.use('downloads') : null;
     if(dl){ await dl.save({filename:name,data:blob}); msg.textContent='PDF listo.'; return; } }
   catch(e){ const c=e&&e.code; if(c==='declined'){ msg.textContent='Descarga cancelada.'; return; } if(c==='rate_limited'){ msg.textContent='Ya hay una descarga pendiente; intente de nuevo en un momento.'; return; } }
@@ -4656,11 +4864,28 @@ function renderHoja(){
   const ta=document.createElement('textarea'); ta.className='ordtxt'; ta.readOnly=true; ta.rows=Math.min(14,state.hoja.length*2+2); ta.value=all; h.appendChild(ta);
   const cp=el('button','copybtn','Copiar todas las indicaciones'); cp.type='button'; h.appendChild(cp);
   cp.addEventListener('click',()=>{ const done=()=>{cp.textContent='✓ Copiadas'; setTimeout(()=>cp.textContent='Copiar todas las indicaciones',1600);}; try{ navigator.clipboard.writeText(all).then(done,()=>{ta.select(); document.execCommand('copy'); done();}); }catch(e){ ta.select(); try{document.execCommand('copy');}catch(_){} done(); } });
+  const pdf=el('button','addbtn','Descargar PDF'); pdf.type='button'; const pm=el('span','rmeta'); h.appendChild(pdf); h.appendChild(pm);
+  pdf.addEventListener('click',()=>{ const d=new Date(), f='hoja-paciente-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.pdf';
+    const D=[{k:'blank',l:['Nombre','Cama','Expediente']},{k:'pt',t:(head||'Datos del paciente sin capturar')+' · Fecha: '+d.toLocaleDateString('es-MX')}];
+    state.hoja.forEach((t,ix)=>D.push({k:'li',n:ix+1,t}));
+    D.push({k:'note',t:'Verifique cada dosis y la presentación disponible en su unidad. Doble verificación en medicamentos de alto riesgo.'});
+    pm.textContent=' Generando…'; svDownload(D,f,pm,'Indicaciones del paciente'); });
   const clr=el('button','addbtn','Vaciar hoja'); clr.type='button'; clr.addEventListener('click',()=>{ state.hoja=[]; savePrefs(); updTabs(); renderHoja(); }); h.appendChild(clr);
   h.appendChild(el('p','rmeta','La hoja se guarda solo en este navegador.'));
 }
 
 /* ---------- inicio ---------- */
+// app instalable y sin conexión (solo en GitHub Pages; no en claude.ai)
+if(location.protocol==='https:' && /\.github\.io$/.test(location.hostname) && 'serviceWorker' in navigator){
+  [['manifest','manifest.webmanifest'],['apple-touch-icon','icon-180.png'],['icon','icon.svg']].forEach(([r,h])=>{ const l=document.createElement('link'); l.rel=r; l.href=h; document.head.appendChild(l); });
+  const m=document.createElement('meta'); m.name='theme-color'; m.content='#5b00ed'; document.head.appendChild(m);
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+try{ const o=JSON.parse(localStorage.getItem('dosis_pt')||'{}'); PTF.forEach(id=>{ if(o[id]!=null&&o[id]!=='') $(id).value=o[id]; }); }catch(e){}
+$('#newpt').addEventListener('click',()=>{ PTF.forEach(id=>{ $(id).value= id==='#edadu'?'a':''; }); state.hoja=[]; savePrefs(); updTabs(); readWeight(); patientNote(); renderCurrent(); try{ localStorage.removeItem('dosis_pt'); }catch(e){} pesoIn.focus(); });
+{ const sec=$('#patient'), mini=$('#ptmini');
+  if('IntersectionObserver' in window) new IntersectionObserver(es=>{ mini.classList.toggle('show',!es[0].isIntersecting); },{threshold:0}).observe(sec);
+  $('#ptedit').addEventListener('click',()=>{ sec.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>pesoIn.focus({preventScroll:true}),400); }); }
 readWeight(); renderList(); updTabs(); patientNote();
 const h=location.hash.slice(1); if(VIEWS.includes(h)) showView(h,true); else if(DB.some(d=>d.id===h)){state.cur=h; renderList(); renderDetail();}
 })();

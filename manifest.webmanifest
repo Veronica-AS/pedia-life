@@ -1,0 +1,16 @@
+{
+  "name": "Pedia Life · Dosis pediátricas y neonatales",
+  "short_name": "Pedia Life",
+  "description": "Consulta de dosis pediátricas y neonatales, calculadoras, escalas y signos vitales.",
+  "lang": "es-MX",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#dad9ff",
+  "theme_color": "#5b00ed",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ]
+}
