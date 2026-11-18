@@ -391,6 +391,34 @@ footer i{color:var(--durazno)}
 .fbbtn.alt{border-color:var(--marino);color:var(--marino)}.fbbtn.alt:hover{background:var(--marino);color:#fff}
 p.report{margin-top:18px}
 .fupd{margin:0;opacity:.85;font-size:13px}
+/* emergencias */
+.emerg{margin:14px 0 4px}
+.emh{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--coral-t);margin:0 0 8px;letter-spacing:.02em}
+.emh::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--coralc)}
+.emgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.emcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:20px;border:2px solid var(--coral-tin);background:#fff;color:var(--marino);font:inherit;font-weight:600;font-size:14px;line-height:1.25;text-align:left;cursor:pointer}
+.emcard:hover{border-color:var(--coralc)}
+.emcard[aria-current="true"]{border-color:var(--coral-t);background:var(--coral-tin)}
+.emcard .tile{width:36px;height:36px}
+@media (max-width:860px){.emgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;-webkit-overflow-scrolling:touch}.emcard{flex:0 0 132px;scroll-snap-align:start}}
+.pwarn{background:var(--coral-tin);color:var(--coral-t);border-radius:16px;padding:10px 14px;font-weight:600;margin:0 0 14px}
+.pnow{background:var(--lav-tin);color:var(--marino);border-radius:16px;padding:10px 14px;margin:0 0 14px}
+.psteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.pstep{display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 12px;border:2px solid var(--ash);border-radius:20px;padding:14px 16px;background:#fff}
+.pstep>*:not(.pnum){grid-column:2}
+.pnum{grid-row:1/span 3;grid-column:1;width:32px;height:32px;border-radius:50%;background:var(--marino);color:#fff;display:grid;place-items:center;font-weight:600}
+.phd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.phd h3{margin:0;font-size:16.5px;color:var(--marino)}
+.ptm{font-size:12px;font-weight:600;color:var(--lav-t);background:var(--lav-tin);border-radius:999px;padding:3px 10px}
+.pls{margin:6px 0 0;padding-left:18px}.pls li{margin:4px 0;line-height:1.45}
+.pls li.w{list-style:none;margin-left:-18px;color:var(--coral-t);font-weight:600}
+.pls b{color:var(--marino)}
+.pbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pbtns .addbtn{margin:0;padding:6px 12px;font-size:13px}
+.pbtns .addbtn.go{background:var(--marino);color:#fff}
+#v-proto .src.out{display:block;border-radius:14px;padding:8px 12px;margin-top:14px}
+.paviso{font-size:12.5px;color:var(--muted);margin-top:10px}
+.protolist{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+@media (max-width:860px){.pstep{grid-template-columns:28px minmax(0,1fr);gap:4px 10px;padding:12px}.pnum{width:26px;height:26px;font-size:13px}}
 </style>
 </head>
 <body>
@@ -473,6 +501,7 @@ p.report{margin-top:18px}
       <div class="pnote" id="pnote">Opcional: con edad (y en neonatos la EG) la página elige el intervalo y resalta el esquema que corresponde; con talla y creatinina calcula SC y TFG.</div>
     </div></details>
   </section>
+  <section class="emerg" id="emerg" aria-label="Emergencias"><h2 class="emh">Emergencias</h2><div class="emgrid" id="emgrid"></div></section>
   <nav class="tabs" id="tabs" aria-label="Secciones">
     <button type="button" data-v="med" data-c="blue" aria-pressed="true"><svg class="ic" aria-hidden="true"><use href="#i-pill"/></svg><span>Medicamentos</span></button>
     <button type="button" data-v="reanimacion" data-c="pink" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg><span>Reanimación</span></button>
@@ -502,6 +531,7 @@ p.report{margin-top:18px}
   <section class="panel view hidden" id="v-escalas"></section>
   <section class="panel view hidden" id="v-hoja"></section>
   <section class="panel view hidden" id="v-signos"></section>
+  <section class="panel view hidden" id="v-proto" aria-live="polite"></section>
 
   <footer>
     <div class="apoyof"><span>Pedia Life es gratis y sin anuncios. Si te ayuda en la guardia, puedes invitarme un café.</span><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a></div>
@@ -511,7 +541,7 @@ p.report{margin-top:18px}
       <div class="igbtns"><a class="igfollow" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">Instagram</a><a class="igfollow" href="https://www.tiktok.com/@pedia.life" target="_blank" rel="noopener">TikTok</a></div>
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
-    <p class="fupd">Última actualización del contenido: 17 de noviembre de 2026.</p>
+    <p class="fupd">Última actualización del contenido: 18 de noviembre de 2026.</p>
   </footer>
 </div>
 
@@ -3659,8 +3689,9 @@ function toolIndex(){ if(TOOLIX) return TOOLIX; const w0=state.w; state.w=state.
    ['infus','ivbag','green','Infusiones (regla del 6)','infusiones regla del 6 goteo bomba vasoactivos'],
    ['signos','thermo','pink','Signos vitales y crecimiento OMS (percentiles, PDF)','signos vitales percentiles frecuencia cardiaca respiratoria presion arterial tension crecimiento oms peso talla imc z score'],
    ['hoja','sheet','green','Hoja del paciente','hoja paciente indicaciones copiar pdf']].forEach(([v,ic,c,t,k])=>R.push({v,t,ic,c,lab:'Sección',s:norm(t+' '+k)}));
+  PROTO.forEach(x=>R.unshift({v:'proto',id:x.id,t:'Protocolo: '+x.t,ic:x.ic,c:x.c,lab:'Emergencias',s:norm('protocolo emergencia urgencia '+x.t+' '+x.k)}));
   TOOLIX=R; return R; }
-function openTool(x){ showView(x.v); if(x.lab==='Sección') { window.scrollTo({top:0}); return; }
+function openTool(x){ if(x.v==='proto'){ openProto(x.id); return; } showView(x.v); if(x.lab==='Sección') { window.scrollTo({top:0}); return; }
   const d=[...document.querySelectorAll('#v-'+x.v+' details.acc')].find(e=>e.querySelector('.acct').textContent===x.t);
   if(d){ d.open=true; setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),50); } }
 function renderList(){
@@ -3691,8 +3722,8 @@ function select(id){
   renderList(); renderDetail();
   if(window.matchMedia('(max-width:860px)').matches) $('#detail').scrollIntoView({behavior:'smooth',block:'start'});
 }
-const VIEWS=['reanimacion','liquidos','calc','infus','escalas','hoja','signos'];
-window.addEventListener('hashchange',()=>{const id=location.hash.slice(1); if(VIEWS.includes(id)){showView(id,true); return;} if(DB.some(d=>d.id===id)&&id!==state.cur){state.cur=id; showView('med',true); renderList(); renderDetail();}});
+const VIEWS=['reanimacion','liquidos','calc','infus','escalas','hoja','signos','proto'];
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1); if(protoHash(id)) return; if(VIEWS.includes(id)){showView(id,true); return;} if(DB.some(d=>d.id===id)&&id!==state.cur){state.cur=id; showView('med',true); renderList(); renderDetail();}});
 
 /* ---------- paciente ---------- */
 state.fav=[]; state.rec=[]; state.hoja=[];
@@ -4111,12 +4142,13 @@ function showView(v,fromHash){
   document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
   document.querySelector('.layout').classList.toggle('hidden',v!=='med');
   VIEWS.forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
-  if(!fromHash && v!=='med'){ try{history.replaceState(null,'','#'+v);}catch(e){} }
+  if(!fromHash && v!=='med'){ try{history.replaceState(null,'','#'+(v==='proto'&&state.proto?'proto-'+state.proto:v));}catch(e){} }
+  document.querySelectorAll('#emgrid .emcard').forEach(c=>c.setAttribute('aria-current',v==='proto'&&c.dataset.id===state.proto));
   renderCurrent();
 }
 function updTabs(){ const b=document.querySelector('#tabs button[data-v="hoja"]'); b.querySelector('span').textContent='Hoja del paciente'+(state.hoja.length?' ('+state.hoja.length+')':''); }
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.v==='med' && state.cur){ try{history.replaceState(null,'','#'+state.cur);}catch(e){} } showView(b.dataset.v); }));
-function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView==='reanimacion') renderRCP(); else if(curView==='liquidos') renderLiq(); else if(curView==='calc') renderCalc(); else if(curView==='infus') renderInf(); else if(curView==='escalas') renderEsc(); else if(curView==='signos') renderSV(); else renderHoja(); }
+function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView==='reanimacion') renderRCP(); else if(curView==='liquidos') renderLiq(); else if(curView==='calc') renderCalc(); else if(curView==='infus') renderInf(); else if(curView==='escalas') renderEsc(); else if(curView==='signos') renderSV(); else if(curView==='proto') renderProto(); else renderHoja(); }
 const _rw=readWeight; 
 pesoIn.addEventListener('input',()=>{ if(curView!=='med') renderCurrent(); patientNote(); });
 
@@ -4318,6 +4350,112 @@ function accOrder(g,order){
   order.concat(Object.keys(by).filter(k=>!order.includes(k))).forEach(s=>{ if(!by[s]) return; g.appendChild(el('div','accsec',s)); by[s].forEach(d=>g.appendChild(d)); });
 }
 function srcLine(b,t,ext){ b.appendChild(el('p','src'+(ext?' out':''),(ext?'Fuente externa a los libros: ':'Fuente: ')+t)); }
+/* ---------- emergencias: protocolos con dosis por peso ---------- */
+// dz: dosis por kg (o rango) con tope y volumen. o = {mx: tope por dosis, c: concentración por mL, cu: etiqueta de la presentación, per: '/h' | '/min', t: texto al final}
+function dz(n,lo,hi,u,o){ o=o||{}; const w=state.w, per=o.per||'';
+  let s=n+' '+rng(lo,hi,u+'/kg'+per)+(o.mx!=null?' (máx. '+fmt(o.mx)+' '+u+per+')':'');
+  if(!w) return s+(o.t||'');
+  const a=lo*w, b=hi*w, A=o.mx!=null?Math.min(a,o.mx):a, B=o.mx!=null?Math.min(b,o.mx):b;
+  s+=' → '+rng(A,B,u+per)+(o.mx!=null&&b>o.mx+1e-9?' (tope)':'');
+  if(o.c) s+=' = '+rng(A/o.c,B/o.c,'mL'+per)+(o.cu?' de '+o.cu:'');
+  return s+(o.t||''); }
+// infusión en mcg/kg/min → mcg/min y, si hay concentración (mcg/mL), mL/h
+function dinf(n,lo,hi,c,cu){ const w=state.w; let s=n+' '+rng(lo,hi,'mcg/kg/min');
+  if(!w) return s; s+=' → '+rng(lo*w,hi*w,'mcg/min');
+  if(c) s+=' = '+rng(lo*w*60/c,hi*w*60/c,'mL/h')+(cu?' con '+cu:''); return s; }
+const PW=()=>state.w; // atajo
+const PROTO=[
+ {id:'paro',t:'Paro cardiaco',ic:'heart',c:'pink',k:'paro cardiorrespiratorio rcp reanimacion asistolia aesp fibrilacion ventricular desfibrilacion',
+  src:'AHA 2025, soporte vital avanzado pediátrico. Las dosis de adrenalina, amiodarona y lidocaína coinciden con Taketomo (PALS).',
+  steps:()=>[
+   {tm:'0 min',t:'Reconocer y comenzar RCP',L:['Sin respuesta, sin respiración normal y sin pulso (revisar ≤10 s): pida ayuda y el desfibrilador.','Compresiones de alta calidad: 100–120/min, al menos 1/3 del diámetro del tórax, reexpansión completa y pausas mínimas.','Sin vía aérea avanzada: <b>15:2</b> con 2 reanimadores (<b>30:2</b> con 1). Con vía aérea avanzada: compresiones continuas y 1 ventilación c/2–3 s.','Oxígeno, monitor/desfibrilador y acceso IV/IO.']},
+   {tm:'c/2 min',t:'Ritmo desfibrilable (FV / TV sin pulso)',L:[
+     dz('1.ª descarga',2,2,'J'), dz('2.ª descarga',4,4,'J'),
+     'Siguientes: ≥4 J/kg, sin pasar de 10 J/kg'+(PW()?' ('+fmt(10*PW())+' J)':'')+' ni de la dosis de adulto de su desfibrilador.',
+     'Reanude la RCP de inmediato tras cada descarga, 2 min antes de revisar el ritmo.']},
+   {tm:'c/3–5 min',t:'Adrenalina',L:[dz('Adrenalina IV/IO',0.01,0.01,'mg',{mx:1,c:0.1,cu:'0.1 mg/mL (1:10 000)'}),'Ritmo no desfibrilable: lo antes posible. Desfibrilable: después de la 2.ª descarga.'],f:['adrenalina']},
+   {tm:'Tras la 3.ª descarga',t:'Antiarrítmico (FV/TV refractaria)',L:[dz('Amiodarona IV/IO en bolo',5,5,'mg',{mx:300,c:50,cu:'50 mg/mL',t:'; puede repetirse hasta 3 dosis (15 mg/kg)'}),dz('o lidocaína IV/IO',1,1,'mg',{mx:100,c:20,cu:'20 mg/mL (2%)'})],f:['amiodarona','lidocaina']},
+   {tm:'Durante toda la RCP',t:'Causas reversibles (H y T)',L:['<b>H:</b> hipovolemia, hipoxia, hidrogeniones (acidosis), hipoglucemia, hipo/hiperpotasemia, hipotermia.','<b>T:</b> neumotórax a tensión, taponamiento cardiaco, tóxicos, trombosis pulmonar o coronaria.'],go:[['Abrir Reanimación (PALS, NRP, equipo)',()=>showView('reanimacion')]]}
+  ]},
+ {id:'anafilaxia',t:'Anafilaxia',ic:'shield',c:'yellow',k:'anafilaxia alergia choque anafilactico adrenalina intramuscular',
+  src:'TREKK, anafilaxia pediátrica (2023); JTFPP, parámetro de práctica de anafilaxia (2020). La adrenalina IM coincide con Taketomo; difenhidramina y prednisolona como en sus fichas.',
+  steps:()=>[
+   {tm:'0 min',t:'Adrenalina IM de inmediato',L:[dz('Adrenalina IM (cara anterolateral del muslo)',0.01,0.01,'mg',{mx:0.5,c:1,cu:'1 mg/mL (1:1000)',t:'; repetir c/5–15 min si no mejora'}),'Algunas guías usan un máximo de 0.3 mg por dosis en prepúberes.','No retrase la adrenalina por dar antihistamínicos o esteroides.'],f:['adrenalina']},
+   {tm:'0–5 min',t:'Posición, oxígeno y acceso',L:['Acostado con las piernas elevadas; sentado si tiene dificultad para respirar; de lado si vomita. No lo levante ni lo siente de golpe.','Oxígeno, monitoreo y acceso IV/IO.']},
+   {tm:'Si hay hipotensión',t:'Bolo de líquidos',L:[dz('Bolo de SN 0.9% o Hartmann',20,20,'mL',{t:' rápido; repetir según la respuesta'})]},
+   {tm:'Si hay broncoespasmo',t:'Salbutamol',L:[PW()? 'Salbutamol nebulizado '+(PW()<20?'2.5 mg (0.5 mL':'5 mg (1 mL')+' de 5 mg/mL), repetir c/20 min según necesidad.' : 'Salbutamol nebulizado 2.5 mg (<20 kg) o 5 mg (≥20 kg), repetir c/20 min según necesidad.'],f:['salbutamol']},
+   {tm:'Si no responde a 2–3 dosis IM',t:'Infusión de adrenalina',L:[dinf('Adrenalina en infusión',0.05,0.1,10,'1 mg en 100 mL (10 mcg/mL)'),'Titular según la respuesta, con monitoreo continuo.'],go:[['Ver Infusiones',()=>showView('infus')]]},
+   {tm:'Después de estabilizar',t:'Adyuvantes (no sustituyen a la adrenalina)',L:[dz('Difenhidramina IV/IM/VO',1,1,'mg',{mx:50,c:10,cu:'10 mg/mL'}),dz('Prednisolona VO',1,2,'mg',{mx:60})],f:['difenhidramina','prednisolona']}
+  ]},
+ {id:'epileptico',t:'Estado epiléptico',ic:'brain',c:'blue',k:'estado epileptico convulsion crisis convulsiva status benzodiacepina',
+  src:'TREKK, estado epiléptico pediátrico; ABEM. Lorazepam, diazepam y fenobarbital coinciden con Taketomo; levetiracetam con la Guía AES 2016.',
+  steps:()=>{ const w=PW(); let mi='Midazolam IM o IN: 0.2 mg/kg si pesa ≤13 kg; 5 mg si pesa 13–40 kg; 10 mg si pesa >40 kg.';
+   if(w){ const v=w<=13?0.2*w:w<=40?5:10; mi='Midazolam IM o IN ('+(w<=13?'0.2 mg/kg, ≤13 kg':w<=40?'dosis fija de 13–40 kg':'dosis fija de >40 kg')+') → '+fmt(v)+' mg = '+fmt(v/5)+' mL de 5 mg/mL'; }
+   return [
+   {tm:'0–5 min',t:'Estabilizar',L:['Vía aérea, oxígeno, monitoreo, posición de seguridad; anote la hora de inicio.','Glucosa capilar. '+dz('Si hay hipoglucemia: SG10%',5,5,'mL',{mx:250})],f:['dextrosa']},
+   {tm:'5 min',t:'1.ª dosis de benzodiacepina',L:['<b>Sin acceso IV:</b> '+mi+'.','<b>Con acceso IV/IO</b> (elija una):',dz('Lorazepam IV',0.1,0.1,'mg',{mx:4,c:2,cu:'2 mg/mL'}),dz('Midazolam IV',0.1,0.1,'mg',{mx:10,c:5,cu:'5 mg/mL'}),dz('Diazepam IV',0.2,0.2,'mg',{mx:10,c:5,cu:'5 mg/mL'})],f:['midazolam','lorazepam','diazepam']},
+   {tm:'10 min',t:'Si sigue convulsionando: 2.ª dosis',L:['Repita la benzodiacepina una vez.','⚠ Máximo 2 dosis de benzodiacepina en total, contando las prehospitalarias.']},
+   {tm:'15–20 min',t:'Segunda línea (elija uno)',L:[dz('Levetiracetam IV',60,60,'mg',{mx:4500,c:100,cu:'100 mg/mL'}),dz('Fosfenitoína IV',20,20,'mg EF',{mx:1500,c:50,cu:'50 mg EF/mL',t:'; velocidad máx. 150 mg EF/min'}),dz('Valproato IV',30,40,'mg',{mx:3000,c:100,cu:'100 mg/mL',t:'; evítelo si hay sospecha de enfermedad hepática o mitocondrial'}),dz('Fenobarbital IV',20,20,'mg',{mx:1000,c:63.5,cu:'63.5 mg/mL'})],f:['levetiracetam','fosfenitoina','valproato','fenobarbital']},
+   {tm:'≥40 min',t:'Estado epiléptico refractario',L:['Si persiste tras la segunda línea: otro fármaco de segunda línea o infusión anestésica (por ejemplo, midazolam) en terapia intensiva, con vía aérea avanzada y monitoreo con EEG.']}
+  ];}},
+ {id:'cad',t:'Cetoacidosis diabética',ic:'flask',c:'yellow',k:'cetoacidosis diabetica cad diabetes insulina hiperglucemia',
+  src:'ISPAD 2022 (Glaser N et al., Pediatr Diabetes 2022;23:835-56). El Harriet Lane 2027 define la acidosis con HCO₃ <15.',
+  steps:()=>[
+   {tm:'0 min',t:'Diagnóstico y gravedad',L:['Glucosa >200 mg/dL (o diabetes conocida) + pH venoso <7.3 o HCO₃ <18 + cetonemia o cetonuria.','<b>Leve:</b> pH <7.3 o HCO₃ <18 · <b>Moderada:</b> pH <7.2 o HCO₃ <10 · <b>Grave:</b> pH <7.1 o HCO₃ <5.']},
+   {tm:'0–1 h',t:'Líquidos',L:[dz('Bolo de SN 0.9%',10,20,'mL',{t:' en 20–30 min; repetir si persiste el choque'}),'Después, reponga el déficit en 24–48 h (calculadora de CAD).'],go:[['Abrir la calculadora de CAD',()=>openAcc('calc',/^Cetoacidosis diabética/)]]},
+   {tm:'Antes de la insulina',t:'Potasio',L:['⚠ K <3.5 mEq/L: no inicie la insulina; reponga primero el potasio.',dz('Reposición de K sin pasar de',0.5,0.5,'mEq',{per:'/h'})],f:['cloruro-potasio']},
+   {tm:'≥1 h después de iniciar líquidos',t:'Insulina en infusión',L:[dz('Insulina regular IV',0.05,0.1,'UI',{per:'/h',c:1,cu:'1 UI/mL (50 UI en 50 mL)'}),'Sin bolo de insulina.'],f:['insulina']},
+   {tm:'Cada hora',t:'Controles',L:['Glucosa capilar, estado neurológico, signos vitales y balance cada hora; electrolitos y gasometría venosa cada 2–4 h.']},
+   {tm:'Si hay deterioro neurológico',t:'Edema cerebral',L:['Cefalea, vómito, bradicardia, hipertensión, deterioro del estado de alerta: trate de inmediato.',dz('Manitol 20%',0.5,1,'g',{c:0.2,cu:'0.2 g/mL',t:' en 10–15 min'}),dz('o NaCl 3%',2.5,5,'mL',{t:' en 10–15 min'})],f:['manitol']}
+  ]},
+ {id:'sepsis',t:'Choque séptico',ic:'germ',c:'green',k:'choque septico sepsis shock antibiotico vasoactivo',
+  src:'Surviving Sepsis Campaign pediátrica 2020 (Weiss SL et al., Pediatr Crit Care Med 2020;21:e52-e106) y 2026 (Weiss SL et al., Intensive Care Med 2026;52:937-83). Hidrocortisona y vasoactivos coinciden con Taketomo.',
+  steps:()=>[
+   {tm:'0 min',t:'Reconocer y estabilizar',L:['Oxígeno, monitoreo, 2 accesos IV/IO; hemocultivos, lactato y glucosa sin retrasar el antibiótico.'],go:[['Abrir criterios de Phoenix',()=>openAcc('escalas',/^Phoenix/)]]},
+   {tm:'≤1 h',t:'Antibiótico en la primera hora',L:['Empírico de amplio espectro según el foco y la epidemiología local.'],f:['ceftriaxona','cefotaxima','vancomicina']},
+   {tm:'0–60 min',t:'Bolos de líquidos',L:[dz('Bolo de cristaloide',10,20,'mL',{t:'; reevaluar después de cada bolo'}),dz('Total en la 1.ª hora hasta',40,60,'mL'),'Prefiera un cristaloide balanceado (Hartmann) sobre la SN 0.9%.','⚠ Suspenda los bolos si hay datos de sobrecarga: estertores, hepatomegalia o ritmo de galope.']},
+   {tm:'Si persiste el choque',t:'Vasoactivo (puede iniciarse por vía periférica)',L:[dinf('Adrenalina',0.1,1),dinf('o norepinefrina',0.05,2),'La preparación y los mL/h están en Infusiones.'],f:['adrenalina','norepinefrina'],go:[['Ver Infusiones',()=>showView('infus')]]},
+   {tm:'Choque refractario',t:'Hidrocortisona',L:[dz('Hidrocortisona IV',1,2,'mg',{mx:100,c:50,cu:'50 mg/mL'}),'Solo si persiste el choque pese a líquidos y vasoactivos.'],f:['hidrocortisona']},
+   {tm:'Reevaluar',t:'Metas',L:['Mejoría de la perfusión (llenado capilar, pulsos, estado de alerta, diuresis), lactato en descenso y PAM entre los percentiles 5 y 50 para la edad.']}
+  ]},
+ {id:'asma',t:'Crisis asmática',ic:'lungs',c:'blue',k:'crisis asmatica asma broncoespasmo salbutamol sibilancias',
+  src:'TREKK, crisis asmática pediátrica (salbutamol por disparos y dosis fijas). Salbutamol continuo, prednisolona, dexametasona y sulfato de magnesio coinciden con Taketomo (NAEPP 2007).',
+  steps:()=>{ const w=PW(), P=pt(); const small= P.years!=null? P.years<5 : (w? w<20 : null);
+   const sal= w? 'Salbutamol IDM 100 mcg con espaciador: <b>'+(w<20?5:10)+' disparos</b> c/20 min × 3; o nebulizado <b>'+(w<20?'2.5 mg (0.5 mL':'5 mg (1 mL')+' de 5 mg/mL)</b> c/20 min × 3.' : 'Salbutamol IDM 100 mcg con espaciador: 5 disparos (<20 kg) o 10 disparos (≥20 kg) c/20 min × 3; o nebulizado 2.5 mg (<20 kg) o 5 mg (≥20 kg) c/20 min × 3.';
+   const ipr= small==null? 'Bromuro de ipratropio nebulizado: 0.25 mg en <5 años y 0.5 mg en mayores, con cada una de las 3 primeras dosis de salbutamol.' : 'Bromuro de ipratropio nebulizado <b>'+(small?'0.25 mg (1 mL':'0.5 mg (2 mL')+' de 0.25 mg/mL)</b> con cada una de las 3 primeras dosis de salbutamol'+(P.years==null?' (sin edad, se usó el peso: <20 kg ≈ <5 años)':'')+'.';
+   return [
+   {tm:'0–20 min',t:'Broncodilatador',L:[sal,'Oxígeno si hay hipoxemia.'],f:['salbutamol']},
+   {tm:'Crisis moderada o grave',t:'Ipratropio',L:[ipr],f:['ipratropio']},
+   {tm:'En la 1.ª hora',t:'Corticoide sistémico',L:[dz('Prednisolona VO',1,2,'mg',{mx:60}),dz('o dexametasona VO/IM/IV',0.6,0.6,'mg',{mx:16,c:4,cu:'4 mg/mL'})],f:['prednisolona','dexametasona']},
+   {tm:'Sin respuesta',t:'Sulfato de magnesio IV',L:[dz('Sulfato de magnesio',40,40,'mg',{mx:2000,c:100,cu:'10% (100 mg/mL)',t:' en 20 min'})],f:['sulfato-magnesio']},
+   {tm:'Grave persistente',t:'Salbutamol nebulizado continuo',L:[dz('Salbutamol continuo',0.5,0.5,'mg',{per:'/h',mx:15,c:5,cu:'5 mg/mL'}),'Con monitoreo continuo; valore terapia intensiva.']}
+  ];}}
+];
+function openAcc(v,re){ showView(v); const d=[...document.querySelectorAll('#v-'+v+' details.acc')].find(e=>re.test(e.querySelector('.acct').textContent));
+  if(d){ d.open=true; setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),50); } }
+function openProto(id){ state.proto=id; showView('proto'); setTimeout(()=>$('#v-proto').scrollIntoView({behavior:'smooth',block:'start'}),30); }
+function protoHash(h){ if(!/^proto-/.test(h)) return false; const id=h.slice(6); if(!PROTO.some(p=>p.id===id)) return false; state.proto=id; showView('proto',true); return true; }
+(function(){ const g=$('#emgrid'); PROTO.forEach(p=>{ const b=el('button','emcard'); b.type='button'; b.dataset.id=p.id; b.appendChild(tile(p.ic,p.c)); b.appendChild(el('span',null,p.t)); b.addEventListener('click',()=>openProto(p.id)); g.appendChild(b); }); })();
+function renderProto(){
+  const h=$('#v-proto'), p=PROTO.find(x=>x.id===state.proto), w=state.w, P=pt();
+  if(!p){ vhead(h,'Emergencias','Protocolos de urgencias'); const g=el('div','protolist'); PROTO.forEach(x=>{ const b=el('button','emcard'); b.type='button'; b.appendChild(tile(x.ic,x.c)); b.appendChild(el('span',null,x.t)); b.addEventListener('click',()=>openProto(x.id)); g.appendChild(b); }); h.appendChild(g); return; }
+  vhead(h,'Protocolo de emergencias',p.t);
+  if((P.days!=null&&P.days<=28)||(P.days==null&&w&&w<5)) h.appendChild(el('p','pwarn','⚠ Estos protocolos son para pacientes mayores de 28 días. En neonatos use Reanimación (NRP) y la ficha de cada medicamento.'));
+  if(!w) h.appendChild(el('p','pnow','Escriba el peso del paciente arriba para ver las dosis calculadas en mg y mL.'));
+  const ol=el('ol','psteps');
+  p.steps().forEach((s,i)=>{ const li=el('li','pstep'); li.appendChild(el('span','pnum',String(i+1)));
+    const hd=el('div','phd'); hd.appendChild(el('h3',null,s.t)); hd.appendChild(el('span','ptm',s.tm)); li.appendChild(hd);
+    const ul=el('ul','pls'); s.L.forEach(t=>{ const x=el('li',t.startsWith('⚠')?'w':null); x.innerHTML=t; ul.appendChild(x); }); li.appendChild(ul);
+    if((s.f&&s.f.length)||(s.go&&s.go.length)){ const bb=el('div','pbtns');
+      (s.go||[]).forEach(([t,fn])=>{ const b=el('button','addbtn go',t); b.type='button'; b.addEventListener('click',fn); bb.appendChild(b); });
+      (s.f||[]).forEach(id=>{ const d=DB.find(x=>x.id===id); if(!d) return; const b=el('button','addbtn','Ficha: '+d.n.replace(/\s*\(.*\)$/,'')); b.type='button'; b.addEventListener('click',()=>select(id)); bb.appendChild(b); });
+      li.appendChild(bb); }
+    ol.appendChild(li); });
+  h.appendChild(ol);
+  srcLine(h,p.src,1);
+  h.appendChild(el('p','paviso','Modelo orientativo para personal de salud: resume las guías citadas y no sustituye el juicio clínico ni los protocolos de su institución. Verifique dosis, presentaciones y diluciones antes de administrar.'));
+}
+
 const ESC_ORDER=['Triage y evaluación inicial','Estado neurológico','Respiratorio','Fiebre e infección','Deshidratación','Abdomen','Trauma','Dolor','Neonatal','Metabólico'];
 
 function escMore(g,P){
@@ -4491,7 +4629,7 @@ function escMore(g,P){
   { const b=ccard(g,'vig','Cetoacidosis diabética · gravedad (ISPAD)','Por pH venoso o bicarbonato. El manejo completo con peso está en Calculadoras.');
     const ph=numIn(null,'0.01','pH'), hc=numIn(null,'any','HCO₃'); const m=el('div','mini'); m.append(fld('pH',ph),fld('HCO₃ (mEq/L)',hc)); b.appendChild(m);
     liveOut(b,[ph,hc],()=>{ const p=nv(ph), h=nv(hc); if(p==null&&h==null) return ['Capture pH o HCO₃.'];
-      return [(p!=null&&p<7.1)||(h!=null&&h<5)?'⚠ Grave (pH <7.1 o HCO₃ <5).':(p!=null&&p<7.2)||(h!=null&&h<10)?'⚠ Moderada (pH <7.2 o HCO₃ <10).':(p!=null&&p<7.3)||(h!=null&&h<15)?'Leve (pH <7.3 o HCO₃ <15).':'No cumple criterio de acidosis de CAD (pH ≥7.3 y HCO₃ ≥15).']; });
+      return [(p!=null&&p<7.1)||(h!=null&&h<5)?'⚠ Grave (pH <7.1 o HCO₃ <5).':(p!=null&&p<7.2)||(h!=null&&h<10)?'⚠ Moderada (pH <7.2 o HCO₃ <10).':(p!=null&&p<7.3)||(h!=null&&h<18)?'Leve (pH <7.3 o HCO₃ <18).':'No cumple criterio de acidosis de CAD (pH ≥7.3 y HCO₃ ≥18).']; });
     srcLine(b,'ISPAD 2022 y Harriet Lane 2027, cap. 10.'); }
 }
 
@@ -4601,12 +4739,12 @@ function renderCalc(){
 
   // CAD
   accSec(g,'Por peso: urgencias');
-  { const b=ccard(g,'vig','Cetoacidosis diabética (Harriet Lane 2027 / ISPAD 2022)','Diagnóstico: glucosa >200 mg/dL (o DM conocida) + pH <7.3 o HCO₃ <15 + cetonuria/cetonemia.');
+  { const b=ccard(g,'vig','Cetoacidosis diabética (Harriet Lane 2027 / ISPAD 2022)','Diagnóstico (ISPAD 2022): glucosa >200 mg/dL (o DM conocida) + pH <7.3 o HCO₃ <18 + cetonemia/cetonuria. El Harriet Lane 2027 usa HCO₃ <15.');
     b.style.gridColumn='span 2';
     const ph=numIn(7.15), hco=numIn(8), deh=selIn([['5','Deshidratación 5%'],['7','7%'],['10','10%']],'7'), bolo=numIn(10), ins=selIn([['0.1','0.1 U/kg/h'],['0.05','0.05 U/kg/h (<2 años o leve)']],(P.years!=null&&P.years<2)?'0.05':'0.1');
     const m=el('div','mini'); m.append(fld('pH',ph),fld('HCO₃',hco),fld('Déficit',deh),fld('Bolo (mL/kg)',bolo),fld('Insulina',ins)); b.appendChild(m);
     liveOut(b,[ph,hco,deh,bolo,ins],()=>{ const p=nv(ph), hc=nv(hco); let gr='—';
-      if(p!=null||hc!=null){ gr= (p!=null&&p<7.1)||(hc!=null&&hc<5)?'Grave':(p!=null&&p<7.2)||(hc!=null&&hc<10)?'Moderada':(p!=null&&p<7.3)||(hc!=null&&hc<15)?'Leve':'No cumple criterio de acidosis (pH ≥7.3 y HCO₃ ≥15)'; }
+      if(p!=null||hc!=null){ gr= (p!=null&&p<7.1)||(hc!=null&&hc<5)?'Grave':(p!=null&&p<7.2)||(hc!=null&&hc<10)?'Moderada':(p!=null&&p<7.3)||(hc!=null&&hc<18)?'Leve':'No cumple criterio de acidosis (pH ≥7.3 y HCO₃ ≥18)'; }
       const hs=w<=10?100*w:w<=20?1000+50*(w-10):Math.min(1500+20*(w-20),2400);
       const defml=(+deh.value)*10*w, bol=(nv(bolo)||10)*w, rate=(defml-bol+hs*2)/48, ir=(+ins.value)*w;
       return ['Gravedad (ISPAD): '+gr+'.',
@@ -5028,7 +5166,7 @@ $('#newpt').addEventListener('click',()=>{ PTF.forEach(id=>{ $(id).value= id==='
   if('IntersectionObserver' in window) new IntersectionObserver(es=>{ mini.classList.toggle('show',!es[0].isIntersecting); },{threshold:0}).observe(sec);
   $('#ptedit').addEventListener('click',()=>{ sec.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>pesoIn.focus({preventScroll:true}),400); }); }
 readWeight(); renderList(); updTabs(); patientNote();
-const h=location.hash.slice(1); if(VIEWS.includes(h)) showView(h,true); else if(DB.some(d=>d.id===h)){state.cur=h; renderList(); renderDetail();}
+const h=location.hash.slice(1); if(protoHash(h)){} else if(VIEWS.includes(h)) showView(h,true); else if(DB.some(d=>d.id===h)){state.cur=h; renderList(); renderDetail();}
 })();
 </script>
 </body>
