@@ -5103,13 +5103,24 @@ const INF=[
  {n:'Insulina rápida',id:'insulina',fix:{amt:50,ml:50},st:100,su:'U',u:'U/kg/h',lo:0.05,hi:0.1,nt:'50 U en 50 mL SN (1 U/mL); purgar el equipo'}
 ];
 // «Cómo prepararlo»: solo con la concentración de la tabla (st) y el diluyente de infusión de la ficha (dilx.isol)
-function infPrep(x,amt,tot,drugMl,lo,hi){
+// concentración máxima para infusión (c = pediatría, Taketomo; neo = neonatos, NeoFax 2020), en mg o U del frasco por mL
+const INFMAX={dopamina:{c:3.2,neo:3.2,t:'Taketomo 3200 mcg/mL; 6000 por vena grande en restricción extrema',tn:'NeoFax 3200 mcg/mL; estándar neonatal 1600'},
+ dobutamina:{c:5,neo:4,t:'Taketomo 5000 mcg/mL',tn:'NeoFax 4000 mcg/mL; recomendada en neonatos 2000'},
+ adrenalina:{c:0.064,neo:0.064,t:'Taketomo 64 mcg/mL',tn:'Taketomo 64 mcg/mL; NeoFax no indica máximo'},
+ norepinefrina:{c:0.016,neo:0.1,t:'Taketomo 16 mcg/mL en restricción extrema; estándar 4',tn:'NeoFax 16–100 mcg/mL'},
+ milrinona:{c:0.2,neo:0.2,t:'Taketomo <200 mcg/mL',tn:'NeoFax 200 mcg/mL'},
+ nitroprusiato:{c:0.2,neo:0.5,t:'Taketomo 200 mcg/mL; 1000 en SG5% con restricción de líquidos',tn:'NeoFax 50–500 mcg/mL'},
+ vasopresina:{c:1,neo:1,t:'Taketomo 0.1–1 UI/mL',tn:'Taketomo 0.1–1 UI/mL'},
+ midazolam:{c:5,neo:5,t:'Taketomo 5 mg/mL IV',tn:'NeoFax 1–5 mg/mL IV; infusión habitual 0.5 mg/mL'},
+ ketamina:{c:2,neo:2,t:'Taketomo 2 mg/mL para infusión',tn:'Taketomo 2 mg/mL; NeoFax no la incluye'}};
+function infPrep(x,amt,tot,drugMl,lo,hi,noMax){
   const tr=document.createElement('tr'); tr.className='prep'; const td=el('td'); td.colSpan=4; tr.appendChild(td);
   td.appendChild(el('b',null,'Cómo prepararlo: '));
   const d=DB.find(q=>q.id===x.id), sol=d&&d.dilx&&d.dilx.isol;
   const dm=parseFloat(fmt(drugMl)), dil=Math.round((tot-dm)*100)/100;
   if(!x.st||!sol||!isFinite(drugMl)||dil<=0){ td.appendChild(el('span','prepx','Verificar dilución en protocolo local.')); return tr; }
   td.appendChild(document.createTextNode(fmt(dm)+' mL de '+x.n.toLowerCase()+' ('+fmt(x.st)+' '+x.su+'/mL) + '+String(dil)+' mL de '+sol+' = '+tot+' mL → '+fmt(lo)+'–'+fmt(hi)+' mL/h ('+fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+').'));
+  if(noMax) td.appendChild(el('span','prepx',' Taketomo y NeoFax no indican concentración máxima: verificar en protocolo local.'));
   return tr; }
 function renderInf(){
   const h=$('#v-infus'); vhead(h,'Urgencias','Infusiones estandarizadas');
@@ -5118,14 +5129,20 @@ function renderInf(){
   h.appendChild(el('p','csub','Mezclas por peso: con la regla del 6, 1 mL/h = 1 mcg/kg/min; con la del 0.6, 1 mL/h = 0.1 mcg/kg/min. Volumen final 100 mL (vasoactivos) o 50 mL (sedoanalgesia), en SG5% o SN según el fármaco.'));
   const t=document.createElement('table'); t.className='rtab';
   const hd=document.createElement('tr'); ['Fármaco','Mezcla','Equivalencia','Rango → mL/h'].forEach(x=>hd.appendChild(el('th',null,x))); t.appendChild(hd);
-  INF.forEach(x=>{ let amt, tot, eq, lo, hi, unit=x.mu||x.su;
-    if(x.fix){ amt=x.fix.amt; tot=x.fix.ml; const perMl=amt/tot; eq='1 mL/h = '+fmt(perMl/w)+' '+x.u; lo=x.lo*w/perMl; hi=x.hi*w/perMl; }
-    else if(x.special==='vaso'){ tot=100; amt=0.06*w; eq='1 mL/h = 0.01 mU/kg/min'; lo=x.lo/0.01; hi=x.hi/0.01; }
-    else { tot=x.tot||100; amt=x.k*w; eq='1 mL/h = '+fmt(x.f)+' '+x.u; lo=x.lo/x.f; hi=x.hi/x.f; }
+  const P=pt(), neo=(P.days!=null? P.days<=28 : state.pob==='neo');
+  INF.forEach(x=>{ let amt, tot, unit=x.mu||x.su;
+    if(x.fix){ amt=x.fix.amt; tot=x.fix.ml; } else { tot=x.tot||100; amt=x.k*w; }
+    const cm=INFMAX[x.id], cmax=cm? (neo? cm.neo : cm.c) : null, rule=amt/tot;
+    const adj= !x.fix && cmax!=null && rule>cmax*(1+1e-9);
+    if(adj) amt=cmax*tot;
+    const C=amt/tot, fu=({'mg>mcg':1000,'U>mU':1000})[x.su+'>'+x.u.split('/')[0]]||1, per=/min$/.test(x.u)?60:1;
+    const eqv=C*fu/(w*per), lo=x.lo/eqv, hi=x.hi/eqv, eq='1 mL/h = '+fmt(eqv)+' '+x.u;
     const drugMl=amt/x.st, big=drugMl>tot/2;
-    const mix=fmt(amt)+' '+unit+' ('+fmt(drugMl)+' mL de '+fmt(x.st)+' '+x.su+'/mL) + aforar a '+tot+' mL'+(big?' — ⚠ el fármaco ocupa más de la mitad: usar concentración fija':'');
-    const tr=document.createElement('tr'); [x.n, mix, eq+(x.nt?' · '+x.nt:''), fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+' → '+fmt(lo)+'–'+fmt(hi)+' mL/h'].forEach((c,j)=>tr.appendChild(el('td',j===3?'big2':null,c))); t.appendChild(tr);
-    t.appendChild(infPrep(x,amt,tot,drugMl,lo,hi)); });
+    let mix=fmt(amt)+' '+unit+' ('+fmt(drugMl)+' mL de '+fmt(x.st)+' '+x.su+'/mL) + aforar a '+tot+' mL'+(big?' — ⚠ el fármaco ocupa más de la mitad: usar concentración fija':'');
+    if(adj) mix+=' — ⚠ ajustada a la concentración máxima ('+(neo?cm.tn:cm.t)+'); con '+(x.k?'la regla':'la mezcla estándar')+' quedaría en '+fmt(rule*fu)+' '+x.u.split('/')[0]+'/mL';
+    const nt= adj? 'Concentración máxima '+(neo?'neonatal (NeoFax)':'pediátrica (Taketomo)')+', no regla del 6/0.6' : x.nt;
+    const tr=document.createElement('tr'); [x.n, mix, eq+(nt?' · '+nt:''), fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+' → '+fmt(lo)+'–'+fmt(hi)+' mL/h'].forEach((c,j)=>tr.appendChild(el('td',j===3?'big2':null,c))); t.appendChild(tr);
+    t.appendChild(infPrep(x,amt,tot,drugMl,lo,hi,!cm&&!x.fix)); });
   h.appendChild(t);
   h.appendChild(el('p','src','Rangos de adrenalina, norepinefrina y milrinona: PALS 2023; resto: Taketomo, NeoFax y Harriet Lane 2027.'));
   h.appendChild(el('p','src out','⚠ Las mezclas por regla del 6/0.6 son de uso habitual; verificar la ampolleta disponible. En neonatos y restricción hídrica concentrar la mezcla. Doble verificación de toda infusión de alto riesgo.'));
