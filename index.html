@@ -416,6 +416,7 @@ p.report{margin-top:18px}
 .pbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pbtns .addbtn{margin:0;padding:6px 12px;font-size:13px}
 .pbtns .addbtn.go{background:var(--marino);color:#fff}
 #v-proto .src.out{display:block;border-radius:14px;padding:8px 12px;margin-top:14px}
+.rtab tr.prep td{background:var(--lilac);font-size:13.5px;line-height:1.45;border-top:0}.rtab tr.prep b{color:var(--marino)}.prepx{color:var(--coral-t);font-weight:600}
 .paviso{font-size:12.5px;color:var(--muted);margin-top:10px}
 .protolist{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 @media (max-width:860px){.pstep{grid-template-columns:28px minmax(0,1fr);gap:4px 10px;padding:12px}.pnum{width:26px;height:26px;font-size:13px}}
@@ -595,7 +596,7 @@ p.report{margin-top:18px}
       <div class="igbtns"><a class="igfollow" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">Instagram</a><a class="igfollow" href="https://www.tiktok.com/@pedia.life" target="_blank" rel="noopener">TikTok</a></div>
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
-    <p class="fupd">Última actualización del contenido: 18 de noviembre de 2026.</p>
+    <p class="fupd">Última actualización del contenido: 19 de noviembre de 2026.</p>
   </footer>
 </div>
 
@@ -5087,20 +5088,29 @@ function renderCalc(){
 
 /* ---------- infusiones ---------- */
 const INF=[
- {n:'Dopamina',st:40,su:'mg',k:6,u:'mcg/kg/min',lo:2,hi:20,f:1,nt:'Regla del 6 · PALS prefiere adrenalina o norepinefrina en choque séptico'},
- {n:'Dobutamina',st:12.5,su:'mg',k:6,u:'mcg/kg/min',lo:2,hi:20,f:1,nt:'Regla del 6'},
- {n:'Adrenalina',st:1,su:'mg',k:0.6,u:'mcg/kg/min',lo:0.03,hi:0.2,f:0.1,nt:'Regla del 0.6 · PALS: choque hipotenso 0.03–0.2 (normotenso 0.03–0.05); el límite alto varía'},
- {n:'Norepinefrina',st:1,su:'mg',k:0.6,u:'mcg/kg/min',lo:0.05,hi:0.5,f:0.1,nt:'Regla del 0.6 · PALS 0.05–0.5'},
- {n:'Milrinona',st:1,su:'mg',k:0.6,u:'mcg/kg/min',lo:0.25,hi:0.75,f:0.1,nt:'Regla del 0.6 · PALS: carga opcional 50 mcg/kg en 10–60 min (hipotensión)'},
- {n:'Nitroprusiato',st:25,su:'mg',k:6,u:'mcg/kg/min',lo:0.3,hi:8,f:1,nt:'Regla del 6; proteger de la luz'},
- {n:'Vasopresina',st:20,su:'U',k:0.6,u:'mU/kg/min',lo:0.3,hi:2,f:0.1,nt:'0.6 U × kg en 100 mL'},
- {n:'Fentanilo',st:50,su:'mcg',k:50,u:'mcg/kg/h',lo:1,hi:5,f:1,tot:50,nt:'50 mcg × kg en 50 mL'},
- {n:'Midazolam',st:5,su:'mg',k:2.5,u:'mg/kg/h',lo:0.05,hi:0.2,f:0.05,tot:50,nt:'2.5 mg × kg en 50 mL'},
- {n:'Ketamina',st:50,su:'mg',k:5,u:'mg/kg/h',lo:0.5,hi:2,f:0.1,tot:50,nt:'5 mg × kg en 50 mL'},
- {n:'Dexmedetomidina',st:100,su:'mcg',k:25,u:'mcg/kg/h',lo:0.2,hi:1,f:0.5,tot:50,nt:'25 mcg × kg en 50 mL'},
- {n:'Morfina',st:10,su:'mg',k:0.5,u:'mcg/kg/h',lo:10,hi:40,f:10,tot:50,nt:'0.5 mg × kg en 50 mL',mu:'mg'},
- {n:'Insulina rápida',fix:{amt:50,ml:50},st:100,su:'U',u:'U/kg/h',lo:0.05,hi:0.1,nt:'50 U en 50 mL SN (1 U/mL); purgar el equipo'}
+ {n:'Dopamina',id:'dopamina',st:40,su:'mg',k:6,u:'mcg/kg/min',lo:2,hi:20,f:1,nt:'Regla del 6 · PALS prefiere adrenalina o norepinefrina en choque séptico'},
+ {n:'Dobutamina',id:'dobutamina',st:12.5,su:'mg',k:6,u:'mcg/kg/min',lo:2,hi:20,f:1,nt:'Regla del 6'},
+ {n:'Adrenalina',id:'adrenalina',st:1,su:'mg',k:0.6,u:'mcg/kg/min',lo:0.03,hi:0.2,f:0.1,nt:'Regla del 0.6 · PALS: choque hipotenso 0.03–0.2 (normotenso 0.03–0.05); el límite alto varía'},
+ {n:'Norepinefrina',id:'norepinefrina',st:1,su:'mg',k:0.6,u:'mcg/kg/min',lo:0.05,hi:0.5,f:0.1,nt:'Regla del 0.6 · PALS 0.05–0.5'},
+ {n:'Milrinona',id:'milrinona',st:1,su:'mg',k:0.6,u:'mcg/kg/min',lo:0.25,hi:0.75,f:0.1,nt:'Regla del 0.6 · PALS: carga opcional 50 mcg/kg en 10–60 min (hipotensión)'},
+ {n:'Nitroprusiato',id:'nitroprusiato',st:25,su:'mg',k:6,u:'mcg/kg/min',lo:0.3,hi:8,f:1,nt:'Regla del 6; proteger de la luz'},
+ {n:'Vasopresina',id:'vasopresina',st:20,su:'U',k:0.6,u:'mU/kg/min',lo:0.3,hi:2,f:0.1,nt:'0.6 U × kg en 100 mL'},
+ {n:'Fentanilo',id:'fentanilo',st:50,su:'mcg',k:50,u:'mcg/kg/h',lo:1,hi:5,f:1,tot:50,nt:'50 mcg × kg en 50 mL'},
+ {n:'Midazolam',id:'midazolam',st:5,su:'mg',k:2.5,u:'mg/kg/h',lo:0.05,hi:0.2,f:0.05,tot:50,nt:'2.5 mg × kg en 50 mL'},
+ {n:'Ketamina',id:'ketamina',st:50,su:'mg',k:5,u:'mg/kg/h',lo:0.5,hi:2,f:0.1,tot:50,nt:'5 mg × kg en 50 mL'},
+ {n:'Dexmedetomidina',id:'dexmedetomidina',st:100,su:'mcg',k:25,u:'mcg/kg/h',lo:0.2,hi:1,f:0.5,tot:50,nt:'25 mcg × kg en 50 mL'},
+ {n:'Morfina',id:'morfina',st:10,su:'mg',k:0.5,u:'mcg/kg/h',lo:10,hi:40,f:10,tot:50,nt:'0.5 mg × kg en 50 mL',mu:'mg'},
+ {n:'Insulina rápida',id:'insulina',fix:{amt:50,ml:50},st:100,su:'U',u:'U/kg/h',lo:0.05,hi:0.1,nt:'50 U en 50 mL SN (1 U/mL); purgar el equipo'}
 ];
+// «Cómo prepararlo»: solo con la concentración de la tabla (st) y el diluyente de infusión de la ficha (dilx.isol)
+function infPrep(x,amt,tot,drugMl,lo,hi){
+  const tr=document.createElement('tr'); tr.className='prep'; const td=el('td'); td.colSpan=4; tr.appendChild(td);
+  td.appendChild(el('b',null,'Cómo prepararlo: '));
+  const d=DB.find(q=>q.id===x.id), sol=d&&d.dilx&&d.dilx.isol;
+  const dm=parseFloat(fmt(drugMl)), dil=Math.round((tot-dm)*100)/100;
+  if(!x.st||!sol||!isFinite(drugMl)||dil<=0){ td.appendChild(el('span','prepx','Verificar dilución en protocolo local.')); return tr; }
+  td.appendChild(document.createTextNode(fmt(dm)+' mL de '+x.n.toLowerCase()+' ('+fmt(x.st)+' '+x.su+'/mL) + '+String(dil)+' mL de '+sol+' = '+tot+' mL → '+fmt(lo)+'–'+fmt(hi)+' mL/h ('+fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+').'));
+  return tr; }
 function renderInf(){
   const h=$('#v-infus'); vhead(h,'Urgencias','Infusiones estandarizadas');
   if(!state.w){ h.appendChild(el('p','nocalc','Escriba el peso arriba para calcular.')); return; }
@@ -5114,7 +5124,8 @@ function renderInf(){
     else { tot=x.tot||100; amt=x.k*w; eq='1 mL/h = '+fmt(x.f)+' '+x.u; lo=x.lo/x.f; hi=x.hi/x.f; }
     const drugMl=amt/x.st, big=drugMl>tot/2;
     const mix=fmt(amt)+' '+unit+' ('+fmt(drugMl)+' mL de '+fmt(x.st)+' '+x.su+'/mL) + aforar a '+tot+' mL'+(big?' — ⚠ el fármaco ocupa más de la mitad: usar concentración fija':'');
-    const tr=document.createElement('tr'); [x.n, mix, eq+(x.nt?' · '+x.nt:''), fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+' → '+fmt(lo)+'–'+fmt(hi)+' mL/h'].forEach((c,j)=>tr.appendChild(el('td',j===3?'big2':null,c))); t.appendChild(tr); });
+    const tr=document.createElement('tr'); [x.n, mix, eq+(x.nt?' · '+x.nt:''), fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+' → '+fmt(lo)+'–'+fmt(hi)+' mL/h'].forEach((c,j)=>tr.appendChild(el('td',j===3?'big2':null,c))); t.appendChild(tr);
+    t.appendChild(infPrep(x,amt,tot,drugMl,lo,hi)); });
   h.appendChild(t);
   h.appendChild(el('p','src','Rangos de adrenalina, norepinefrina y milrinona: PALS 2023; resto: Taketomo, NeoFax y Harriet Lane 2027.'));
   h.appendChild(el('p','src out','⚠ Las mezclas por regla del 6/0.6 son de uso habitual; verificar la ampolleta disponible. En neonatos y restricción hídrica concentrar la mezcla. Doble verificación de toda infusión de alto riesgo.'));
