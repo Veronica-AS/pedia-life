@@ -62,10 +62,10 @@ header.top::after{content:"";position:absolute;right:0;top:-10px;width:220px;hei
 .item .nm{font-weight:600;font-size:15px}
 .item .gp{font-size:12.5px;color:var(--muted)}
 .item.more{font-weight:600;color:var(--ink,#090a1e);text-align:center;background:#f6f3ea}
-.sctab td:last-child{min-width:180px}.sctab{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}.sctab th,.sctab td{border-bottom:1px solid #e6e4dc;padding:5px 6px;text-align:left}.sctab th{font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-.cfld{max-width:100%;display:inline-flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}.cfld input,.cfld select{font:inherit;font-size:14px;color:var(--ink,#090a1e);padding:6px 8px;border:1px solid var(--ash);border-radius:var(--r);background:#fff;max-width:100%}.cfld input{width:96px}
+.sctab td:last-child{min-width:180px}.sctab{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}.sctab th,.sctab td{border-bottom:1px solid var(--ash);padding:5px 6px;text-align:left}.sctab th{font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.cfld{max-width:100%;display:inline-flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}.cfld input,.cfld select{font:inherit;font-size:14px;color:var(--ink,#090a1e);padding:6px 8px;border:1px solid var(--ash);border-radius:var(--r);background:var(--surface);max-width:100%}.cfld input{width:96px}
 .cfld.wide{display:flex;margin-top:8px}.cfld.wide select{width:100%}.cfld:not(.wide) select{max-width:230px}
-.cout{margin-top:10px;border-top:1px dashed var(--ash);padding-top:8px}.cout p{margin:4px 0;font-size:14px}.cout p:first-child{font-weight:600}.cwarn{color:#9b1d6b}
+.cout{margin-top:10px;border-top:1px dashed var(--ash);padding-top:8px}.cout p{margin:4px 0;font-size:14px}.cout p:first-child{font-weight:600}.cwarn{color:var(--coral-t)}
 .csub{font-size:13px;color:var(--muted);margin:2px 0 6px}
 details.report{margin-top:22px;border:1px dashed var(--ash);border-radius:var(--r);padding:10px 14px}details.report summary{cursor:pointer;font-size:13px;font-weight:600}details.report.owner{margin:0 0 14px;background:#fff7e0}
 .tabs{flex-wrap:wrap}
@@ -153,7 +153,7 @@ table.vt td.ml,td.ml{font-weight:700;white-space:nowrap}
 .mix input{width:80px;padding:5px 8px;border:1px solid var(--ash);border-radius:var(--r);background:var(--paper);font-variant-numeric:tabular-nums}
 .mix input:focus{outline:2px solid var(--blue);outline-offset:0}
 table.inf{border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums;width:100%;max-width:540px;background:var(--paper);border:1px solid var(--mist);border-radius:var(--r)}
-table.inf th,table.inf td{text-align:left;padding:6px 10px;border-bottom:1px solid #edf1f3}
+table.inf th,table.inf td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--ash)}
 table.inf th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
 .info{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .box{border:1px solid var(--ash);border-radius:var(--r);padding:18px 20px}
@@ -195,21 +195,21 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:18p
 .secttl::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--prism);margin-right:10px;vertical-align:.12em}
 .empty .eicons{display:flex;justify-content:center;gap:10px;margin-bottom:18px}
 .empty .eicons .tile{width:56px;height:56px;font-size:30px;border-radius:50%}
-/* tema: encabezado violeta, tarjetas blancas de 25 px, controles en píldora */
+/* tema:encabezado violeta, tarjetas blancas de 25 px, controles en píldora */
 .prismbar{height:6px;background:var(--grape)}
 header.top{background:var(--grape);color:#fff;border-radius:var(--rc);padding:30px 34px;margin:8px 0 18px;overflow:hidden}
 header.top::after{display:none}
 header.top .eyebrow{color:#fff;opacity:.85;font-weight:700;letter-spacing:.07em}
 header.top h1{font-weight:700;font-size:56px;line-height:1.05;letter-spacing:0;color:#fff}
-.hicons .tile{background:#fff;border:2px solid #fff;box-shadow:inset 0 0 0 2px var(--ink)}
+.hicons .tile{background:var(--surface);border:2px solid #fff;box-shadow:inset 0 0 0 2px var(--ink)}
 .hicons .tile.c-yellow{color:var(--ink)}
 @media (max-width:860px){header.top{padding:20px}header.top h1{font-size:32px}}
 .disclaimer{border-radius:var(--rc);border:2px solid var(--yellow);padding:14px 20px}
 .panel,.patient{border:0;border-radius:var(--rc)}
 .ptmini{display:none}
 @media (max-width:860px){.patient{position:static}
- .ptmini.show{display:flex;position:fixed;top:0;left:0;right:0;z-index:20;background:#fff;box-shadow:var(--sh);padding:8px 16px;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:15px;color:var(--ink);border-radius:0 0 20px 20px}}
-.ptmini button{border:2px solid var(--ink);border-radius:52px;background:#fff;color:var(--ink);font-weight:600;padding:4px 14px;font-family:inherit;cursor:pointer}
+ .ptmini.show{display:flex;position:fixed;top:0;left:0;right:0;z-index:20;background:var(--surface);box-shadow:var(--sh);padding:8px 16px;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:15px;color:var(--ink);border-radius:0 0 20px 20px}}
+.ptmini button{border:2px solid var(--ink);border-radius:52px;background:var(--surface);color:var(--ink);font-weight:600;padding:4px 14px;font-family:inherit;cursor:pointer}
 .wwarn{display:block;margin-top:6px;color:var(--ink);background:var(--blush);border:1px solid var(--pink);border-radius:12px;padding:6px 10px;font-weight:600}
 .newpt{margin:0}
 .item.tool{background:var(--cream)}
@@ -241,7 +241,7 @@ header.top h1{font-weight:700;font-size:56px;line-height:1.05;letter-spacing:0;c
 .order{border:2px solid var(--ink);border-radius:20px}
 .ordtxt{border-radius:15px;background:#faf9ff}
 .copybtn{background:var(--ink);border-radius:20px;padding:10px 18px;font-weight:700}
-.addbtn,.star,.toggle button{border:2px solid var(--ink);border-radius:52px;font-weight:600;color:var(--ink);background:#fff}
+.addbtn,.star,.toggle button{border:2px solid var(--ink);border-radius:52px;font-weight:600;color:var(--ink);background:var(--surface)}
 .star[aria-pressed="true"]{background:var(--cream);border-color:var(--ink)}
 .toggle button:hover{background:var(--ink);color:#fff}
 .tile{border-radius:12px;border-width:2px}
@@ -250,7 +250,7 @@ header.top h1{font-weight:700;font-size:56px;line-height:1.05;letter-spacing:0;c
 table.inf{border-radius:15px;overflow:hidden}
 .rtab th{border-bottom:2px solid var(--ink)}
 .rtab tr.sec td{background:var(--lilac)}
-details.report{border-radius:20px;border:2px dashed var(--mist);background:#fff}
+details.report{border-radius:20px;border:2px dashed var(--mist);background:var(--surface)}
 footer{background:#000;color:#fff;border:0;border-radius:var(--rc);padding:24px 28px;margin-top:36px}
 footer i{color:var(--aqua)}
 /* signos vitales */
@@ -266,7 +266,7 @@ footer i{color:var(--aqua)}
 .acclist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .accq{margin-top:6px;max-width:520px}
 .accsec{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 4px 2px}
-details.acc{background:#fff;border:2px solid var(--ash);border-radius:20px;overflow:hidden}
+details.acc{background:var(--surface);border:2px solid var(--ash);border-radius:20px;overflow:hidden}
 details.acc[open]{border-color:var(--ink)}
 details.acc>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 18px;font-weight:700;font-size:16px}
 details.acc>summary::-webkit-details-marker{display:none}
@@ -290,16 +290,37 @@ label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 
   --cream:#FFF3E8; --mint:#E2F6F8; --sky:#ECEEFE; --lilac:#F6F7FE; --aqua:#FFD6B5;
   --grape:#153E8A; --prism:linear-gradient(90deg,#22B8C5,#7B86F6,#FF7A8A,#FFD6B5);
   --rc:24px; --sh:0 8px 30px rgba(21,62,138,.08);
+  /* tokens de tema: texto vs relleno (ver modo oscuro abajo) */
+  --bg:#F6F7FE; --surface:#fff; --marino-tx:#153E8A; --coral-fill:#C23549; --lav-fill:#4C57D1;
+  --chart-grid:#E6E8F2; --chart-tx:#6B7280; --amb-bg:#FFE3B3; --amb-tx:#6B3A00;
+  color-scheme:light;
 }
-html,body{background:#F6F7FE}
+/* modo oscuro para la guardia: automático según el sistema, o forzado con el botón de tema (data-theme) */
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0F1626; --surface:#18213A; --paper:#18213A; --marino:#2C55B0; --marino-tx:#AFC2FF; --grape:#2C55B0;
+  --ink:#E7EBF6; --carbon:#E7EBF6; --muted:#AAB4D0; --ash:#2F3B5E; --mist:#2F3B5E;
+  --lav-t:#B4BAFF; --coral-t:#FF9EA9; --turq-t:#73DCE6; --coral-fill:#B92F43; --lav-fill:#4C57D1;
+  --turq-tin:#12363F; --lav-tin:#252D57; --coral-tin:#3F1F2B; --dur-tin:#3A2D20;
+  --blue:#AFC2FF; --pink:#FF9EA9; --blush:#3F1F2B; --green:#73DCE6; --cream:#3A2D20; --mint:#12363F; --sky:#252D57; --lilac:#1E2844;
+  --sh:0 8px 30px rgba(0,0,0,.35); --chart-grid:#2F3B5E; --chart-tx:#AAB4D0; --amb-bg:#5A3D10; --amb-tx:#FFE0A8;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0F1626; --surface:#18213A; --paper:#18213A; --marino:#2C55B0; --marino-tx:#AFC2FF; --grape:#2C55B0;
+  --ink:#E7EBF6; --carbon:#E7EBF6; --muted:#AAB4D0; --ash:#2F3B5E; --mist:#2F3B5E;
+  --lav-t:#B4BAFF; --coral-t:#FF9EA9; --turq-t:#73DCE6; --coral-fill:#B92F43; --lav-fill:#4C57D1;
+  --turq-tin:#12363F; --lav-tin:#252D57; --coral-tin:#3F1F2B; --dur-tin:#3A2D20;
+  --blue:#AFC2FF; --pink:#FF9EA9; --blush:#3F1F2B; --green:#73DCE6; --cream:#3A2D20; --mint:#12363F; --sky:#252D57; --lilac:#1E2844;
+  --sh:0 8px 30px rgba(0,0,0,.35); --chart-grid:#2F3B5E; --chart-tx:#AAB4D0; --amb-bg:#5A3D10; --amb-tx:#FFE0A8;
+  color-scheme:dark; }
+html,body{background:var(--bg)}
 .prismbar{height:5px;background:var(--prism)}
-/* encabezado: blanco, isotipo en sello con aro lavanda, logotipo y divisor de marca */
-header.top{background:#fff;color:var(--ink);border:1px solid var(--ash);border-radius:var(--rc);padding:24px 30px;gap:18px 34px;align-items:center;justify-content:flex-start;position:relative;overflow:hidden}
+/* encabezado:blanco, isotipo en sello con aro lavanda, logotipo y divisor de marca */
+header.top{background:var(--surface);color:var(--ink);border:1px solid var(--ash);border-radius:var(--rc);padding:24px 30px;gap:18px 34px;align-items:center;justify-content:flex-start;position:relative;overflow:hidden}
 .bmarca{display:flex;align-items:center;gap:16px;flex:none}
-.bsello{width:96px;height:96px;border-radius:50%;background:#fff;border:3px solid var(--lavanda);display:grid;place-items:center;overflow:hidden;flex:none}
+.bsello{width:96px;height:96px;border-radius:50%;background:var(--surface);border:3px solid var(--lavanda);display:grid;place-items:center;overflow:hidden;flex:none}
 .bsello img{width:80%;height:auto;display:block}
 .bnombre{display:flex;flex-direction:column}
-.bpedia{font-weight:600;font-size:34px;line-height:1.05;letter-spacing:-.01em;color:var(--marino)}
+.bpedia{font-weight:600;font-size:34px;line-height:1.05;letter-spacing:-.01em;color:var(--marino-tx)}
 .blife{color:var(--lavanda);font-weight:500}
 .buser{font-weight:500;font-size:15px;color:var(--lav-t)}
 .btxt{flex:1;min-width:260px}
@@ -307,69 +328,69 @@ header.top{background:#fff;color:var(--ink);border:1px solid var(--ash);border-r
 .bdiv .p{width:8px;height:8px;border-radius:50%;flex:none}.bdiv .p.t{background:var(--turquesa)}.bdiv .p.d{background:var(--durazno)}
 .bdiv .l{flex:1;height:2px;border-radius:2px;background:var(--lavanda)}
 .bdiv svg{width:18px;height:18px;flex:none;fill:var(--coralc)}
-header.top .eyebrow{color:var(--marino);opacity:1;font-size:11px;font-weight:500;letter-spacing:.32em;text-transform:uppercase}
-header.top h1{color:var(--marino);font-weight:600;font-size:40px;line-height:1.1;letter-spacing:-.01em;margin:4px 0 0}
+header.top .eyebrow{color:var(--marino-tx);opacity:1;font-size:11px;font-weight:500;letter-spacing:.32em;text-transform:uppercase}
+header.top h1{color:var(--marino-tx);font-weight:600;font-size:40px;line-height:1.1;letter-spacing:-.01em;margin:4px 0 0}
 header.top .hicons{display:none}
 .bdeco svg,.bdeco i{position:absolute}
 .bdeco svg{width:20px;height:20px}
 .bdeco .st1{fill:var(--turquesa);right:30px;top:20px}.bdeco .st2{fill:var(--coralc);right:70px;bottom:22px;width:16px;height:16px}
 .bdeco i{width:8px;height:8px;border-radius:50%}.bdeco .d1{background:var(--lavanda);right:72px;top:30px}.bdeco .d2{background:var(--durazno);right:26px;bottom:34px}
 @media (max-width:860px){header.top{padding:18px 18px;gap:12px}.bsello{width:72px;height:72px}.bpedia{font-size:28px}header.top h1{font-size:26px}.btxt{min-width:0;flex-basis:100%}.bdeco .st2,.bdeco .d2{display:none}header.top .eyebrow{letter-spacing:.14em;font-size:10px}}
-.disclaimer{background:#fff;border:2px solid var(--durazno);border-radius:var(--rc)}
+.disclaimer{background:var(--surface);border:2px solid var(--durazno);border-radius:var(--rc)}
 .panel,.patient,.view,.detail{border-radius:var(--rc)}
 /* foco de teclado */
-:focus-visible{outline:2px solid var(--marino);outline-offset:2px}
-.search:focus,.weight input:focus{outline:2px solid var(--marino);outline-offset:2px;border-color:var(--marino)}
-/* iconos de grupo: tintes con su color -texto */
+:focus-visible{outline:2px solid var(--marino-tx);outline-offset:2px}
+.search:focus,.weight input:focus{outline:2px solid var(--marino-tx);outline-offset:2px;border-color:var(--marino-tx)}
+/* iconos de grupo:tintes con su color -texto */
 .tile{border-width:0}
 .c-pink{color:var(--coral-t);background:var(--coral-tin)}
 .c-blue{color:var(--lav-t);background:var(--lav-tin)}
-.c-yellow{color:var(--marino);background:var(--dur-tin)}
+.c-yellow{color:var(--marino-tx);background:var(--dur-tin)}
 .c-green{color:var(--turq-t);background:var(--turq-tin)}
 /* pestañas: píldoras blancas; la activa en marino */
-.tabs button,.tabs button[data-c][aria-pressed="false"]{background:#fff;border:2px solid var(--ash);color:var(--marino)}
-.tabs button[data-c="pink"] .ic{color:var(--coral-t)}.tabs button[data-c="blue"] .ic{color:var(--lav-t)}.tabs button[data-c="green"] .ic{color:var(--turq-t)}.tabs button[data-c="yellow"] .ic{color:var(--marino)}
-.tabs button[data-c][aria-pressed="true"]{background:var(--marino);border-color:var(--marino);color:#fff}
+.tabs button,.tabs button[data-c][aria-pressed="false"]{background:var(--surface);border:2px solid var(--ash);color:var(--marino-tx)}
+.tabs button[data-c="pink"] .ic{color:var(--coral-t)}.tabs button[data-c="blue"] .ic{color:var(--lav-t)}.tabs button[data-c="green"] .ic{color:var(--turq-t)}.tabs button[data-c="yellow"] .ic{color:var(--marino-tx)}
+.tabs button[data-c][aria-pressed="true"]{background:var(--marino);border-color:var(--marino-tx);color:#fff}
 .tabs button[data-c][aria-pressed="true"] .ic{color:#fff}
 /* títulos en marino */
-.dhead h2,.view h2{color:var(--marino);font-weight:600;letter-spacing:-.01em}
-.secttl{color:var(--marino);font-weight:600}
+.dhead h2,.view h2{color:var(--marino-tx);font-weight:600;letter-spacing:-.01em}
+.secttl{color:var(--marino-tx);font-weight:600}
 .secttl::before{background:var(--turquesa)}
 .dhead .grp{color:var(--lav-t);font-weight:600}
 .eyebrow{color:var(--muted)}
 /* controles */
-.weight input{border-color:var(--marino)}
-.seg,.seg button+button{border-color:var(--marino)}
+.weight input{border-color:var(--marino-tx)}
+.seg,.seg button+button{border-color:var(--marino-tx)}
 .seg button[aria-pressed="true"]{background:var(--marino);color:#fff}
 .copybtn{background:var(--marino);border-radius:999px}
-.addbtn,.star,.toggle button{border-color:var(--marino);color:var(--marino)}
+.addbtn,.star,.toggle button{border-color:var(--marino-tx);color:var(--marino-tx)}
 .toggle button:hover{background:var(--marino);color:#fff}
 .star[aria-pressed="true"]{background:var(--dur-tin)}
-.order{border-color:var(--marino)}
+.order{border-color:var(--marino-tx)}
 .calc{background:var(--lav-tin)}
-.calc .big{color:var(--marino)}
-.ordtxt{background:#F6F7FE}
+.calc .big{color:var(--marino-tx)}
+.ordtxt{background:var(--bg)}
 .reg{border-color:var(--ash)}
-.item:hover{background:#F6F7FE}
+.item:hover{background:var(--bg)}
 .item[aria-current="true"]{background:var(--lav-tin)}
-.item.more{background:var(--lav-tin);color:var(--marino)}
+.item.more{background:var(--lav-tin);color:var(--marino-tx)}
 .item.tool{background:var(--turq-tin)}
 .tag.ped{background:var(--lav-tin);border-color:var(--lavanda)}
 .box.adm{background:var(--turq-tin);border-color:var(--turquesa)}
-details.acc[open]{border-color:var(--marino)}
-details.acc>summary:hover{background:#F6F7FE}
-details.acc>summary::after{color:var(--marino)}
-.rtab th{border-bottom-color:var(--marino)}
+details.acc[open]{border-color:var(--marino-tx)}
+details.acc>summary:hover{background:var(--bg)}
+details.acc>summary::after{color:var(--marino-tx)}
+.rtab th{border-bottom-color:var(--marino-tx)}
 .rtab tr.sec td,.svbig th{background:var(--lav-tin)}
-.svbig th,.svbig td{border-color:var(--marino)}
+.svbig th,.svbig td{border-color:var(--marino-tx)}
 footer{background:var(--marino);color:#fff}
 footer i{color:var(--durazno)}
 .ptmini.show{border-bottom:3px solid var(--lavanda)}
-.ptmini button{border-color:var(--marino);color:var(--marino)}
+.ptmini button{border-color:var(--marino-tx);color:var(--marino-tx)}
 .buser{text-decoration:none}.buser:hover{text-decoration:underline}
 .igic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;flex:none}.igic .dot{fill:currentColor;stroke:none}
 .bacc{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.igbtn{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;border:2px solid var(--marino);color:var(--marino);font-weight:600;font-size:14px;text-decoration:none;background:#fff}
+.igbtn{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;border:2px solid var(--marino-tx);color:var(--marino-tx);font-weight:600;font-size:14px;text-decoration:none;background:var(--surface)}
 .igbtn:hover{background:var(--marino);color:#fff}
 .igfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;font-weight:500}.igfoot a{color:var(--durazno);font-weight:600}
 .igtip{margin:10px 0 0;font-size:13px;color:var(--muted)}.igtip a{color:var(--lav-t);font-weight:600}
@@ -378,17 +399,17 @@ footer i{color:var(--durazno)}
 .apic{width:18px;height:18px;fill:var(--coralc);flex:none}
 .apoyof{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;padding:14px 18px;border-radius:18px;background:rgba(255,255,255,.08)}
 .apoyof span{font-weight:500}
-.igcard{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;background:#fff;color:var(--marino);border-radius:18px;padding:10px 14px;margin:0 0 14px;max-width:640px}
-.igtile{width:38px;height:38px;border-radius:12px;background:var(--lav-tin);color:var(--marino);display:grid;place-items:center;flex:none}
+.igcard{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;background:var(--surface);color:var(--marino-tx);border-radius:18px;padding:10px 14px;margin:0 0 14px;max-width:640px}
+.igtile{width:38px;height:38px;border-radius:12px;background:var(--lav-tin);color:var(--marino-tx);display:grid;place-items:center;flex:none}
 .igtile .igic{width:22px;height:22px}
 .igtx{flex:1;min-width:180px;display:flex;flex-direction:column;line-height:1.3}.igtx b{font-size:14.5px;font-weight:600}.igtx span{font-size:12.5px;color:var(--muted)}
 .igfollow{display:inline-flex;align-items:center;padding:7px 16px;font-size:13.5px;border-radius:999px;background:var(--marino);color:#fff;font-weight:600;text-decoration:none;white-space:nowrap}
-.igfollow:hover{background:var(--lav-t)}
+.igfollow:hover{background:var(--lav-fill)}
 .igbtns{display:flex;gap:8px;flex-wrap:wrap}
 .fbrow{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;padding:0 4px}
 .fbbtn{display:inline-flex;align-items:center;padding:8px 18px;border-radius:999px;border:2px solid #fff;color:#fff;font-weight:600;font-size:14px;text-decoration:none}
-.fbbtn:hover{background:#fff;color:var(--marino)}
-.fbbtn.alt{border-color:var(--marino);color:var(--marino)}.fbbtn.alt:hover{background:var(--marino);color:#fff}
+.fbbtn:hover{background:var(--surface);color:var(--marino-tx)}
+.fbbtn.alt{border-color:var(--marino-tx);color:var(--marino-tx)}.fbbtn.alt:hover{background:var(--marino);color:#fff}
 p.report{margin-top:18px}
 .fupd{margin:0;opacity:.85;font-size:13px}
 /* emergencias */
@@ -396,27 +417,27 @@ p.report{margin-top:18px}
 .emh{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--coral-t);margin:0 0 8px;letter-spacing:.02em}
 .emh::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--coralc)}
 .emgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.emcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:20px;border:2px solid var(--coral-tin);background:#fff;color:var(--marino);font:inherit;font-weight:600;font-size:14px;line-height:1.25;text-align:left;cursor:pointer}
+.emcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:20px;border:2px solid var(--coral-tin);background:var(--surface);color:var(--marino-tx);font:inherit;font-weight:600;font-size:14px;line-height:1.25;text-align:left;cursor:pointer}
 .emcard:hover{border-color:var(--coralc)}
 .emcard[aria-current="true"]{border-color:var(--coral-t);background:var(--coral-tin)}
 .emcard .tile{width:36px;height:36px}
 @media (max-width:860px){.emgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;-webkit-overflow-scrolling:touch}.emcard{flex:0 0 132px;scroll-snap-align:start}}
 .pwarn{background:var(--coral-tin);color:var(--coral-t);border-radius:16px;padding:10px 14px;font-weight:600;margin:0 0 14px}
-.pnow{background:var(--lav-tin);color:var(--marino);border-radius:16px;padding:10px 14px;margin:0 0 14px}
+.pnow{background:var(--lav-tin);color:var(--marino-tx);border-radius:16px;padding:10px 14px;margin:0 0 14px}
 .psteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.pstep{display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 12px;border:2px solid var(--ash);border-radius:20px;padding:14px 16px;background:#fff}
+.pstep{display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 12px;border:2px solid var(--ash);border-radius:20px;padding:14px 16px;background:var(--surface)}
 .pstep>*:not(.pnum){grid-column:2}
 .pnum{grid-row:1/span 3;grid-column:1;width:32px;height:32px;border-radius:50%;background:var(--marino);color:#fff;display:grid;place-items:center;font-weight:600}
 .phd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
-.phd h3{margin:0;font-size:16.5px;color:var(--marino)}
+.phd h3{margin:0;font-size:16.5px;color:var(--marino-tx)}
 .ptm{font-size:12px;font-weight:600;color:var(--lav-t);background:var(--lav-tin);border-radius:999px;padding:3px 10px}
 .pls{margin:6px 0 0;padding-left:18px}.pls li{margin:4px 0;line-height:1.45}
 .pls li.w{list-style:none;margin-left:-18px;color:var(--coral-t);font-weight:600}
-.pls b{color:var(--marino)}
+.pls b{color:var(--marino-tx)}
 .pbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pbtns .addbtn{margin:0;padding:6px 12px;font-size:13px}
 .pbtns .addbtn.go{background:var(--marino);color:#fff}
 #v-proto .src.out{display:block;border-radius:14px;padding:8px 12px;margin-top:14px}
-.rtab tr.prep td{background:var(--lilac);font-size:13.5px;line-height:1.45;border-top:0}.rtab tr.prep b{color:var(--marino)}.prepx{color:var(--coral-t);font-weight:600}
+.rtab tr.prep td{background:var(--lilac);font-size:13.5px;line-height:1.45;border-top:0}.rtab tr.prep b{color:var(--marino-tx)}.prepx{color:var(--coral-t);font-weight:600}
 .paviso{font-size:12.5px;color:var(--muted);margin-top:10px}
 .protolist{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 @media (max-width:860px){.pstep{grid-template-columns:28px minmax(0,1fr);gap:4px 10px;padding:12px}.pnum{width:26px;height:26px;font-size:13px}}
@@ -426,9 +447,9 @@ p.report{margin-top:18px}
 .westlink{background:none;border:0;padding:0;color:var(--lav-t);text-decoration:underline;font-size:14px;cursor:pointer}
 .westh{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:2px 0 6px}
 .westrow{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--ash);background:var(--lilac);border-radius:14px;padding:8px 10px;margin:6px 0}
-.westrow b{display:block;font-size:15px;color:var(--marino)}
+.westrow b{display:block;font-size:15px;color:var(--marino-tx)}
 .westrow small{display:block;font-size:12.5px;color:var(--muted);line-height:1.35}
-.westuse{flex:none;border:1px solid var(--marino);background:#fff;color:var(--marino);border-radius:999px;padding:6px 14px;font-weight:600;cursor:pointer}
+.westuse{flex:none;border:1px solid var(--marino-tx);background:var(--surface);color:var(--marino-tx);border-radius:999px;padding:6px 14px;font-weight:600;cursor:pointer}
 .westnote{display:block;font-size:12.5px;color:var(--muted)}
 .westflag{display:block;background:var(--dur-tin);border:1px solid var(--durazno);border-radius:12px;padding:6px 10px;font-size:13.5px;color:var(--ink);font-weight:500}
 /* lactante febril */
@@ -438,42 +459,73 @@ p.report{margin-top:18px}
 .febf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 14px;margin:12px 0}
 .febfld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
 .febfld>span{font-weight:600;color:var(--ink)}
-.febfld input,.febfld select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--ash);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+.febfld input,.febfld select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--ash);border-radius:12px;background:var(--surface);color:var(--ink);width:100%}
 .febfld small{font-size:12px}
 .febinl{display:flex;gap:6px}.febinl input{flex:1;min-width:0}.febinl select{width:auto}
-.febhsv{margin-top:14px;border:1px solid var(--ash);border-radius:16px;padding:10px 14px;background:#fff}.febhsv summary{font-weight:600;cursor:pointer;color:var(--marino)}
+.febhsv{margin-top:14px;border:1px solid var(--ash);border-radius:16px;padding:10px 14px;background:var(--surface)}.febhsv summary{font-weight:600;cursor:pointer;color:var(--marino-tx)}
 /* metrónomo de RCP */
-.metro{border:2px solid var(--coralc);border-radius:20px;padding:14px 16px;margin:14px 0;background:#fff}
-.mettop{display:flex;justify-content:space-between;align-items:baseline}.mettop b{color:var(--marino);font-size:17px}
+.metro{border:2px solid var(--coralc);border-radius:20px;padding:14px 16px;margin:14px 0;background:var(--surface)}
+.mettop{display:flex;justify-content:space-between;align-items:baseline}.mettop b{color:var(--marino-tx);font-size:17px}
 .metclk{font-variant-numeric:tabular-nums;font-weight:600;font-size:20px;color:var(--ink)}
-.metcnt{font-size:44px;font-weight:700;text-align:center;color:var(--marino);font-variant-numeric:tabular-nums;margin:6px 0;min-height:56px}
+.metcnt{font-size:44px;font-weight:700;text-align:center;color:var(--marino-tx);font-variant-numeric:tabular-nums;margin:6px 0;min-height:56px}
 .metcnt.vent{color:var(--coral-t);font-size:34px}
 .metrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
 .metrl{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}.metrl input{width:120px}.metrate{font-weight:600;color:var(--ink);min-width:62px}
-.metmode{display:flex;flex-wrap:wrap;gap:8px}.metmode button{font:inherit;font-size:13.5px;border:1px solid var(--ash);background:var(--lilac);color:var(--marino);border-radius:999px;padding:7px 12px;cursor:pointer}.metmode button[aria-pressed="true"]{background:var(--marino);border-color:var(--marino);color:#fff;font-weight:600}
+.metmode{display:flex;flex-wrap:wrap;gap:8px}.metmode button{font:inherit;font-size:13.5px;border:1px solid var(--ash);background:var(--lilac);color:var(--marino-tx);border-radius:999px;padding:7px 12px;cursor:pointer}.metmode button[aria-pressed="true"]{background:var(--marino);border-color:var(--marino-tx);color:#fff;font-weight:600}
 .metcyc{margin:10px 0 0;font-size:14px;color:var(--muted)}.metcyc.due{color:var(--coral-t);font-weight:700}
 .metbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.metgo{flex:1;min-width:180px;border:0;border-radius:999px;padding:12px 18px;font-size:16px;font-weight:600;background:var(--marino);color:#fff;cursor:pointer}.metgo.on{background:var(--coral-t)}
-.metepib{border:1px solid var(--marino);background:#fff;color:var(--marino);border-radius:999px;padding:12px 16px;font-weight:600;cursor:pointer}
+.metgo{flex:1;min-width:180px;border:0;border-radius:999px;padding:12px 18px;font-size:16px;font-weight:600;background:var(--marino);color:#fff;cursor:pointer}.metgo.on{background:var(--coral-fill)}
+.metepib{border:1px solid var(--marino-tx);background:var(--surface);color:var(--marino-tx);border-radius:999px;padding:12px 16px;font-weight:600;cursor:pointer}
 .metepi{margin:8px 0 0;font-size:14px;color:var(--muted)}.metepi.due{color:var(--coral-t);font-weight:700}
 .metnote{display:block;margin-top:8px;font-size:12.5px;color:var(--muted)}
-.metfloat{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:var(--coral-t);color:#fff;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer}
+.metfloat{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:var(--coral-fill);color:#fff;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer}
 /* bilirrubina AAP 2022 */
 .bilbox .febout{display:grid;gap:12px;margin-top:14px}
 .bilbox .pstep{display:block}
-.bilchart{margin-top:6px;border:1px solid var(--ash);border-radius:16px;background:#fff;padding:6px}
+.bilchart{margin-top:6px;border:1px solid var(--ash);border-radius:16px;background:var(--surface);padding:6px}
 .bilsvg{width:100%;height:auto;display:block}
-.bilsvg .bg{stroke:#E6E8F2;stroke-width:1}
-.bilsvg .bt{font-size:19px;fill:#6B7280}
+.bilsvg .bg{stroke:var(--chart-grid);stroke-width:1}
+.bilsvg .bt{font-size:19px;fill:var(--chart-tx)}
 .bilsvg path,.bilsvg line.bph,.bilsvg line.bex,.bilsvg line.bes{fill:none;stroke-width:2.5}
 .bilsvg .bph{stroke:var(--turquesa)}
 .bilsvg .bes{stroke:#E8A26A;stroke-dasharray:6 4;stroke-width:2.5}
 .bilsvg .bex{stroke:var(--coral-t)}
-.bilsvg .bpt{fill:var(--marino);stroke:#fff;stroke-width:2}
+.bilsvg .bpt{fill:var(--marino-tx);stroke:#fff;stroke-width:2}
 .pstep.bilred{border-color:var(--coral-t);background:var(--coral-tin)}
 .pstep.bilamb{border-color:var(--durazno);background:var(--dur-tin)}
 .pstep h3{margin:0 0 4px}
+/* cronómetro de paro */
+.parogo{margin:6px 0 10px!important;font-size:15px;padding:10px 18px}
+.paropanel{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:60;width:min(680px,100%);background:var(--surface);border:2px solid var(--coral-t);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -6px 24px rgba(21,62,138,.18);padding:10px 14px 12px;max-height:62vh;overflow:auto}
+.ptop{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}.ptop b{color:var(--coral-t);font-size:16px}
+.pclk{font-size:22px;font-weight:700;color:var(--marino-tx);font-variant-numeric:tabular-nums}
+.pcyc,.pepi{font-weight:600;font-size:14px;border-radius:999px;padding:4px 10px;background:var(--lav-tin);color:var(--marino-tx);font-variant-numeric:tabular-nums}
+.pcyc.due{background:var(--coral-fill);color:#fff}
+.pepi.amb{background:var(--amb-bg);color:var(--amb-tx)}.pepi.red{background:var(--coral-fill);color:#fff}
+.pmin{margin-left:auto;border:1px solid var(--ash);background:var(--surface);color:var(--marino-tx);border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+.pinfo{margin:8px 0;font-size:13.5px;line-height:1.45;color:var(--ink)}.pinfo div{margin:2px 0}
+.pbtns2{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}
+.pb{font:inherit;font-weight:600;font-size:14px;border:1.5px solid var(--marino-tx);background:var(--surface);color:var(--marino-tx);border-radius:12px;padding:9px 8px;cursor:pointer}
+.pb.epi{background:var(--marino);color:#fff}.pb.shock{background:var(--coral-fill);border-color:var(--coral-t);color:#fff}.pb.rce{border-color:var(--turq-t);color:var(--turq-t)}
+.pb.end{border-color:var(--coral-t);color:var(--coral-t)}.pb:disabled{opacity:.45;cursor:default}
+.pnote{display:flex;gap:6px;margin:8px 0}.pnote input{flex:1;min-width:0;font:inherit;font-size:15px;padding:8px 10px;border:1px solid var(--ash);border-radius:12px}
+.plog{list-style:none;margin:6px 0;padding:0;max-height:22vh;overflow:auto;border-top:1px solid var(--ash)}.plog li{display:flex;gap:10px;padding:5px 2px;border-bottom:1px solid var(--ash);font-size:13.5px}
+.plt{flex:none;color:var(--muted);font-variant-numeric:tabular-nums}
+.pfoot{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.pnote2{margin:6px 0 0;font-size:12px;color:var(--muted)}
+body.paroon .metfloat{bottom:auto;top:12px}
+.swnew{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:80;width:min(560px,calc(100% - 24px));border:0;border-radius:16px;padding:12px 16px;background:var(--marino);color:#fff;font:inherit;font-weight:600;font-size:15px;box-shadow:0 8px 24px rgba(21,62,138,.3);cursor:pointer}
+.legal h3{color:var(--marino-tx);font-size:17px;margin:20px 0 6px}.legal ul{padding-left:20px}.legal li{margin:6px 0;line-height:1.5}.legal p{line-height:1.55}
+.legal code{font-size:13px;background:var(--lav-tin);border-radius:6px;padding:1px 5px}
+.lgdraft{display:inline-block;background:var(--dur-tin);border:1px solid var(--durazno);color:var(--ink);font-weight:600;border-radius:12px;padding:6px 12px}
+.lgback a{color:var(--lav-t);font-weight:600}
+.lglinks{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 10px;padding:0 4px}.lglinks a{color:#fff;font-weight:500;font-size:14px}
+/* el sello del isotipo siempre es blanco (marca) */
+.bsello{background:#fff!important}
+.themebtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:2px solid var(--ash);background:var(--surface);color:var(--marino-tx);font:inherit;font-weight:600;font-size:14px;cursor:pointer}
 </style>
+<meta name="theme-color" content="#153E8A" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1626" media="(prefers-color-scheme: dark)">
 </head>
 <body>
 <div class="prismbar" aria-hidden="true"></div>
@@ -510,7 +562,7 @@ p.report{margin-top:18px}
       <div class="bdiv" aria-hidden="true"><span class="p t"></span><span class="l"></span><svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z" stroke-linejoin="round"/></svg><span class="l"></span><span class="p d"></span></div>
       <div class="eyebrow">Herramienta para personal de salud</div>
       <h1>Dosis pediátricas y neonatales</h1>
-      <div class="bacc"><a class="igbtn" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg><span>Sígueme en Instagram</span></a><a class="igbtn" href="https://www.tiktok.com/@pedia.life" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3.5v11a3.5 3.5 0 1 1-3.5-3.5"/><path d="M13.5 3.5c.5 2.6 2.4 4.3 5 4.6"/></svg><span>TikTok</span></a><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a></div>
+      <div class="bacc"><a class="igbtn" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="dot"/></svg><span>Sígueme en Instagram</span></a><a class="igbtn" href="https://www.tiktok.com/@pedia.life" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3.5v11a3.5 3.5 0 1 1-3.5-3.5"/><path d="M13.5 3.5c.5 2.6 2.4 4.3 5 4.6"/></svg><span>TikTok</span></a><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a><button type="button" class="themebtn" id="themebtn" aria-label="Cambiar tema">Tema: automático</button></div>
     </div>
     <span class="bdeco" aria-hidden="true"><svg class="st1" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg><svg class="st2" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg><i class="d1"></i><i class="d2"></i></span>
     <div class="hicons" aria-hidden="true">
@@ -587,6 +639,98 @@ p.report{margin-top:18px}
   <section class="panel view hidden" id="v-hoja"></section>
   <section class="panel view hidden" id="v-signos"></section>
   <section class="panel view hidden" id="v-proto" aria-live="polite"></section>
+  <section class="panel view hidden legal" id="v-referencias" aria-labelledby="h-ref">
+    <div class="eyebrow">Confianza</div>
+    <h2 id="h-ref">Referencias y metodología</h2>
+    <p class="lgback"><a href="#" data-lgback>← Volver a la herramienta</a></p>
+    <h3>Fuentes de las dosis</h3>
+    <ul>
+      <li><b>NeoFax</b> (edición: EDICION_AQUI, año: AÑO_AQUI). Dosis neonatales.</li>
+      <li><b>Taketomo · Pediatric &amp; Neonatal Dosage Handbook</b> (edición: EDICION_AQUI, año: AÑO_AQUI). Dosis pediátricas.</li>
+      <li><b>The Harriet Lane Handbook</b> (edición: EDICION_AQUI, año: AÑO_AQUI; en la página se cita como «Harriet Lane 2027»). Dosis, tablas y calculadoras.</li>
+      <li><b>Cuadro Básico y Catálogo de Medicamentos del IMSS</b> (agosto de 2019): presentaciones y claves.</li>
+    </ul>
+    <h3>Guías y artículos citados en la página</h3>
+    <ul>
+      <li>Reanimación: PALS 2023 (American Heart Association), NRP 9.ª edición y actualización de RCP de la AHA 2025.</li>
+      <li>Urgencias: Surviving Sepsis Campaign pediátrica 2020 y 2026 (Weiss SL et al.), ISPAD 2022 (cetoacidosis), AAP 2021 (lactante febril de 8 a 60 días, Pantell et al.), AAP 2022 (hiperbilirrubinemia ≥35 semanas, Kemper et al.), TREKK (anafilaxia, estado epiléptico, crisis asmática), JTFPP 2020 (anafilaxia), ABEM, guía AES 2016 (estado epiléptico), NAEPP 2007 y GEMA 5.3 (asma).</li>
+      <li>Crecimiento y signos vitales: estándares de crecimiento de la OMS (2006 y 2007), Bonafide 2013 (frecuencias cardiaca y respiratoria), AAP 2017 (presión arterial) y Dionne 2012 (presión arterial neonatal).</li>
+      <li>Escalas: cada escala muestra su cita debajo (por ejemplo, PECARN, CATCH, CHALICE, Bedside PEWS, PRAM, Tal, Gorelick, McIsaac, OMS).</li>
+      <li>Otras referencias puntuales que aparecen en algunos esquemas: CDC, CHEST, NIH y AHA.</li>
+    </ul>
+    <h3>Cómo leer la página</h3>
+    <ul>
+      <li><b>Fuente de cada dosis:</b> cada esquema dice de qué libro o guía viene.</li>
+      <li><span class="src out">Etiqueta rosa</span> El esquema <b>no proviene de los libros fuente</b> (NeoFax, Taketomo, Harriet Lane): viene de una guía o referencia externa, o es de uso habitual. Verifíquelo con más cuidado.</li>
+      <li><b>Alto riesgo:</b> los medicamentos marcados requieren doble verificación.</li>
+      <li><b>Neonato:</b> edad de 28 días o menos (o, sin edad, el botón «Neonato»).</li>
+    </ul>
+    <h3>Cálculos</h3>
+    <ul>
+      <li><b>Dosis:</b> dosis por kg × peso, sin pasar del máximo por dosis o por día que indica la fuente (se marca como «tope»). El redondeo queda a criterio del médico.</li>
+      <li><b>Superficie corporal (SC):</b> fórmula de Mosteller, √(talla en cm × peso en kg ÷ 3600). Sin talla: (4 × peso + 7) ÷ (peso + 90).</li>
+      <li><b>Tasa de filtración glomerular estimada (TFGe):</b> fórmula de Schwartz, 0.413 × talla en cm ÷ creatinina sérica en mg/dL (validada en mayores de 1 año).</li>
+      <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
+    </ul>
+    <h3>Revisión</h3>
+    <p>Última revisión del contenido: 19 de noviembre de 2026. Versión de la página: 2026.11.19.</p>
+  </section>
+
+  <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
+    <div class="eyebrow">Legal</div>
+    <h2 id="h-priv">Aviso de privacidad</h2>
+    <p class="lgdraft">BORRADOR para revisión legal. No es un documento definitivo.</p>
+    <p class="lgback"><a href="#" data-lgback>← Volver a la herramienta</a></p>
+    <p>Pedia Life (responsable: NOMBRE_O_RAZON_SOCIAL_AQUI; contacto: CONTACTO_AQUI) es una herramienta de consulta para personal de salud. No requiere cuenta ni registro.</p>
+    <h3>Qué se guarda y dónde</h3>
+    <p>Todo lo que se guarda queda <b>solo en el navegador de su dispositivo</b>. La página no lo envía a ningún servidor.</p>
+    <ul>
+      <li><b>Datos del paciente</b> (almacenamiento local del navegador, <code>dosis_pt</code>): peso, sexo, edad, edad gestacional, talla y creatinina. La página no pide nombre, cama ni expediente.</li>
+      <li><b>Hoja del paciente, favoritos y recientes</b> (<code>dosis_extra</code>): las indicaciones que usted agrega a la hoja, sus medicamentos favoritos y los últimos consultados.</li>
+      <li><b>Preferencias</b> (<code>dosis_prefs</code> y <code>pl_tema</code>): población, unidad de peso y tema claro u oscuro.</li>
+      <li><b>Bitácora del cronómetro de paro</b> (almacenamiento de sesión, <code>pl_paro</code>): eventos, horas y notas libres. Se borra al cerrar la pestaña o con «Terminar y borrar».</li>
+      <li><b>Copia para usar sin conexión</b> (solo en la versión instalada desde GitHub Pages): la página y sus íconos.</li>
+    </ul>
+    <p>Los cálculos y los PDF (hoja del paciente, signos vitales) se generan en su dispositivo. La página no usa cookies de publicidad ni herramientas de analítica.</p>
+    <p><b>No escriba nombres ni otros datos que identifiquen al paciente</b> en las notas libres ni en los formularios.</p>
+    <h3>Servicios de terceros</h3>
+    <ul>
+      <li><b>Google Fonts:</b> al abrir la página, su navegador descarga la tipografía Poppins desde servidores de Google, que reciben su dirección IP y datos técnicos del navegador.</li>
+      <li><b>Hospedaje:</b> GitHub Pages (GitHub) o claude.ai (Anthropic), según dónde abra la página. Estos servicios pueden registrar datos técnicos de acceso, como la dirección IP.</li>
+      <li><b>En claude.ai:</b> la página comprueba si quien la abre es la autora para mostrarle reportes antiguos guardados en la plataforma; no guarda su identidad. La descarga de PDF usa la función de descargas de la plataforma.</li>
+      <li><b>Enlaces externos</b> (solo si usted los toca): el formulario de Google para errores y sugerencias (desde un medicamento se prellena solo el nombre del medicamento), Mercado Pago, Instagram y TikTok. Cada servicio tiene su propio aviso de privacidad.</li>
+    </ul>
+    <h3>Cómo borrar sus datos</h3>
+    <p>«Nuevo paciente» borra los datos del paciente y la hoja. Para borrar todo (favoritos, recientes, preferencias y la copia sin conexión), borre los datos de este sitio en la configuración de su navegador.</p>
+    <h3>Cambios</h3>
+    <p>Este aviso puede cambiar. La fecha de la última actualización aparece en el pie de la página.</p>
+  </section>
+
+  <section class="panel view hidden legal" id="v-terminos" aria-labelledby="h-term">
+    <div class="eyebrow">Legal</div>
+    <h2 id="h-term">Términos de uso</h2>
+    <p class="lgdraft">BORRADOR para revisión legal. No es un documento definitivo.</p>
+    <p class="lgback"><a href="#" data-lgback>← Volver a la herramienta</a></p>
+    <h3>1. Para quién es</h3>
+    <p>Pedia Life es una herramienta de apoyo para personal de salud con formación para interpretar dosis y escalas. No está dirigida a pacientes ni a familiares, y no da consejo médico a personas que no son profesionales de la salud.</p>
+    <h3>2. Herramienta de apoyo</h3>
+    <ul>
+      <li>No sustituye el juicio clínico, la valoración del paciente ni los protocolos de su institución.</li>
+      <li>Usted debe <b>verificar cada dosis, presentación, dilución y vía</b> antes de indicarla o administrarla, considerando la función renal y hepática, las interacciones y las alergias del paciente.</li>
+      <li>Los medicamentos de alto riesgo requieren doble verificación.</li>
+      <li>Los esquemas con etiqueta rosa no provienen de los libros fuente y requieren verificación adicional.</li>
+    </ul>
+    <h3>3. Contenido y posibles errores</h3>
+    <p>El contenido se basa en las fuentes citadas en «Referencias y metodología» y puede contener errores, omisiones o información desactualizada. Las fuentes pueden cambiar después de la fecha de revisión. Si encuentra un error, repórtelo con el botón «Reportar un error o sugerencia».</p>
+    <h3>4. Sin garantía y limitación de responsabilidad</h3>
+    <p>La herramienta se ofrece «tal cual», sin garantía de exactitud, disponibilidad o idoneidad para un fin particular. La responsabilidad de cada decisión clínica es del profesional que la toma. TEXTO_DE_LIMITACION_DE_RESPONSABILIDAD_A_REVISAR_POR_ABOGADO.</p>
+    <h3>5. Propiedad intelectual</h3>
+    <p>Los textos de la página son resúmenes propios; las dosis se citan con su fuente. Los nombres de libros, guías, escalas y marcas pertenecen a sus titulares.</p>
+    <h3>6. Uso gratuito y cambios</h3>
+    <p>El uso es gratuito. Los apoyos voluntarios no dan derecho a soporte ni a funciones especiales. Estos términos pueden cambiar; el uso continuo implica su aceptación.</p>
+    <h3>7. Legislación aplicable</h3>
+    <p>JURISDICCION_Y_LEGISLACION_AQUI.</p>
+  </section>
 
   <footer>
     <div class="apoyof"><span>Pedia Life es gratis y sin anuncios. Si te ayuda en la guardia, puedes invitarme un café.</span><a class="apoyo" href="https://link.mercadopago.com.mx/pedialife" target="_blank" rel="noopener"><svg class="apic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10-7.5 10z"/></svg><span>Apoya el proyecto</span></a></div>
@@ -596,7 +740,8 @@ p.report{margin-top:18px}
       <div class="igbtns"><a class="igfollow" href="https://www.instagram.com/pedia.life/" target="_blank" rel="noopener">Instagram</a><a class="igfollow" href="https://www.tiktok.com/@pedia.life" target="_blank" rel="noopener">TikTok</a></div>
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
-    <p class="fupd">Última actualización del contenido: 19 de noviembre de 2026.</p>
+    <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
+    <p class="fupd">Última actualización del contenido: 19 de noviembre de 2026. · <span id="pver" data-v="2026.11.19">Versión 2026.11.19</span></p>
   </footer>
 </div>
 
@@ -3653,6 +3798,14 @@ DB.forEach(d=>{ d.cbm=CBM[d.id]||null; if(CBM_CONC[d.id]&&CBM_CONC[d.id].length)
 <script>
 (function(){
 const $=s=>document.querySelector(s);
+/* tema: auto (sistema), claro u oscuro; se guarda en este navegador (pl_tema) */
+const THEMES=['auto','dark','light'], THEME_TXT={auto:'Tema: automático',dark:'Tema: oscuro',light:'Tema: claro'};
+function applyTheme(t){ const r=document.documentElement; if(t==='auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme',t);
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{ const dk=/dark/.test(m.media); m.content= t==='auto'? (dk?'#0F1626':'#153E8A') : (t==='dark'?'#0F1626':'#153E8A'); });
+  const b=document.getElementById('themebtn'); if(b) b.textContent=THEME_TXT[t]; }
+let THEME='auto'; try{ const t=localStorage.getItem('pl_tema'); if(THEMES.includes(t)) THEME=t; }catch(e){}
+applyTheme(THEME);
+document.getElementById('themebtn').addEventListener('click',()=>{ THEME=THEMES[(THEMES.indexOf(THEME)+1)%3]; try{ localStorage.setItem('pl_tema',THEME); }catch(e){} applyTheme(THEME); });
 const state={w:null,unit:'kg',pob:'todos',q:'',grp:null,cur:null,showAll:false,mix:{}};
 try{const s=JSON.parse(localStorage.getItem('dosis_prefs')||'{}'); if(s.pob)state.pob=s.pob; if(s.unit)state.unit=s.unit;}catch(e){}
 function save(){try{localStorage.setItem('dosis_prefs',JSON.stringify({pob:state.pob,unit:state.unit}))}catch(e){}}
@@ -3777,7 +3930,7 @@ function select(id){
   renderList(); renderDetail();
   if(window.matchMedia('(max-width:860px)').matches) $('#detail').scrollIntoView({behavior:'smooth',block:'start'});
 }
-const VIEWS=['reanimacion','liquidos','calc','infus','escalas','hoja','signos','proto'];
+const VIEWS=['reanimacion','liquidos','calc','infus','escalas','hoja','signos','proto','referencias','privacidad','terminos'];
 window.addEventListener('hashchange',()=>{const id=location.hash.slice(1); if(protoHash(id)) return; if(VIEWS.includes(id)){showView(id,true); return;} if(DB.some(d=>d.id===id)&&id!==state.cur){state.cur=id; showView('med',true); renderList(); renderDetail();}});
 
 /* ---------- paciente ---------- */
@@ -3807,7 +3960,7 @@ function condMatch(c){ // 1 coincide, 0 no coincide, null sin datos
 function intvFor(r){ if(!r.intv) return null; for(const e of r.intv){ const c={}; ['epm','pna','ga','wt'].forEach(k=>{if(e[k]) c[k]=e[k];}); if(condMatch(c)===1) return e; } return null; }
 function regStatus(r){ if(r.intv){ return intvFor(r)? 1 : null; } return condMatch(r.cond); }
 function patientNote(){
-  wCheck(); ptMini(); savePt(); renderWest();
+  wCheck(); ptMini(); savePt(); renderWest(); if(PARO.on) paroPaint(true);
   const p=pt(); const parts=[]; if(p.sx) parts.push(p.sx==='f'?'Femenino':'Masculino');
   if(p.days!=null) parts.push(p.days<60? Math.round(p.days)+' días de vida' : p.years<2? fmt(p.days/30.44)+' meses' : fmt(p.years)+' años');
   if(p.epm!=null) parts.push('EPM '+fmt(p.epm)+' sem');
@@ -4203,7 +4356,7 @@ function showView(v,fromHash){
 }
 function updTabs(){ const b=document.querySelector('#tabs button[data-v="hoja"]'); b.querySelector('span').textContent='Hoja del paciente'+(state.hoja.length?' ('+state.hoja.length+')':''); }
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.v==='med' && state.cur){ try{history.replaceState(null,'','#'+state.cur);}catch(e){} } showView(b.dataset.v); }));
-function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView==='reanimacion') renderRCP(); else if(curView==='liquidos') renderLiq(); else if(curView==='calc') renderCalc(); else if(curView==='infus') renderInf(); else if(curView==='escalas') renderEsc(); else if(curView==='signos') renderSV(); else if(curView==='proto') renderProto(); else renderHoja(); }
+function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView==='reanimacion') renderRCP(); else if(curView==='liquidos') renderLiq(); else if(curView==='calc') renderCalc(); else if(curView==='infus') renderInf(); else if(curView==='escalas') renderEsc(); else if(curView==='signos') renderSV(); else if(curView==='proto') renderProto(); else if(/^(referencias|privacidad|terminos)$/.test(curView)) window.scrollTo({top:document.getElementById('v-'+curView).offsetTop-10}); else renderHoja(); }
 const _rw=readWeight; 
 pesoIn.addEventListener('input',()=>{ if(curView!=='med') renderCurrent(); patientNote(); });
 
@@ -4498,7 +4651,7 @@ function renderProto(){
   if(!p){ vhead(h,'Emergencias','Protocolos de urgencias'); const g=el('div','protolist'); PROTO.forEach(x=>{ const b=el('button','emcard'); b.type='button'; b.appendChild(tile(x.ic,x.c)); b.appendChild(el('span',null,x.t)); b.addEventListener('click',()=>openProto(x.id)); g.appendChild(b); }); h.appendChild(g); return; }
   vhead(h,'Protocolo de emergencias',p.t);
   if(p.custom){ renderFebril(h); return; }
-  if(p.id==='paro') renderMetro(h);
+  if(p.id==='paro'){ const pb=el('button','addbtn go parogo',PARO.on?'Ver cronómetro de paro':'Iniciar cronómetro de paro'); pb.type='button'; pb.addEventListener('click',()=>{ if(PARO.on){ PARO.min=false; paroSave(); paroPaint(true); } else paroStart(); }); h.appendChild(pb); renderMetro(h); }
   if((P.days!=null&&P.days<=28)||(P.days==null&&w&&w<5)) h.appendChild(el('p','pwarn','⚠ Estos protocolos son para pacientes mayores de 28 días. En neonatos use Reanimación (NRP) y la ficha de cada medicamento.'));
   if(!w) h.appendChild(el('p','pnow','Escriba el peso del paciente arriba para ver las dosis calculadas en mg y mL.'));
   const ol=el('ol','psteps');
@@ -4700,6 +4853,85 @@ function metFloat(){ let f=document.getElementById('metfloat'); const inView=[..
   if(!MET.on||inView){ if(f) f.remove(); return; }
   if(!f){ f=el('button','metfloat'); f.id='metfloat'; f.type='button'; f.addEventListener('click',()=>{ metStop(); metFloat(); }); document.body.appendChild(f); }
   f.textContent='■ Detener metrónomo · '+metFmt((Date.now()-MET.t0)/1000); }
+/* ---------- Cronómetro de paro con bitácora ---------- */
+// Estado en memoria y en sessionStorage (un recargo accidental no borra el evento). Dosis tomadas de la base (DB).
+const PARO={on:false,t0:0,cyc0:0,log:[],min:false,lock:null,tick:null,cycAlert:0};
+function paroSave(){ try{ sessionStorage.setItem('pl_paro',JSON.stringify({on:PARO.on,t0:PARO.t0,cyc0:PARO.cyc0,log:PARO.log,min:PARO.min})); }catch(e){} }
+function paroClock(ms){ const s=Math.max(0,Math.floor(ms/1000)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function paroHora(t){ const d=new Date(t); return [d.getHours(),d.getMinutes(),d.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':'); }
+function paroNeo(){ const P=pt(); return P.days!=null? P.days<=28 : state.pob==='neo'; }
+// dosis de la base: adrenalina (paro / reanimación neonatal) y amiodarona (FV/TV sin pulso)
+function paroDose(id){ const d=DB.find(x=>x.id===id), w=state.w; if(!d) return null; const neo=paroNeo();
+  const re= id==='adrenalina'? (neo? /^Reanimaci.n neonatal \(FC/ : /^Paro cardiaco/) : /^FV \/ TV sin pulso/;
+  const r=d.reg.find(x=>re.test(x.i) && (neo? x.p!=='ped' : x.p!=='neo')); if(!r) return {txt:'ver ficha',r:null,d};
+  if(!w) return {txt:fmt(r.min)+(r.max!==r.min?'–'+fmt(r.max):'')+' '+r.u+'/kg (escriba el peso)',r,d};
+  const cap=r.mx!=null? r.mx : Infinity, lo=Math.min(r.min*w,cap), hi=Math.min(r.max*w,cap);
+  const c=(d.conc||[]).filter(x=>x[3]==='iny').sort((a,b)=>a[1]-b[1])[0];
+  return {txt:rng(lo,hi,r.u)+(r.max*w>cap?' (tope)':'')+(c?' = '+rng(lo/c[1],hi/c[1],'mL')+' de '+c[0].charAt(0).toLowerCase()+c[0].slice(1):'')+' '+r.v,r,d}; }
+function paroShocks(){ return PARO.log.filter(x=>x.k==='shock').length; }
+function paroJoules(n){ const w=state.w; if(n===1) return {t:'2 J/kg',j:w?2*w:null}; if(n===2) return {t:'4 J/kg',j:w?4*w:null};
+  return {t:'≥4 J/kg, máx. 10 J/kg'+(w?' ('+fmt(10*w)+' J)':'')+' o dosis de adulto',j:w?4*w:null}; }
+function paroLastEpi(){ for(let i=PARO.log.length-1;i>=0;i--) if(PARO.log[i].k==='epi') return PARO.log[i].t; return null; }
+function paroAdd(k,txt){ PARO.log.push({t:Date.now(),k,txt}); if(k==='ritmo') { PARO.cyc0=Date.now(); PARO.cycAlert=0; } paroSave(); paroPaint(true); }
+async function paroLock(){ try{ if(PARO.on && 'wakeLock' in navigator && document.visibilityState==='visible' && !PARO.lock){ PARO.lock=await navigator.wakeLock.request('screen'); PARO.lock.addEventListener('release',()=>{ PARO.lock=null; }); } }catch(e){} }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') paroLock(); });
+function paroStart(){ if(PARO.on){ paroPaint(true); return; } PARO.on=true; PARO.t0=Date.now(); PARO.cyc0=PARO.t0; PARO.log=[{t:PARO.t0,k:'inicio',txt:'Inicio del paro / RCP'+(state.w?' · peso '+fmt(state.w)+' kg':'')}]; PARO.min=false; paroSave(); paroRun(); if(curView==='proto') renderProto(); }
+function paroRun(){ paroLock(); clearInterval(PARO.tick); PARO.tick=setInterval(paroTick,250); paroPaint(true); }
+function paroEnd(){ if(!confirm('¿Terminar el evento y borrar la bitácora? Copie la bitácora antes si la necesita.')) return;
+  PARO.on=false; clearInterval(PARO.tick); PARO.tick=null; try{ PARO.lock&&PARO.lock.release(); }catch(e){} PARO.lock=null; PARO.log=[];
+  try{ sessionStorage.removeItem('pl_paro'); }catch(e){} const p=$('#paropanel'); if(p) p.remove(); document.body.style.paddingBottom=''; document.body.classList.remove('paroon'); if(curView==='proto') renderProto(); }
+function paroTick(){ if(!PARO.on) return; const now=Date.now(); let left=120000-(now-PARO.cyc0);
+  if(left<=0){ PARO.cyc0+=120000*Math.ceil(-left/120000||1); left=120000-(now-PARO.cyc0); PARO.cycAlert=now; paroSave();
+    try{ navigator.vibrate&&navigator.vibrate([400,150,400]); }catch(e){} try{ metBeep(523,0.35,0.5); setTimeout(()=>metBeep(523,0.35,0.5),450); }catch(e){} }
+  paroPaint(false); }
+function paroCopy(){ const L=PARO.log, t0=PARO.t0, d=new Date(t0);
+  const txt=['Bitácora de paro cardiorrespiratorio — '+d.toLocaleDateString('es-MX')+', inicio '+paroHora(t0), 'Duración total: '+paroClock(Date.now()-t0)]
+    .concat(L.map(x=>paroHora(x.t)+' (+'+paroClock(x.t-t0)+') '+x.txt)).join('\n');
+  const done=()=>{ const b=$('#parocopy'); if(b){ b.textContent='Copiada ✓'; setTimeout(()=>{ b.textContent='Copiar bitácora'; },1500); } };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done,()=>fallback()); else fallback();
+  function fallback(){ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); } }
+function paroPaint(full){
+  let p=$('#paropanel'); if(!PARO.on){ if(p) p.remove(); return; }
+  if(!p||full){ if(p) p.remove(); p=paroBuild(); document.body.appendChild(p); document.body.classList.add('paroon'); }
+  const now=Date.now(), left=120000-(now-PARO.cyc0), le=paroLastEpi(), ep=le? now-le : null;
+  p.querySelector('.pclk').textContent=paroClock(now-PARO.t0);
+  const cy=p.querySelector('.pcyc'); cy.textContent='Ciclo '+paroClock(left); cy.classList.toggle('due', left<=10000 || now-PARO.cycAlert<4000);
+  const e=p.querySelector('.pepi'); e.textContent= ep==null? 'Adrenalina: sin dosis' : 'Adrenalina hace '+paroClock(ep);
+  e.classList.toggle('amb', ep!=null && ep>=180000 && ep<300000); e.classList.toggle('red', ep!=null && ep>=300000);
+  document.body.style.paddingBottom=(p.offsetHeight+12)+'px'; }
+function paroBuild(){
+  const p=el('section','paropanel'+(PARO.min?' min':'')); p.id='paropanel'; p.setAttribute('aria-label','Cronómetro de paro');
+  const top=el('div','ptop'); top.appendChild(el('b',null,'Paro')); top.appendChild(el('span','pclk','00:00')); top.appendChild(el('span','pcyc','Ciclo 02:00')); top.appendChild(el('span','pepi',''));
+  const mn=el('button','pmin',PARO.min?'▴ Abrir':'▾ Minimizar'); mn.type='button'; mn.addEventListener('click',()=>{ PARO.min=!PARO.min; paroSave(); paroPaint(true); }); top.appendChild(mn); p.appendChild(top);
+  if(PARO.min) return p;
+  const body=el('div','pbody'); p.appendChild(body);
+  const epi=paroDose('adrenalina'), ami=paroDose('amiodarona'), n=paroShocks()+1, J=paroJoules(n);
+  const info=el('div','pinfo');
+  info.appendChild(el('div',null,'Adrenalina c/3–5 min: '+(epi?epi.txt:'ver ficha')+(epi&&epi.r?' · '+epi.r.s:'')));
+  info.appendChild(el('div',null,'Descarga n.º '+n+': '+J.t+(J.j?' → '+fmt(J.j)+' J':'')+' · AHA'));
+  info.appendChild(el('div',null,'Amiodarona: '+(ami?ami.txt:'ver ficha')+(ami&&ami.r?' · '+ami.r.s:'')));
+  body.appendChild(info);
+  const g=el('div','pbtns2'); const B=(t,cls,fn)=>{ const b=el('button','pb'+(cls?' '+cls:''),t); b.type='button'; b.addEventListener('click',fn); g.appendChild(b); return b; };
+  B('Adrenalina dada','epi',()=>paroAdd('epi','Adrenalina '+(epi?epi.txt:'')));
+  B('Descarga','shock',()=>{ const k=paroShocks()+1, j=paroJoules(k); paroAdd('shock','Descarga n.º '+k+(j.j?': '+fmt(j.j)+' J ('+j.t+')':' ('+j.t+')')); });
+  B('Amiodarona',null,()=>paroAdd('ami','Amiodarona '+(ami?ami.txt:'')));
+  B('Ritmo revisado',null,()=>paroAdd('ritmo','Ritmo revisado (inicia ciclo de 2 min)'));
+  B('Acceso IO/IV',null,()=>paroAdd('acc','Acceso IO/IV'));
+  B('Intubación',null,()=>paroAdd('iot','Intubación'));
+  B('RCE','rce',()=>paroAdd('rce','RCE (retorno de la circulación espontánea)'));
+  body.appendChild(g);
+  const nr=el('div','pnote'); const ni=document.createElement('input'); ni.type='text'; ni.placeholder='Nota libre (ritmo, fármaco, hallazgo…)'; ni.setAttribute('aria-label','Nota libre');
+  const na=el('button','pb','Agregar'); na.type='button'; const addN=()=>{ const v=ni.value.trim(); if(!v) return; paroAdd('nota',v); };
+  na.addEventListener('click',addN); ni.addEventListener('keydown',e=>{ if(e.key==='Enter') addN(); }); nr.append(ni,na); body.appendChild(nr);
+  const lg=el('ol','plog'); PARO.log.slice().reverse().forEach(x=>{ const li=el('li'); li.appendChild(el('span','plt',paroHora(x.t)+' · +'+paroClock(x.t-PARO.t0))); li.appendChild(el('span',null,x.txt)); lg.appendChild(li); }); body.appendChild(lg);
+  const ft=el('div','pfoot');
+  const un=el('button','pb','Deshacer último'); un.type='button'; un.disabled=PARO.log.length<=1; un.addEventListener('click',()=>{ if(PARO.log.length>1){ const x=PARO.log.pop(); if(x.k==='ritmo'){ const r=[...PARO.log].reverse().find(y=>y.k==='ritmo'); PARO.cyc0=r? r.t : PARO.t0; } paroSave(); paroPaint(true); } }); ft.appendChild(un);
+  const cp=el('button','pb','Copiar bitácora'); cp.id='parocopy'; cp.type='button'; cp.addEventListener('click',paroCopy); ft.appendChild(cp);
+  const en=el('button','pb end','Terminar y borrar'); en.type='button'; en.addEventListener('click',paroEnd); ft.appendChild(en);
+  body.appendChild(ft);
+  body.appendChild(el('p','pnote2','Pantalla encendida mientras corre. La bitácora se guarda solo en esta pestaña del navegador hasta que la borre.'));
+  return p; }
+function paroRestore(){ try{ const s=JSON.parse(sessionStorage.getItem('pl_paro')||'null'); if(s&&s.on&&Array.isArray(s.log)){ Object.assign(PARO,{on:true,t0:s.t0,cyc0:s.cyc0||s.t0,log:s.log,min:!!s.min}); paroRun(); } }catch(e){} }
 /* Umbrales AAP 2022 extraídos de las Supplemental Tables 1–4 (índice = horas de vida; índice 0 sin valor en la guía) */
 const BILI={"photo":{"none":{"35":[null,6.4,6.6,6.8,7.0,7.2,7.4,7.6,7.8,7.9,8.1,8.3,8.5,8.7,8.9,9.0,9.2,9.4,9.6,9.8,9.9,10.1,10.3,10.4,10.6,10.8,10.9,11.1,11.3,11.4,11.6,11.7,11.9,12.0,12.2,12.3,12.5,12.6,12.8,12.9,13.1,13.2,13.4,13.5,13.6,13.8,13.9,14.0,14.2,14.3,14.4,14.5,14.7,14.8,14.9,15.0,15.1,15.3,15.4,15.5,15.6,15.7,15.8,15.9,16.0,16.1,16.2,16.3,16.4,16.5,16.6,16.7,16.8,16.9,17.0,17.1,17.2,17.3,17.4,17.5,17.5,17.6,17.7,17.8,17.8,17.9,18.0,18.1,18.1,18.2,18.3,18.3,18.4,18.5,18.5,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.7,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.8,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,18.9,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.2,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.3,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6],"36":[null,6.9,7.1,7.3,7.5,7.7,7.9,8.1,8.3,8.5,8.7,8.8,9.0,9.2,9.4,9.6,9.8,9.9,10.1,10.3,10.5,10.6,10.8,11.0,11.2,11.3,11.5,11.7,11.8,12.0,12.1,12.3,12.5,12.6,12.8,12.9,13.1,13.2,13.4,13.5,13.7,13.8,13.9,14.1,14.2,14.4,14.5,14.6,14.8,14.9,15.0,15.1,15.3,15.4,15.5,15.6,15.8,15.9,16.0,16.1,16.2,16.3,16.5,16.6,16.7,16.8,16.9,17.0,17.1,17.2,17.3,17.4,17.5,17.6,17.7,17.8,17.9,17.9,18.0,18.1,18.2,18.3,18.4,18.4,18.5,18.6,18.7,18.8,18.8,18.9,19.0,19.0,19.1,19.2,19.2,19.3,19.3,19.3,19.3,19.3,19.3,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.4,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.5,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.6,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.7,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.8,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,19.9,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.4,20.4,20.4],"37":[null,7.4,7.6,7.8,8.0,8.2,8.4,8.6,8.8,9.0,9.2,9.4,9.6,9.8,9.9,10.1,10.3,10.5,10.7,10.8,11.0,11.2,11.4,11.5,11.7,11.9,12.1,12.2,12.4,12.5,12.7,12.9,13.0,13.2,13.3,13.5,13.6,13.8,13.9,14.1,14.2,14.4,14.5,14.7,14.8,15.0,15.1,15.2,15.4,15.5,15.6,15.8,15.9,16.0,16.1,16.3,16.4,16.5,16.6,16.7,16.9,17.0,17.1,17.2,17.3,17.4,17.5,17.6,17.7,17.8,17.9,18.0,18.1,18.2,18.3,18.4,18.5,18.6,18.7,18.8,18.9,19.0,19.0,19.1,19.2,19.3,19.4,19.4,19.5,19.6,19.7,19.7,19.8,19.9,19.9,20.0,20.0,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.1,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.2,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.3,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.5,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.6,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.1,21.1,21.1,21.1,21.1,21.1,21.1],"38":[null,7.9,8.1,8.3,8.5,8.7,8.9,9.1,9.3,9.5,9.7,9.9,10.1,10.3,10.5,10.7,10.8,11.0,11.2,11.4,11.6,11.7,11.9,12.1,12.3,12.4,12.6,12.8,12.9,13.1,13.3,13.4,13.6,13.8,13.9,14.1,14.2,14.4,14.5,14.7,14.8,15.0,15.1,15.3,15.4,15.6,15.7,15.8,16.0,16.1,16.2,16.4,16.5,16.6,16.8,16.9,17.0,17.1,17.3,17.4,17.5,17.6,17.7,17.8,17.9,18.1,18.2,18.3,18.4,18.5,18.6,18.7,18.8,18.9,19.0,19.1,19.2,19.3,19.4,19.5,19.5,19.6,19.7,19.8,19.9,20.0,20.0,20.1,20.2,20.3,20.3,20.4,20.5,20.6,20.6,20.7,20.7,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.0,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8],"39":[null,8.4,8.6,8.8,9.0,9.3,9.5,9.7,9.9,10.0,10.2,10.4,10.6,10.8,11.0,11.2,11.4,11.6,11.8,11.9,12.1,12.3,12.5,12.7,12.8,13.0,13.2,13.3,13.5,13.7,13.8,14.0,14.2,14.3,14.5,14.7,14.8,15.0,15.1,15.3,15.4,15.6,15.7,15.9,16.0,16.2,16.3,16.4,16.6,16.7,16.8,17.0,17.1,17.2,17.4,17.5,17.6,17.8,17.9,18.0,18.1,18.2,18.4,18.5,18.6,18.7,18.8,18.9,19.0,19.1,19.2,19.3,19.5,19.6,19.7,19.7,19.8,19.9,20.0,20.1,20.2,20.3,20.4,20.5,20.6,20.6,20.7,20.8,20.9,21.0,21.0,21.1,21.2,21.3,21.3,21.4,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8],"40":[null,8.9,9.1,9.3,9.6,9.8,10.0,10.2,10.4,10.5,10.7,10.9,11.1,11.3,11.5,11.7,11.9,12.1,12.2,12.4,12.6,12.8,13.0,13.1,13.3,13.5,13.6,13.8,14.0,14.1,14.3,14.5,14.6,14.8,15.0,15.1,15.3,15.4,15.6,15.7,15.9,16.0,16.2,16.3,16.4,16.6,16.7,16.9,17.0,17.1,17.3,17.4,17.5,17.7,17.8,17.9,18.0,18.2,18.3,18.4,18.5,18.6,18.8,18.9,19.0,19.1,19.2,19.3,19.4,19.6,19.7,19.7,19.8,19.9,20.0,20.1,20.2,20.3,20.4,20.5,20.6,20.7,20.7,20.8,20.9,21.0,21.1,21.1,21.2,21.3,21.4,21.4,21.5,21.6,21.6,21.7,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8]},"any":{"35":[null,4.9,5.1,5.3,5.5,5.6,5.8,6.0,6.2,6.4,6.5,6.7,6.9,7.1,7.2,7.4,7.6,7.7,7.9,8.1,8.2,8.4,8.6,8.7,8.9,9.0,9.2,9.3,9.5,9.6,9.8,9.9,10.1,10.2,10.3,10.5,10.6,10.8,10.9,11.0,11.2,11.3,11.4,11.5,11.7,11.8,11.9,12.0,12.2,12.3,12.4,12.5,12.6,12.7,12.8,13.0,13.1,13.2,13.3,13.4,13.5,13.6,13.7,13.8,13.9,14.0,14.1,14.2,14.2,14.3,14.4,14.5,14.6,14.7,14.8,14.8,14.9,15.0,15.1,15.1,15.2,15.3,15.3,15.4,15.5,15.5,15.6,15.7,15.7,15.8,15.8,15.9,15.9,16.0,16.1,16.1,16.1,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.3,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.4,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.6,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.7,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.4,17.4,17.4,17.4,17.4,17.4],"36":[null,5.4,5.6,5.8,6.0,6.2,6.3,6.5,6.7,6.9,7.1,7.3,7.4,7.6,7.8,8.0,8.1,8.3,8.5,8.6,8.8,9.0,9.1,9.3,9.4,9.6,9.8,9.9,10.1,10.2,10.4,10.5,10.7,10.8,11.0,11.1,11.2,11.4,11.5,11.7,11.8,11.9,12.1,12.2,12.3,12.5,12.6,12.7,12.8,13.0,13.1,13.2,13.3,13.4,13.5,13.7,13.8,13.9,14.0,14.1,14.2,14.3,14.4,14.5,14.6,14.7,14.8,14.9,15.0,15.1,15.2,15.3,15.4,15.4,15.5,15.6,15.7,15.8,15.8,15.9,16.0,16.1,16.1,16.2,16.3,16.4,16.4,16.5,16.6,16.6,16.7,16.7,16.8,16.8,16.9,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.1,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.2,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.3,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.4,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.5,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.7,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2],"37":[null,5.9,6.1,6.3,6.5,6.7,6.9,7.0,7.2,7.4,7.6,7.8,8.0,8.1,8.3,8.5,8.7,8.9,9.0,9.2,9.4,9.5,9.7,9.9,10.0,10.2,10.4,10.5,10.7,10.8,11.0,11.1,11.3,11.4,11.6,11.7,11.9,12.0,12.2,12.3,12.4,12.6,12.7,12.9,13.0,13.1,13.2,13.4,13.5,13.6,13.8,13.9,14.0,14.1,14.2,14.4,14.5,14.6,14.7,14.8,14.9,15.0,15.1,15.2,15.3,15.4,15.5,15.6,15.7,15.8,15.9,16.0,16.1,16.2,16.3,16.4,16.5,16.6,16.6,16.7,16.8,16.9,17.0,17.0,17.1,17.2,17.2,17.3,17.4,17.4,17.5,17.6,17.6,17.7,17.8,17.8,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,17.9,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.1,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2],"38":[null,6.4,6.6,6.8,7.0,7.2,7.3,7.5,7.7,7.9,8.1,8.3,8.5,8.6,8.8,9.0,9.2,9.4,9.5,9.7,9.9,10.0,10.2,10.4,10.5,10.7,10.8,11.0,11.2,11.3,11.5,11.6,11.8,11.9,12.1,12.2,12.4,12.5,12.7,12.8,12.9,13.1,13.2,13.3,13.5,13.6,13.7,13.9,14.0,14.1,14.2,14.4,14.5,14.6,14.7,14.8,14.9,15.1,15.2,15.3,15.4,15.5,15.6,15.7,15.8,15.9,16.0,16.1,16.2,16.3,16.4,16.5,16.6,16.6,16.7,16.8,16.9,17.0,17.1,17.1,17.2,17.3,17.4,17.4,17.5,17.6,17.6,17.7,17.8,17.8,17.9,18.0,18.0,18.1,18.1,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2]}},"exch":{"none":{"35":[null,14.9,15.0,15.1,15.3,15.4,15.6,15.7,15.8,16.0,16.1,16.2,16.4,16.5,16.6,16.8,16.9,17.0,17.2,17.3,17.4,17.5,17.7,17.8,17.9,18.0,18.2,18.3,18.4,18.5,18.7,18.8,18.9,19.0,19.1,19.2,19.4,19.5,19.6,19.7,19.8,19.9,20.0,20.1,20.2,20.3,20.5,20.6,20.7,20.8,20.9,21.0,21.1,21.2,21.3,21.4,21.5,21.6,21.7,21.7,21.8,21.9,22.0,22.1,22.2,22.3,22.4,22.5,22.6,22.6,22.7,22.8,22.9,23.0,23.1,23.1,23.2,23.3,23.4,23.4,23.5,23.6,23.7,23.7,23.8,23.9,23.9,24.0,24.1,24.1,24.2,24.3,24.3,24.4,24.4,24.5,24.5,24.5,24.5,24.5,24.5,24.5,24.5,24.5,24.6,24.6,24.6,24.6,24.6,24.6,24.6,24.6,24.6,24.6,24.6,24.7,24.7,24.7,24.7,24.7,24.7,24.7,24.7,24.7,24.7,24.8,24.8,24.8,24.8,24.8,24.8,24.8,24.8,24.8,24.8,24.8,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.1,25.1,25.1,25.1,25.1,25.1,25.1,25.1,25.1,25.1,25.1,25.2,25.2,25.2,25.2,25.2,25.2,25.2,25.2,25.2,25.2,25.2,25.2,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.3,25.4,25.4,25.4,25.4,25.4,25.4,25.4,25.4,25.4,25.4,25.4,25.4,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.5,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3],"36":[null,15.9,16.1,16.2,16.4,16.5,16.7,16.8,16.9,17.1,17.2,17.4,17.5,17.7,17.8,17.9,18.1,18.2,18.3,18.5,18.6,18.7,18.9,19.0,19.1,19.2,19.4,19.5,19.6,19.7,19.9,20.0,20.1,20.2,20.4,20.5,20.6,20.7,20.8,20.9,21.0,21.2,21.3,21.4,21.5,21.6,21.7,21.8,21.9,22.0,22.1,22.2,22.3,22.4,22.5,22.6,22.7,22.8,22.9,23.0,23.1,23.2,23.2,23.3,23.4,23.5,23.6,23.7,23.8,23.8,23.9,24.0,24.1,24.1,24.2,24.3,24.4,24.4,24.5,24.6,24.6,24.7,24.8,24.8,24.9,25.0,25.0,25.1,25.2,25.2,25.3,25.3,25.4,25.4,25.5,25.5,25.5,25.5,25.5,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.7,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.8,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,25.9,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.0,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.1,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.2,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.3,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.4,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0],"37":[null,17.0,17.1,17.3,17.5,17.6,17.8,17.9,18.1,18.2,18.4,18.5,18.7,18.8,18.9,19.1,19.2,19.4,19.5,19.6,19.8,19.9,20.1,20.2,20.3,20.5,20.6,20.7,20.8,21.0,21.1,21.2,21.3,21.5,21.6,21.7,21.8,21.9,22.1,22.2,22.3,22.4,22.5,22.6,22.7,22.8,22.9,23.0,23.1,23.2,23.3,23.4,23.5,23.6,23.7,23.8,23.9,24.0,24.1,24.2,24.3,24.4,24.5,24.5,24.6,24.7,24.8,24.9,24.9,25.0,25.1,25.2,25.2,25.3,25.4,25.5,25.5,25.6,25.7,25.7,25.8,25.8,25.9,26.0,26.0,26.1,26.1,26.2,26.2,26.3,26.3,26.4,26.4,26.5,26.5,26.5,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,26.9,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0],"38":[null,18.0,18.2,18.4,18.5,18.7,18.8,19.0,19.1,19.3,19.4,19.6,19.7,19.9,20.0,20.1,20.3,20.4,20.6,20.7,20.8,21.0,21.1,21.2,21.4,21.5,21.6,21.7,21.9,22.0,22.1,22.2,22.3,22.4,22.6,22.7,22.8,22.9,23.0,23.1,23.2,23.3,23.4,23.5,23.6,23.7,23.8,23.9,24.0,24.1,24.2,24.3,24.4,24.5,24.6,24.7,24.7,24.8,24.9,25.0,25.1,25.2,25.2,25.3,25.4,25.5,25.5,25.6,25.7,25.7,25.8,25.9,25.9,26.0,26.0,26.1,26.2,26.2,26.3,26.3,26.4,26.4,26.5,26.5,26.6,26.6,26.7,26.7,26.7,26.8,26.8,26.9,26.9,26.9,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0],"39":[null,18.0,18.2,18.4,18.5,18.7,18.8,19.0,19.1,19.3,19.4,19.6,19.7,19.9,20.0,20.1,20.3,20.4,20.6,20.7,20.8,21.0,21.1,21.2,21.4,21.5,21.6,21.7,21.9,22.0,22.1,22.2,22.3,22.4,22.6,22.7,22.8,22.9,23.0,23.1,23.2,23.3,23.4,23.5,23.6,23.7,23.8,23.9,24.0,24.1,24.2,24.3,24.4,24.5,24.6,24.7,24.7,24.8,24.9,25.0,25.1,25.2,25.2,25.3,25.4,25.5,25.5,25.6,25.7,25.7,25.8,25.9,25.9,26.0,26.0,26.1,26.2,26.2,26.3,26.3,26.4,26.4,26.5,26.5,26.6,26.6,26.7,26.7,26.7,26.8,26.8,26.9,26.9,26.9,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0],"40":[null,18.0,18.2,18.4,18.5,18.7,18.8,19.0,19.1,19.3,19.4,19.6,19.7,19.9,20.0,20.1,20.3,20.4,20.6,20.7,20.8,21.0,21.1,21.2,21.4,21.5,21.6,21.7,21.9,22.0,22.1,22.2,22.3,22.4,22.6,22.7,22.8,22.9,23.0,23.1,23.2,23.3,23.4,23.5,23.6,23.7,23.8,23.9,24.0,24.1,24.2,24.3,24.4,24.5,24.6,24.7,24.7,24.8,24.9,25.0,25.1,25.2,25.2,25.3,25.4,25.5,25.5,25.6,25.7,25.7,25.8,25.9,25.9,26.0,26.0,26.1,26.2,26.2,26.3,26.3,26.4,26.4,26.5,26.5,26.6,26.6,26.7,26.7,26.7,26.8,26.8,26.9,26.9,26.9,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0,27.0]},"any":{"35":[null,13.1,13.3,13.4,13.6,13.7,13.8,14.0,14.1,14.3,14.4,14.5,14.6,14.8,14.9,15.0,15.1,15.3,15.4,15.5,15.6,15.8,15.9,16.0,16.1,16.2,16.3,16.4,16.5,16.6,16.8,16.9,17.0,17.1,17.2,17.3,17.4,17.5,17.6,17.7,17.7,17.8,17.9,18.0,18.1,18.2,18.3,18.4,18.5,18.5,18.6,18.7,18.8,18.9,18.9,19.0,19.1,19.2,19.2,19.3,19.4,19.4,19.5,19.6,19.6,19.7,19.8,19.8,19.9,19.9,20.0,20.1,20.1,20.2,20.2,20.3,20.3,20.4,20.4,20.5,20.5,20.6,20.6,20.6,20.7,20.7,20.8,20.8,20.8,20.9,20.9,20.9,21.0,21.0,21.0,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.1,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.3,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.4,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.5,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.6,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.7,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.8,21.9,21.9,21.9,21.9,21.9,21.9,21.9,21.9,21.9,21.9,21.9,21.9,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.0,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9],"36":[null,13.7,13.9,14.0,14.1,14.3,14.4,14.5,14.7,14.8,14.9,15.1,15.2,15.3,15.4,15.6,15.7,15.8,15.9,16.1,16.2,16.3,16.4,16.5,16.6,16.8,16.9,17.0,17.1,17.2,17.3,17.4,17.5,17.6,17.7,17.8,17.9,18.0,18.1,18.2,18.3,18.4,18.5,18.6,18.7,18.8,18.9,19.0,19.1,19.2,19.2,19.3,19.4,19.5,19.6,19.7,19.7,19.8,19.9,20.0,20.1,20.1,20.2,20.3,20.3,20.4,20.5,20.6,20.6,20.7,20.8,20.8,20.9,20.9,21.0,21.1,21.1,21.2,21.2,21.3,21.4,21.4,21.5,21.5,21.6,21.6,21.7,21.7,21.8,21.8,21.9,21.9,22.0,22.0,22.0,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.1,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.2,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.3,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.4,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.6,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.7,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.8,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,22.9,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.0,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5],"37":[null,14.3,14.4,14.6,14.7,14.8,15.0,15.1,15.2,15.4,15.5,15.6,15.7,15.9,16.0,16.1,16.2,16.4,16.5,16.6,16.7,16.8,17.0,17.1,17.2,17.3,17.4,17.5,17.7,17.8,17.9,18.0,18.1,18.2,18.3,18.4,18.5,18.6,18.7,18.8,18.9,19.0,19.1,19.2,19.3,19.4,19.5,19.6,19.7,19.8,19.9,20.0,20.1,20.1,20.2,20.3,20.4,20.5,20.6,20.7,20.7,20.8,20.9,21.0,21.1,21.1,21.2,21.3,21.4,21.4,21.5,21.6,21.7,21.7,21.8,21.9,21.9,22.0,22.1,22.1,22.2,22.3,22.3,22.4,22.5,22.5,22.6,22.6,22.7,22.8,22.8,22.9,22.9,23.0,23.0,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.1,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.2,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.3,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.4,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5],"38":[null,14.8,15.0,15.1,15.2,15.4,15.5,15.6,15.8,15.9,16.0,16.1,16.3,16.4,16.5,16.6,16.7,16.9,17.0,17.1,17.2,17.3,17.4,17.6,17.7,17.8,17.9,18.0,18.1,18.2,18.3,18.4,18.5,18.7,18.8,18.9,19.0,19.1,19.2,19.3,19.4,19.5,19.6,19.7,19.8,19.9,19.9,20.0,20.1,20.2,20.3,20.4,20.5,20.6,20.7,20.8,20.8,20.9,21.0,21.1,21.2,21.3,21.3,21.4,21.5,21.6,21.7,21.7,21.8,21.9,22.0,22.0,22.1,22.2,22.2,22.3,22.4,22.5,22.5,22.6,22.7,22.7,22.8,22.8,22.9,23.0,23.0,23.1,23.1,23.2,23.3,23.3,23.4,23.4,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5,23.5]}}};
 /* ---------- Fototerapia y exanguinotransfusión, AAP 2022 (≥35 semanas) ---------- */
@@ -4935,6 +5167,79 @@ function escMore(g,P){
     srcLine(b,'ISPAD 2022 y Harriet Lane 2027, cap. 10.'); }
 }
 
+/* ---------- escalas neonatales: Silverman-Andersen, Capurro y Ballard ---------- */
+// Puntajes por ítem en NEO_ESC (ver la tabla de verificación). Silverman y Capurro: fuente externa (rosa).
+// Ballard: Harriet Lane 2027, eFig. 18.1 (modificada de Ballard 1991); postura, bufanda y talón-oreja son dibujos en el libro.
+const NEO_ESC={
+ silverman:[
+  ['Movimientos toracoabdominales',[[0,'Rítmicos y regulares'],[1,'Tórax inmóvil; solo se mueve el abdomen'],[2,'Disociación toracoabdominal (balanceo)']]],
+  ['Tiraje intercostal',[[0,'Ausente'],[1,'Apenas visible'],[2,'Marcado']]],
+  ['Retracción xifoidea',[[0,'Ausente'],[1,'Apenas visible'],[2,'Marcada']]],
+  ['Aleteo nasal',[[0,'Ausente'],[1,'Discreto'],[2,'Muy acentuado']]],
+  ['Quejido espiratorio',[[0,'Ausente'],[1,'Audible con estetoscopio'],[2,'Audible sin estetoscopio']]]],
+ capSom:{
+  pezon:['Forma del pezón',[[0,'Apenas visible, sin areola'],[5,'Diámetro <7.5 mm; areola lisa y chata'],[10,'Diámetro >7.5 mm; areola punteada, borde no levantado'],[15,'Diámetro >7.5 mm; areola punteada, borde levantado']]],
+  piel:['Textura de la piel',[[0,'Muy fina, gelatinosa'],[5,'Fina y lisa'],[10,'Más gruesa, descamación superficial discreta'],[15,'Gruesa, grietas superficiales, descamación en manos y pies'],[20,'Gruesa y apergaminada, grietas profundas']]],
+  oreja:['Forma de la oreja',[[0,'Chata, deforme, pabellón no incurvado'],[8,'Pabellón parcialmente incurvado en el borde'],[16,'Pabellón parcialmente incurvado en toda la parte superior'],[24,'Pabellón totalmente incurvado']]],
+  mama:['Tamaño de la glándula mamaria',[[0,'No palpable'],[5,'Palpable, <5 mm'],[10,'5 a 10 mm'],[15,'>10 mm']]],
+  plantar:['Pliegues plantares',[[0,'Sin pliegues'],[5,'Marcas mal definidas en la mitad anterior'],[10,'Marcas bien definidas en la mitad anterior; surcos en el tercio anterior'],[15,'Surcos en la mitad anterior'],[20,'Surcos en más de la mitad anterior']]]},
+ capNeu:{
+  bufanda:['Signo de la bufanda',[[0,'El codo llega a la línea axilar anterior del lado opuesto'],[6,'El codo queda entre la línea media y la axilar anterior del lado opuesto'],[12,'El codo llega a la línea media'],[18,'El codo no llega a la línea media']]],
+  cabeza:['Caída de la cabeza',[[0,'Totalmente caída; ángulo cervicotorácico de 270°'],[4,'Ángulo de 180° a 270°'],[8,'Ángulo de 180°'],[12,'Ángulo menor de 180°']]]},
+ // Capurro A (somático + neurológico): 4 somáticos + 2 neurológicos, K=200. Capurro B (solo somático): 5 somáticos, K=204. EG (días) = K + suma.
+ capA:{som:['piel','oreja','mama','plantar'],K:200}, capB:{som:['pezon','piel','oreja','mama','plantar'],K:204},
+ ballNeu:[
+  ['Postura',[[0,'Brazos y piernas extendidos'],[1,'Flexión leve de caderas y rodillas'],[2,'Flexión moderada de piernas, brazos extendidos'],[3,'Piernas flexionadas y abducidas, brazos algo flexionados'],[4,'Flexión completa de brazos y piernas']]],
+  ['Ventana cuadrada (muñeca)',[[-1,'>90°'],[0,'90°'],[1,'60°'],[2,'45°'],[3,'30°'],[4,'0°']]],
+  ['Rebote del brazo',[[0,'180°'],[1,'140–180°'],[2,'110–140°'],[3,'90–110°'],[4,'<90°']]],
+  ['Ángulo poplíteo',[[-1,'180°'],[0,'160°'],[1,'140°'],[2,'120°'],[3,'100°'],[4,'90°'],[5,'<90°']]],
+  ['Signo de la bufanda',[[-1,'El codo pasa la línea axilar opuesta'],[0,'El codo llega a la línea axilar opuesta'],[1,'Entre la línea axilar opuesta y la línea media'],[2,'El codo llega a la línea media'],[3,'El codo no llega a la línea media'],[4,'El codo no pasa de la línea axilar del mismo lado']]],
+  ['Talón-oreja',[[-1,'El talón llega a la oreja, sin resistencia'],[0,'El talón casi llega a la oreja'],[1,'Resistencia leve'],[2,'Resistencia moderada'],[3,'Resistencia marcada'],[4,'Máxima resistencia; rodilla muy flexionada']]]],
+ ballFis:[
+  ['Piel',[[-1,'Pegajosa, friable, transparente'],[0,'Gelatinosa, roja, translúcida'],[1,'Lisa, rosada, venas visibles'],[2,'Descamación superficial o exantema, pocas venas'],[3,'Agrietada, áreas pálidas, venas raras'],[4,'Apergaminada, grietas profundas, sin vasos'],[5,'Correosa, agrietada, arrugada']]],
+  ['Lanugo',[[-1,'Ninguno'],[0,'Escaso'],[1,'Abundante'],[2,'Adelgazado'],[3,'Áreas calvas'],[4,'Casi todo calvo']]],
+  ['Superficie plantar',[[-2,'Talón-dedo <40 mm'],[-1,'Talón-dedo 40–50 mm'],[0,'>50 mm, sin pliegues'],[1,'Marcas rojas tenues'],[2,'Solo pliegue transverso anterior'],[3,'Pliegues en los 2/3 anteriores'],[4,'Pliegues en toda la planta']]],
+  ['Mama',[[-1,'Imperceptible'],[0,'Apenas perceptible'],[1,'Areola plana, sin botón'],[2,'Areola punteada, botón de 1–2 mm'],[3,'Areola elevada, botón de 3–4 mm'],[4,'Areola completa, botón de 5–10 mm']]],
+  ['Ojo / oreja',[[-2,'Párpados fusionados con firmeza'],[-1,'Párpados fusionados laxamente'],[0,'Párpados abiertos; pabellón plano, queda doblado'],[1,'Pabellón algo curvo, blando, retroceso lento'],[2,'Pabellón bien curvo, blando pero con retroceso rápido'],[3,'Formado y firme, retroceso inmediato'],[4,'Cartílago grueso, oreja rígida']]],
+  ['Genitales (masculino)',[[-1,'Escroto plano, liso'],[0,'Escroto vacío, rugosidad tenue'],[1,'Testículos en el canal superior, rugosidad rara'],[2,'Testículos descendiendo, pocas rugosidades'],[3,'Testículos descendidos, buena rugosidad'],[4,'Testículos péndulos, rugosidad profunda']]],
+  ['Genitales (femenino)',[[-1,'Clítoris prominente, labios planos'],[0,'Clítoris prominente, labios menores pequeños'],[1,'Clítoris prominente, labios menores creciendo'],[2,'Labios mayores y menores igual de prominentes'],[3,'Labios mayores grandes, menores pequeños'],[4,'Labios mayores cubren clítoris y menores']]]]
+};
+function egTxt(days){ const w=Math.floor(days/7), d=Math.round(days-w*7); return w+' semanas'+(d?' + '+d+' día'+(d>1?'s':''):''); }
+function useEG(b,weeks){ const P=pt(), btn=el('button','addbtn','Usar esta EG ('+fmt(Math.round(weeks*10)/10)+' sem)'+(P.ga!=null?' · reemplaza '+fmt(P.ga)+' sem':'')); btn.type='button';
+  btn.addEventListener('click',()=>{ const e=$('#eg'); $('#moredet').open=true; e.value=String(Math.round(weeks*10)/10); e.dispatchEvent(new Event('input',{bubbles:true})); btn.textContent='EG capturada ✓'; }); return btn; }
+function neoScales(g,P){
+  // Silverman-Andersen
+  { const b=scaleCard(g,'ci','Silverman-Andersen (dificultad respiratoria neonatal)',NEO_ESC.silverman,
+      s=>s+'/10 → '+(s===0?'Sin dificultad respiratoria':s<=3?'Dificultad respiratoria leve':s<=6?'Dificultad respiratoria moderada':'Dificultad respiratoria grave'),'0 = sin dificultad · 1–3 leve · 4–6 moderada · 7–10 grave.');
+    srcLine(b,'Silverman WA, Andersen DH. Pediatrics 1956;17(1):1-10.',1); }
+  // Capurro A y B
+  { const b=ccard(g,'adm','Capurro (edad gestacional al nacer)','A: somático + neurológico. B: solo somático (recién nacido que no se puede explorar neurológicamente).');
+    const md=selIn([['A','Capurro A (somático + neurológico)'],['B','Capurro B (solo somático)']],'A'); const fm=fld('Método',md); fm.classList.add('wide'); b.appendChild(fm);
+    const S={}; const mk=(k,[lbl,opts])=>{ const s=selIn(opts.map(([v,t])=>[String(v),v+' · '+t]),String(opts[0][0])); const f=fld(lbl,s); f.classList.add('wide'); b.appendChild(f); S[k]={s,f}; };
+    Object.entries(NEO_ESC.capSom).forEach(([k,v])=>mk(k,v)); Object.entries(NEO_ESC.capNeu).forEach(([k,v])=>mk(k,v));
+    const box=el('div','cout'); b.appendChild(box);
+    const up=()=>{ const cfg=md.value==='A'? NEO_ESC.capA : NEO_ESC.capB, keys=cfg.som.concat(md.value==='A'?['bufanda','cabeza']:[]);
+      Object.keys(S).forEach(k=>{ S[k].f.hidden=!keys.includes(k); });
+      const sum=keys.reduce((a,k)=>a+(+S[k].s.value),0), days=cfg.K+sum; box.textContent='';
+      box.appendChild(el('p',null,'Suma '+sum+' + '+cfg.K+' = '+days+' días → '+egTxt(days)+' ('+fmt(Math.round(days/7*10)/10)+' sem).'));
+      box.appendChild(useEG(b,days/7)); };
+    [md].concat(Object.values(S).map(x=>x.s)).forEach(x=>x.addEventListener('change',up)); up();
+    srcLine(b,'Capurro H, Konichezky S, Fonseca D, Caldeyro-Barcia R. J Pediatr 1978;93(1):120-2. EG (días) = 200 + puntaje (A) o 204 + puntaje (B).',1); }
+  // Ballard Nuevo
+  { const b=ccard(g,'adm','Ballard Nuevo (madurez neuromuscular y física)','Más exacto alrededor de las 24 h de vida. Puntaje −10 a 50; EG = 24 + 0.4 × puntaje.');
+    const sx=selIn([['m','Masculino'],['f','Femenino']],P.sx==='f'?'f':'m'); const fs=fld('Sexo (para genitales)',sx); fs.classList.add('wide');
+    const sel=[]; const mk=(t,[lbl,opts])=>{ const s=selIn(opts.map(([v,tx])=>[String(v),(v>0?v:v===0?'0':'−'+(-v))+' · '+tx]),String(opts.find(o=>o[0]===0)?0:opts[0][0])); const f=fld(lbl,s); f.classList.add('wide'); b.appendChild(f); sel.push({t,s,f,lbl}); };
+    b.appendChild(el('p','csub','Madurez neuromuscular')); NEO_ESC.ballNeu.forEach(x=>mk('n',x));
+    b.appendChild(el('p','csub','Madurez física')); b.appendChild(fs); NEO_ESC.ballFis.forEach(x=>mk('f',x));
+    const box=el('div','cout'); b.appendChild(box);
+    const up=()=>{ sel.forEach(x=>{ if(/Genitales/.test(x.lbl)) x.f.hidden= (sx.value==='m')!==/masculino/.test(x.lbl); });
+      const act=sel.filter(x=>!x.f.hidden), n=act.filter(x=>x.t==='n').reduce((a,x)=>a+(+x.s.value),0), f=act.filter(x=>x.t==='f').reduce((a,x)=>a+(+x.s.value),0), tot=n+f, wk=24+0.4*tot;
+      box.textContent=''; box.appendChild(el('p',null,'Neuromuscular '+n+' + física '+f+' = '+tot+' → EG '+fmt(Math.round(wk*10)/10)+' semanas ('+egTxt(wk*7)+').'));
+      if(tot<-10||tot>50) box.appendChild(el('p','cwarn','⚠ Puntaje fuera de la tabla (−10 a 50).'));
+      box.appendChild(useEG(b,wk)); };
+    [sx].concat(sel.map(x=>x.s)).forEach(x=>x.addEventListener('change',up)); up();
+    srcLine(b,'Harriet Lane 2027, eFig. 18.1, modificada de Ballard JL et al. J Pediatr 1991;119(3):417-23. Postura, signo de la bufanda y talón-oreja vienen como dibujos en el libro: verifique con la figura.'); }
+}
 function escNew(g,P){
   accSec(g,'Neonatal');
   scaleCard(g,'dil','APGAR',[
@@ -4944,6 +5249,7 @@ function escNew(g,P){
     ['Irritabilidad refleja (aspiración nasal)',[[0,'Sin respuesta'],[1,'Mueca'],[2,'Tos o estornudo']]],
     ['Color',[[0,'Azul o pálido'],[1,'Acrocianosis'],[2,'Completamente rosado']]]],
     s=>s+'/10. Se valora al minuto y a los 5 minutos; si a los 5 minutos es menor de 7, repetir cada 5 minutos.');
+  neoScales(g,P);
   accSec(g,'Trauma');
   { const lt2=P.years!=null&&P.years<2;
     const b=ccard(g,'ci','PECARN · traumatismo craneoencefálico leve','Decide si se necesita TC de cráneo. Elija la edad y marque lo que tenga el paciente.');
@@ -5487,15 +5793,32 @@ function renderHoja(){
 // app instalable y sin conexión (solo en GitHub Pages; no en claude.ai)
 if(location.protocol==='https:' && /\.github\.io$/.test(location.hostname) && 'serviceWorker' in navigator){
   [['manifest','manifest.webmanifest'],['apple-touch-icon','icon-180.png'],['icon','icon.svg']].forEach(([r,h])=>{ const l=document.createElement('link'); l.rel=r; l.href=h; document.head.appendChild(l); });
-  const m=document.createElement('meta'); m.name='theme-color'; m.content='#153E8A'; document.head.appendChild(m);
-  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+  // aviso de versión nueva: la nueva espera (waiting) hasta que el usuario toca el aviso
+  const swBanner=w=>{ if($('#swnew')) return; const b=el('button','swnew','Hay una versión nueva de Pedia Life con correcciones. Toca para actualizar'); b.id='swnew'; b.type='button';
+    b.addEventListener('click',()=>{ swWant=true; b.textContent='Actualizando…'; w.postMessage({type:'SKIP_WAITING'}); }); document.body.appendChild(b); };
+  // recargar solo cuando el usuario pidió actualizar (en la primera instalación también cambia el controlador y no debe recargar)
+  let swWant=false, swReload=false; navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(!swWant||swReload) return; swReload=true; location.reload(); });
+  navigator.serviceWorker.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='STATUS') swStatus(d.version,d.offline); });
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').then(reg=>{
+    if(reg.waiting && navigator.serviceWorker.controller) swBanner(reg.waiting);
+    reg.addEventListener('updatefound',()=>{ const w=reg.installing; if(!w) return; w.addEventListener('statechange',()=>{ if(w.state==='installed' && navigator.serviceWorker.controller) swBanner(w); }); });
+    if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'GET_STATUS'});
+    document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') reg.update().catch(()=>{}); });
+    setInterval(()=>reg.update().catch(()=>{}),30*60*1000);
+  }).catch(()=>{}); });
 }
+// versión en el pie; «(sin conexión)» si la página llegó de la caché o no hay red
+// la versión que se muestra es la de esta página (build.py la toma de web/sw.js); el service worker solo dice si llegó de la caché
+function swStatus(v,off){ const e=$('#pver'); if(!e) return; e.textContent='Versión '+e.dataset.v+((off||!navigator.onLine)?' (sin conexión)':''); }
+window.addEventListener('offline',()=>swStatus(null,true)); window.addEventListener('online',()=>swStatus(null,false));
 try{ const o=JSON.parse(localStorage.getItem('dosis_pt')||'{}'); PTF.forEach(id=>{ if(o[id]!=null&&o[id]!=='') $(id).value=o[id]; }); }catch(e){}
 $('#newpt').addEventListener('click',()=>{ PTF.forEach(id=>{ $(id).value= id==='#edadu'?'a':''; }); state.hoja=[]; savePrefs(); updTabs(); readWeight(); patientNote(); renderCurrent(); try{ localStorage.removeItem('dosis_pt'); }catch(e){} pesoIn.focus(); });
 { const sec=$('#patient'), mini=$('#ptmini');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>{ mini.classList.toggle('show',!es[0].isIntersecting); },{threshold:0}).observe(sec);
   $('#ptedit').addEventListener('click',()=>{ sec.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>pesoIn.focus({preventScroll:true}),400); }); }
 readWeight(); renderList(); updTabs(); patientNote();
+document.querySelectorAll('[data-lgback]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); try{ history.replaceState(null,'',location.pathname+location.search); }catch(x){} showView('med',true); window.scrollTo({top:0}); }));
+paroRestore();
 const h=location.hash.slice(1); if(protoHash(h)){} else if(VIEWS.includes(h)) showView(h,true); else if(DB.some(d=>d.id===h)){state.cur=h; renderList(); renderDetail();}
 })();
 </script>
