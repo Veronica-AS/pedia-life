@@ -523,6 +523,19 @@ body.paroon .metfloat{bottom:auto;top:12px}
 /* el sello del isotipo siempre es blanco (marca) */
 .bsello{background:#fff!important}
 .themebtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:2px solid var(--ash);background:var(--surface);color:var(--marino-tx);font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+.alsohdr{margin:10px 6px 4px;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.item.also .nm{font-weight:500;color:var(--muted)}
+.confnote{margin:6px 0 0;font-size:13px;font-weight:600;color:var(--coral-t)}
+.wwarn.walert{background:var(--coral-tin);border:2px solid var(--coral-t);color:var(--ink)}
+.wwarn.wok{background:var(--turq-tin);border:1px solid var(--turq-t);color:var(--ink);font-weight:500}
+.wbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.wsug,.wconf{font:inherit;font-size:13px;font-weight:600;border-radius:999px;padding:5px 12px;cursor:pointer;border:1.5px solid var(--marino-tx);background:var(--surface);color:var(--marino-tx)}
+.wconf{background:var(--marino);border-color:var(--marino);color:#fff}
+.wband{margin:8px 0 10px;padding:8px 12px;border-radius:12px;background:var(--coral-tin);border:2px solid var(--coral-t);color:var(--ink);font-weight:600;font-size:14px}
+.sharebtn{margin-left:8px}
+.eqcard h3{margin:0 0 8px;color:var(--marino-tx)}.eqcard td.eqsrc{font-size:12px;color:var(--muted)}.eqcard .copybtn{margin-top:10px}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:860px){ .rtab{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%} }
 </style>
 <meta name="theme-color" content="#153E8A" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1626" media="(prefers-color-scheme: dark)">
@@ -673,7 +686,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 19 de noviembre de 2026. Versión de la página: 2026.11.19.</p>
+    <p>Última revisión del contenido: 20 de noviembre de 2026. Versión de la página: 2026.11.20.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -741,7 +754,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 19 de noviembre de 2026. · <span id="pver" data-v="2026.11.19">Versión 2026.11.19</span></p>
+    <p class="fupd">Última actualización del contenido: 20 de noviembre de 2026. · <span id="pver" data-v="2026.11.20">Versión 2026.11.20</span></p>
   </footer>
 </div>
 
@@ -3464,6 +3477,92 @@ const WHO={"wfa":{"m":{"x":[0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12
 SV.src.who='OMS. WHO Child Growth Standards (2006) y WHO Growth Reference 5–19 años (2007); tablas LMS del software oficial Anthro/AnthroPlus (github.com/WorldHealthOrganization).';
 SV.src.whoint='Interpretación: Becker P, et al. Consenso AND/ASPEN de indicadores de desnutrición pediátrica. Nutr Clin Pract. 2015;30(1):147-61 (Harriet Lane 2027, tabla 21.13); Harriet Lane 2027, cap. 21 (talla baja, edad corregida); OMS, hoja informativa Obesidad y sobrepeso (actualizada 7 oct 2026) y referencia OMS 2007 de IMC para 5 a 19 años.';
 
+/* Marcas comerciales y sinónimos frecuentes en México → id del medicamento.
+   Para editar: agregue la marca en minúsculas y sin acentos en la lista del medicamento.
+   La búsqueda las trata como sinónimos (segundo nivel, después del nombre genérico) y tolera errores de escritura en ellas.
+   Lista PENDIENTE DE REVISIÓN por la autora (marcas tomadas de uso común, no de un catálogo oficial). */
+const MARCAS={
+ 'paracetamol':['tempra','tylenol','mejoralito'],
+ 'ibuprofeno':['advil','motrin'],
+ 'metamizol':['neo-melubrina','neomelubrina','prodolina'],
+ 'ketorolaco':['dolac'],
+ 'amoxicilina':['amoxil'],
+ 'amoxi-clav':['augmentin','clavulin'],
+ 'ampicilina':['pentrexyl','binotal'],
+ 'dicloxacilina':['posipen'],
+ 'ceftriaxona':['rocephin'],
+ 'cefotaxima':['claforan'],
+ 'ceftazidima':['fortum'],
+ 'cefepima':['maxipime'],
+ 'cefuroxima':['zinnat'],
+ 'cefalexina':['keflex'],
+ 'cefaclor':['ceclor'],
+ 'cefazolina':['kefzol'],
+ 'clindamicina':['dalacin'],
+ 'claritromicina':['klaricid'],
+ 'azitromicina':['zitromax'],
+ 'eritromicina':['ilosone'],
+ 'tmp-smx':['bactrim','septrin'],
+ 'metronidazol':['flagyl'],
+ 'gentamicina':['garamicina'],
+ 'amikacina':['amikin'],
+ 'vancomicina':['vancocin'],
+ 'meropenem':['merrem','meronem'],
+ 'imipenem':['tienam'],
+ 'pip-tazo':['tazocin'],
+ 'ciprofloxacino':['ciproxina','cipro'],
+ 'nitrofurantoina':['macrodantina'],
+ 'fluconazol':['diflucan'],
+ 'nistatina':['micostatin'],
+ 'aciclovir':['zovirax'],
+ 'oseltamivir':['tamiflu'],
+ 'albendazol':['zentel'],
+ 'nitazoxanida':['daxon'],
+ 'mebendazol':['vermox'],
+ 'salbutamol':['ventolin'],
+ 'ipratropio':['atrovent'],
+ 'budesonida':['pulmicort'],
+ 'fluticasona':['flixotide'],
+ 'montelukast':['singulair'],
+ 'dexametasona':['decadron','alin'],
+ 'prednisolona':['meticorten','fisopred'],
+ 'metilprednisolona':['solu-medrol','solumedrol'],
+ 'hidrocortisona':['solu-cortef','solucortef','flebocortid'],
+ 'ondansetron':['zofran'],
+ 'metoclopramida':['plasil'],
+ 'ranitidina':['azantac'],
+ 'omeprazol':['losec'],
+ 'loratadina':['clarityne'],
+ 'clorfenamina':['clorotrimeton'],
+ 'difenhidramina':['benadryl'],
+ 'hidroxizina':['atarax'],
+ 'cetirizina':['zyrtec'],
+ 'midazolam':['dormicum'],
+ 'diazepam':['valium'],
+ 'lorazepam':['ativan'],
+ 'clonazepam':['rivotril'],
+ 'fenitoina':['epamin'],
+ 'levetiracetam':['keppra'],
+ 'valproato':['depakene','atemperator'],
+ 'fenobarbital':['alepsal'],
+ 'carbamazepina':['tegretol'],
+ 'oxcarbazepina':['trileptal'],
+ 'topiramato':['topamax'],
+ 'furosemida':['lasix'],
+ 'espironolactona':['aldactone'],
+ 'captopril':['capoten'],
+ 'enalapril':['renitec'],
+ 'nifedipino':['adalat'],
+ 'amlodipino':['norvas'],
+ 'digoxina':['lanoxin'],
+ 'heparina':['inhepar'],
+ 'enoxaparina':['clexane'],
+ 'tramadol':['tramal'],
+ 'lactulosa':['duphalac'],
+ 'mupirocina':['bactroban'],
+ 'dimenhidrinato':['dramamine']
+};
+
 // Parches: condiciones por edad/EPM, intervalos neonatales automáticos, alertas
 (function(){
 const find=id=>DB.find(d=>d.id===id);
@@ -3811,8 +3910,29 @@ try{const s=JSON.parse(localStorage.getItem('dosis_prefs')||'{}'); if(s.pob)stat
 function save(){try{localStorage.setItem('dosis_prefs',JSON.stringify({pob:state.pob,unit:state.unit}))}catch(e){}}
 
 const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+/* letras mayúsculas resaltadas (Tall Man) para nombres que se confunden.
+   Fuente: ISMP-España, Otero López MJ et al. Farm Hosp 2011;35(5):225-35, tabla 2. Solo grupos con ≥2 nombres presentes en la base. */
+const TALLMAN=[['ADRENalina','ATROPina'],['cefAZOLina','cefTRIAXona','cefTAZIdima','cefOXitina','cefOTAXima'],['DOBUTamina','DOPamina'],
+ ['eFEDrina','EPINEFrina','FENILEFrina'],['hidrALAZINA','hidrOXIzina'],['metAMIzol','metroNIDAzol'],['niCARdipino','niFEdipino','niMODipino'],
+ ['OXcarbazepina','carBAMazepina'],['predniSONA','prednisoLONA'],['sulfaDIAzina','sulfaSALAzina'],['valACiclovir','valGANCiclovir']];
+const TM_RE=TALLMAN.flat().map(t=>[new RegExp('(^|[^\\p{L}])('+t.toLowerCase()+')(?=[^\\p{L}]|$)','giu'),t]);
+function tmText(s){ if(!s) return s; let r=String(s); TM_RE.forEach(([re,t])=>{ r=r.replace(re,(m,a)=>a+t); }); return r; }
+DB.forEach(d=>{ d.n=tmText(d.n); });
+DB.forEach(d=>{ const ln=norm(d.n); const mine=TALLMAN.filter(g=>g.some(t=>new RegExp('(^|[^a-z])'+norm(t)+'([^a-z]|$)').test(ln)));
+  const other=new Set(); mine.forEach(g=>g.forEach(t=>DB.forEach(x=>{ if(x!==d && new RegExp('(^|[^a-z])'+norm(t)+'([^a-z]|$)').test(norm(x.n))) other.add(x.n); })));
+  d._conf=[...other]; });
 DB.sort((a,b)=>a.n.localeCompare(b.n,'es'));
 DB.forEach(d=>{d._s=norm(d.n+' '+(d.alias||'')+' '+d.g+' '+d.ind)});
+/* búsqueda: palabras del nombre (_nw) y de sinónimos/marcas (_aw, incluye MARCAS de 97_marcas.js) */
+const words=s=>norm(s).split(/[^a-z0-9]+/).filter(Boolean);
+DB.forEach(d=>{ const mk=(typeof MARCAS!=='undefined'&&MARCAS[d.id])||[]; d._nw=words(d.n); d._aw=words((d.alias||'')+' '+mk.join(' ')); });
+function lev(a,b){ if(a===b) return 0; const m=a.length,n=b.length; if(Math.abs(m-n)>2) return 9; let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
+// nivel de coincidencia de un término: 0 nombre genérico, 1 marca o sinónimo, 2 con error de escritura (solo nombre/marca), 3 texto de la ficha, 4 nada
+function termTier(t,d){ if(d._nw.some(w=>w.startsWith(t))) return 0; if(d._aw.some(w=>w.startsWith(t))) return 1;
+  const k=t.length>=8?2:t.length>=5?1:0;
+  if(k && d._nw.concat(d._aw).some(w=>lev(t,w)<=k || (w.length>t.length && lev(t,w.slice(0,t.length))<=k))) return 2;
+  return d._s.includes(t)? 3 : 4; }
 const GROUPS=[...new Set(DB.map(d=>d.g))].sort((a,b)=>a.localeCompare(b,'es'));
 
 function fmt(x){
@@ -3882,10 +4002,9 @@ function filtered(){
   const g=state.grp;
   const okG=d=> !g || (g==='__fav'? state.fav.includes(d.id) : g==='__rec'? state.rec.includes(d.id) : g==='__high'? d.high : g==='__cbm'? !!(d.cbm&&d.cbm.length) : d.g===g);
   if(!terms.length && !g && !state.allList){ const ids=state.fav.concat(COMMON.filter(x=>!state.fav.includes(x))); return ids.map(id=>DB.find(d=>d.id===id)).filter(Boolean); }
-  const res=DB.filter(d=>okG(d) && terms.every(t=>d._s.includes(t)));
-  if(g==='__rec' && !terms.length) return res.sort((a,b)=>state.rec.indexOf(a.id)-state.rec.indexOf(b.id));
-  return res
-    .sort((a,b)=>{ if(!terms.length) return 0; const qa=norm(a.n).startsWith(terms[0])?0:1, qb=norm(b.n).startsWith(terms[0])?0:1; return qa-qb||a.n.localeCompare(b.n,'es');});
+  if(!terms.length){ const res=DB.filter(okG); if(g==='__rec') return res.sort((a,b)=>state.rec.indexOf(a.id)-state.rec.indexOf(b.id)); return res; }
+  const res=[]; DB.forEach(d=>{ if(!okG(d)) return; const tier=Math.max(...terms.map(t=>termTier(t,d))); if(tier<4){ d._tier=tier; res.push(d); } });
+  return res.sort((a,b)=>{ const qa=norm(a.n).startsWith(terms[0])?0:1, qb=norm(b.n).startsWith(terms[0])?0:1; return a._tier-b._tier||qa-qb||a.n.localeCompare(b.n,'es'); });
 }
 // búsqueda global: calculadoras, escalas y otras secciones
 let TOOLIX=null;
@@ -3911,8 +4030,11 @@ function renderList(){
     tx.appendChild(el('div','nm',x.t)); tx.appendChild(el('div','gp',x.lab)); b.addEventListener('click',()=>openTool(x)); list.appendChild(b); });
   const common=!norm(state.q).trim() && !state.grp && !state.allList;
   $('#count').textContent= common? 'Más usados · escriba para buscar entre los '+DB.length : f.length+' de '+DB.length+' medicamentos'+(tools.length?' · '+tools.length+' herramienta'+(tools.length>1?'s':''):'');
+  let alsoHdr=false; const searching=qt.length>0;
   f.forEach(d=>{
-    const b=el('button','item'); b.type='button'; b.setAttribute('role','option');
+    const also= searching && d._tier===3;
+    if(also && !alsoHdr){ alsoHdr=true; list.appendChild(el('div','alsohdr','También mencionado en…')); }
+    const b=el('button','item'+(also?' also':'')); b.type='button'; b.setAttribute('role','option');
     b.appendChild(gtile(d.g)); const tx=el('div'); b.appendChild(tx);
     const nm=el('div','nm',(state.fav.includes(d.id)?'★ ':'')+d.n); if(d.high){nm.appendChild(el('span','hi','alto riesgo'));} tx.appendChild(nm); tx.appendChild(el('div','gp',d.g));
     if(state.cur===d.id) b.setAttribute('aria-current','true');
@@ -3973,13 +4095,43 @@ function patientNote(){
   const b=el('b',null,parts.join(' · ')); n.appendChild(b);
 }
 // aviso si el peso no es plausible para la edad (peso para la edad OMS fuera de ±3 Z)
-function wCheck(){
-  const n=$('#wnote'), o=n.querySelector('.wwarn'); if(o) o.remove();
-  if(!state.w) return; const P=pt(); if(P.days==null) return;
-  const zs=[]; (P.sx?[P.sx]:['f','m']).forEach(s=>{ const r=whoCalc(P,s,state.w); const x=r.R&&r.R.find(q=>/^Peso para la edad/.test(q.nm)); if(x) zs.push(x.z); });
-  if(!zs.length) return; const lo=zs.every(z=>z<-3), hi=zs.every(z=>z>3); if(!lo&&!hi) return;
-  n.appendChild(el('span','wwarn','⚠ Peso '+(lo?'muy bajo':'muy alto')+' para la edad ('+(P.sx?'Z '+fmt(zs[0]):'Z '+(lo?'< −3':'> +3')+' en ambos sexos')+', OMS). Verifique el peso, la unidad y la edad.'));
+// revisión del peso para la edad (evita errores ×10): OMS peso para la edad, P3–P97
+// 0–5 años: estándares OMS 2006 (por días); 5–10 años: referencia OMS 2007 (por meses). Prematuros <3 años: edad corregida.
+// Neonatos (≤28 días): no se usan límites inferiores de término; solo se avisa si el peso supera el P97 de un recién nacido de término.
+const Z97=1.88079;
+function whoW(t,x,z){ const l=whoLMS(t,x); if(!l) return null; const [L,M,S]=l; return Math.abs(L)<1e-6? M*Math.exp(S*z) : M*Math.pow(1+L*S*z,1/L); }
+function wExpected(P){
+  if(P.days==null) return null;
+  let d=P.days, corr=false; if(P.ga!=null&&P.ga<37&&P.days<1096){ d=P.days-(40-P.ga)*7; corr=true; }
+  const neo=P.days<=28, sx=P.sx? [P.sx] : ['f','m'];
+  const at=(s,z)=>{ const dd=Math.max(0,d); if(dd<=1826) return whoW(WHO.wfa[s],Math.round(dd),z); const mo=dd/30.4375; return mo<=120? whoW(WHO.wfa7[s],mo,z) : null; };
+  const lo=sx.map(s=>at(s,-Z97)), hi=sx.map(s=>at(s,Z97)); if(hi.some(v=>v==null)) return null;
+  return {lo:neo? null : Math.min(...lo), hi:Math.max(...hi), neo, corr};
 }
+function wAgeTxt(P){ return P.days<60? Math.round(P.days)+' días' : P.years<2? fmt(Math.floor(P.days/30.44))+' meses' : fmt(Math.floor(P.years))+' años'; }
+function wKey(){ const P=pt(); return [state.w,P.days,P.sx,P.ga].join('|'); }
+function wAlert(){ const P=pt(); if(!state.w) return null; const E=wExpected(P); if(!E) return null;
+  const w=state.w, bad=(E.lo!=null&&w<E.lo)||w>E.hi; return bad? {E,P,w} : null; }
+function wUnconfirmed(){ return !!wAlert() && state.wOk!==wKey(); }
+function wBand(h){ if(!wUnconfirmed()) return; const b=el('div','wband','⚠ Peso sin confirmar: '+fmt(state.w)+' kg es inusual para la edad. Revíselo arriba antes de usar estas dosis.'); h.appendChild(b); }
+function wCheck(){
+  const n=$('#wnote'); n.querySelectorAll('.wwarn').forEach(x=>x.remove());
+  const A=wAlert(); if(!A) return; const {E,P,w}=A;
+  const box=el('span','wwarn walert'); const fmtR=E.lo!=null? '~'+fmt(Math.round(E.lo*10)/10)+'–'+fmt(Math.round(E.hi*10)/10)+' kg' : 'hasta ~'+fmt(Math.round(E.hi*10)/10)+' kg';
+  if(state.wOk===wKey()){ box.className='wwarn wok'; box.textContent='Peso confirmado por el usuario ('+fmt(w)+' kg para '+wAgeTxt(P)+'; esperado '+fmtR+').'; n.appendChild(box); return; }
+  box.appendChild(document.createTextNode('⚠ '+fmt(w)+' kg es inusual para '+wAgeTxt(P)+(E.corr?' (edad corregida)':'')+' (esperado '+fmtR+', P3–P97 OMS'+(P.sx?'':', ambos sexos')+(E.neo?'; en neonatos solo se revisa el límite superior':'')+'). ¿Lo escribió bien?'));
+  const inR=v=>(E.lo==null||v>=E.lo)&&v<=E.hi, sug=[w*10,w/10].filter(inR);
+  const row=el('span','wbtns');
+  sug.forEach(v=>{ const vv=Math.round(v*1000)/1000, b=el('button','wsug','¿Quiso decir '+fmt(vv)+' kg?'); b.type='button';
+    b.addEventListener('click',()=>{ pesoIn.value= state.unit==='g'? Math.round(vv*1000) : vv; pesoIn.dispatchEvent(new Event('input',{bubbles:true})); }); row.appendChild(b); });
+  const ok=el('button','wconf','Sí, el peso es correcto'); ok.type='button'; ok.addEventListener('click',()=>{ state.wOk=wKey(); document.querySelectorAll('.wband').forEach(x=>x.remove()); patientNote(); renderCurrent(); }); row.appendChild(ok);
+  box.appendChild(row); n.appendChild(box);
+}
+// compartir (WhatsApp, etc.): navigator.share o, si no existe, copiar. Nunca incluye nombre ni expediente; siempre lleva la advertencia.
+const SHARE_URL='https://veronica-as.github.io/pedia-life/', SHARE_TAIL=' — Verifique siempre. Calculado con Pedia Life: '+SHARE_URL;
+async function shareText(t,btn){ const lbl=btn.textContent, done=m=>{ btn.textContent=m; setTimeout(()=>btn.textContent=lbl,1600); };
+  if(navigator.share){ try{ await navigator.share({title:'Pedia Life',text:t}); return; }catch(e){ if(e&&e.name==='AbortError') return; } }
+  try{ await navigator.clipboard.writeText(t); done('✓ Copiado'); }catch(e){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done('✓ Copiado'); }catch(_){ done('No se pudo copiar'); } ta.remove(); } }
 // datos del paciente guardados en este navegador (sin nombre)
 const PTF=['#peso','#sexo','#edad','#edadu','#eg','#talla','#cr'];
 function savePt(){ try{ const o={}; PTF.forEach(id=>{ o[id]=$(id).value; }); localStorage.setItem('dosis_pt',JSON.stringify(o)); }catch(e){} }
@@ -4267,7 +4419,10 @@ function orderBlock(d,r,i){
   if(inp) inp.addEventListener('input',()=>{state.ord[key+':manual']=true; upd();});
   const add=el('button','addbtn','+ Agregar a la hoja del paciente'); add.type='button';
   add.addEventListener('click',()=>{ state.hoja.push(ta.value); savePrefs(); updTabs(); add.textContent='✓ Agregada'; setTimeout(()=>add.textContent='+ Agregar a la hoja del paciente',1500); });
-  b._upd=upd; upd(); b.appendChild(btn); b.appendChild(add);
+  const sh=el('button','addbtn sharebtn','Compartir'); sh.type='button';
+  sh.addEventListener('click',()=>{ let o=ta.value; const nm=d.n.replace(/\s*\(.*\)$/,''); if(o.toLowerCase().startsWith(nm.toLowerCase())) o=o.slice(nm.length).replace(/^[\s·,:-]+/,'');
+    shareText(nm+(state.w?' · '+fmt(state.w)+' kg':'')+' · '+o+SHARE_TAIL, sh); });
+  b._upd=upd; upd(); b.appendChild(btn); b.appendChild(sh); b.appendChild(add);
   btn.addEventListener('click',()=>{ const done=()=>{btn.textContent='✓ Copiada'; setTimeout(()=>btn.textContent='Copiar indicación',1600); igTip(add);};
     try{ navigator.clipboard.writeText(ta.value).then(done,()=>{ta.select(); document.execCommand('copy'); done();}); }catch(e){ ta.select(); try{document.execCommand('copy');}catch(_){} done(); } });
   return b;
@@ -4282,7 +4437,7 @@ function renderDetail(){
   const gl=el('div','gline'); gl.appendChild(gtile(d.g)); gl.appendChild(el('div','grp',d.g)); head.appendChild(gl);
   head.appendChild(el('h2',null,d.n));
   const pres=el('div','pres'); (d.pres||[]).forEach(p=>pres.appendChild(el('span',null,p))); head.appendChild(pres);
-  const bd=el('div'); if(d.high) bd.appendChild(el('span','badge high','⚠ Medicamento de alto riesgo: doble verificación')); if(d.renal) bd.appendChild(el('span','badge ren','Ajuste en insuficiencia renal')); head.appendChild(bd);
+  const bd=el('div'); if(d.high) bd.appendChild(el('span','badge high','⚠ Medicamento de alto riesgo: doble verificación')); if(d.renal) bd.appendChild(el('span','badge ren','Ajuste en insuficiencia renal')); head.appendChild(bd); wBand(head); if(d._conf&&d._conf.length) head.appendChild(el('p','confnote','⚠ Se confunde con: '+d._conf.join(', ')));
   const st=el('button','star',state.fav.includes(d.id)?'★ En favoritos':'☆ Agregar a favoritos'); st.type='button'; st.setAttribute('aria-pressed',state.fav.includes(d.id));
   st.addEventListener('click',()=>{ state.fav=state.fav.includes(d.id)? state.fav.filter(x=>x!==d.id) : state.fav.concat(d.id); savePrefs(); renderList(); renderDetail(); });
   head.appendChild(st);
@@ -4360,15 +4515,16 @@ function renderCurrent(){ if(curView==='med') renderDetail(); else if(curView===
 const _rw=readWeight; 
 pesoIn.addEventListener('input',()=>{ if(curView!=='med') renderCurrent(); patientNote(); });
 
-function rrow(t,cells,cls){ const tr=document.createElement('tr'); if(cls) tr.className=cls; cells.forEach((c,j)=>{ const td=el('td',j===1?'big2':null,c); if(cls==='sec'){td.colSpan=4;} tr.appendChild(td); }); t.appendChild(tr); }
+function rrow(t,cells,cls){ const tr=document.createElement('tr'); if(cls) tr.className=cls; cells.forEach((c,j)=>{ const td=el('td',j===1?'big2':null,j===0&&cls!=='sec'?tmText(c):c); if(cls==='sec'){td.colSpan=4;} tr.appendChild(td); }); t.appendChild(tr); }
 function renderRCP(){
   const h=$('#v-reanimacion'); h.textContent='';
   h.appendChild(el('div','eyebrow','Urgencias'));
-  h.appendChild(el('h2',null,'Hoja de reanimación'+(state.w?' · '+fmt(state.w)+' kg':'')));
+  h.appendChild(el('h2',null,'Hoja de reanimación'+(state.w?' · '+fmt(state.w)+' kg':''))); wBand(h);
   renderMetro(h);
   if(!state.w){ h.appendChild(el('p','nocalc','Escriba el peso arriba para calcular toda la hoja.')); return; }
   const w=state.w, P=pt(), neo=(P.days!=null? P.days<=28 : state.pob==='neo');
   if(neo) nrpBlock(h,w,P);
+  eqCard(h,w,P,neo);
   const cap=(x,m)=>m!=null?Math.min(x,m):x;
   const t=document.createElement('table'); t.className='rtab';
   const hd=document.createElement('tr'); ['Fármaco / acción','Dosis','Volumen','Notas'].forEach(x=>hd.appendChild(el('th',null,x))); t.appendChild(hd);
@@ -4383,8 +4539,8 @@ function renderRCP(){
   rrow(t,['Cloruro de calcio 10%', fmt(cap(20*w,1000))+' mg', fmt(cap(20*w,1000)/100)+' mL', '20 mg/kg (máx. 1 g); de preferencia vía central (periférica en paro)']);
   rrow(t,['Sulfato de magnesio (torsade)', fmt(25*w)+' – '+fmt(cap(50*w,2000))+' mg', fmt(25*w/100)+' – '+fmt(cap(50*w,2000)/100)+' mL de 10%', 'Máx. 2 g']);
   rrow(t,['Choque eléctrico'],'sec');
-  rrow(t,['Desfibrilación (FV/TV sin pulso)', fmt(2*w)+' J → '+fmt(4*w)+' J', '—', 'Luego ≥4 J/kg; máx. 10 J/kg o dosis de adulto']);
-  rrow(t,['Cardioversión sincronizada', fmt(0.5*w)+' – '+fmt(1*w)+' J → '+fmt(2*w)+' J', '—', 'TSV / TV con pulso inestable']);
+  rrow(t,['Desfibrilación (FV/TV sin pulso)', fmt(Math.min(2*w,200))+' J → '+fmt(Math.min(4*w,200))+' J', '—', 'Luego ≥4 J/kg; máx. 10 J/kg o dosis de adulto (200 J, Harriet Lane 2027)']);
+  rrow(t,['Cardioversión sincronizada', fmt(Math.min(0.5*w,200))+' – '+fmt(Math.min(w,200))+' J → '+fmt(Math.min(2*w,200))+' J', '—', 'TSV / TV con pulso inestable']);
   rrow(t,['Arritmias, glucosa, antídotos'],'sec');
   rrow(t,['Adenosina 1.ª / 2.ª dosis', fmt(cap(0.1*w,6))+' mg / '+fmt(cap(0.2*w,12))+' mg', fmt(cap(0.1*w,6)/3)+' / '+fmt(cap(0.2*w,12)/3)+' mL de 3 mg/mL', 'Bolo rápido (1–2 s) + 5–10 mL SN; máx. 6 / 12 mg']);
   rrow(t,['Atropina', fmt(cap(0.02*w,0.5))+' mg', fmt(cap(0.02*w,0.5)/0.1)+' mL de 0.1 mg/mL', '0.02 mg/kg, repetir 1 vez; máx. 0.5 mg/dosis (1 mg total). PALS 2023: mín. 0.1 mg; AHA 2025 (Harriet Lane) ya no fija mínimo']);
@@ -4401,19 +4557,7 @@ function renderRCP(){
   rrow(t,['Midazolam', fmt(0.1*w)+' – '+fmt(0.2*w)+' mg', fmt(0.1*w)+' – '+fmt(0.2*w)+' mL de 1 mg/mL', 'Hipotensión con opioides']);
   rrow(t,['Rocuronio', fmt(1*w)+' mg', fmt(1*w/10)+' mL de 10 mg/mL', '0.6–1.2 mg/kg']);
   rrow(t,['Succinilcolina', fmt((P.years!=null&&P.years<1)||neo?2*w:1*w)+' mg', fmt(((P.years!=null&&P.years<1)||neo?2*w:1*w)/20)+' mL de 20 mg/mL', 'Lactantes 2 mg/kg; niños 1 mg/kg. CI: hiperK, miopatías, quemaduras']);
-  rrow(t,['Vía aérea'],'sec');
-  let tet, prof, hoja;
-  if(neo || (P.days!=null&&P.days<=28)){ const g=w*1000; tet = g<800? '2.5 (2.0 opcional <750 g)' : g<=1200? '2.5' : g<=2200? '3.0' : '3.5';
-    const D=[[500,5.25,'<23 sem'],[600,5.5,'23–24 sem'],[800,6,'25–26 sem'],[1000,6.5,'27–29 sem'],[1400,7,'30–32 sem'],[1800,7.5,'33–34 sem'],[2400,8,'35–37 sem'],[3100,8.5,'38–40 sem'],[99999,9,'41–43 sem']];
-    const GA=[[22.99,5.25,'<23 sem'],[24.99,5.5,'23–24 sem'],[26.99,6,'25–26 sem'],[29.99,6.5,'27–29 sem'],[32.99,7,'30–32 sem'],[34.99,7.5,'33–34 sem'],[37.99,8,'35–37 sem'],[40.99,8.5,'38–40 sem'],[99,9,'41–43 sem']]; const gaN=P.ga; const dd= gaN!=null? GA.find(r=>gaN<=r[0]) : D.find(r=>g<=r[0]); prof=fmt(dd[1])+' cm a la encía (NRP 9.ª, por '+(gaN!=null?'edad gestacional '+dd[2]:'peso')+'; o medir con la longitud nasal-trago)'; hoja = g<1000? 'Miller 00 – 0' : g<3000? 'Miller 0' : 'Miller 0 – 1'; }
-  else if(P.years==null){ tet='Escriba la edad'; prof='—'; hoja='—'; }
-  else if(P.years<1){ tet='3.5 – 4.0 sin globo · 3.0 – 3.5 con globo'; prof=fmt(3*3.75)+' cm aprox. (DI × 3)'; hoja='Miller 1'; }
-  else { const sg=P.years/4+4, cg=P.years/4+3.5; tet=fmt(Math.round(sg*2)/2)+' sin globo · '+fmt(Math.round(cg*2)/2)+' con globo'; prof=fmt(3*Math.round(cg*2)/2)+' cm (DI × 3)'; hoja= P.years<2?'Miller 1 – 2': P.years<8?'Miller 2 / Mac 2':'Mac 2 – 3'; }
-  rrow(t,['Cánula endotraqueal (DI, mm)', tet, '—', neo?'NRP 9.ª: por peso (<800 g y 800–1200 g: 2.5 · 1201–2200 g: 3.0 · >2200 g: 3.5); sin globo':'Tener ±0.5 mm. PALS/Harriet Lane: edad/4 + 4 (sin globo); edad/4 + 3.5 (con globo; preferir con globo)']);
-  rrow(t,[neo?'Profundidad (punta a encía)':'Profundidad (comisura labial)', prof, '—', 'Confirmar con capnografía y radiografía']);
-  rrow(t,['Hoja de laringoscopio', hoja, '—', '']);
   h.appendChild(t);
-  broBlock(h,w);
   h.appendChild(el('p','src','Fuentes: PALS 2023 (algoritmos AHA 2020), Programa de Reanimación Neonatal 9.ª ed., Harriet Lane Handbook 2027 (tabla de reanimación con guías AHA 2025), Taketomo y NeoFax.'));
   h.appendChild(el('p','src out','⚠ Verifique siempre las dosis; doble verificación en medicamentos de alto riesgo.'));
 }
@@ -4465,7 +4609,7 @@ function renderLiq(){
   h.appendChild(el('p','src out','⚠ Ajustar a la condición clínica (SIADH, cardiopatía, insuficiencia renal, quemados).'));
 }
 /* ---------- utilidades para vistas nuevas ---------- */
-function vhead(h,eb,title){ h.textContent=''; h.appendChild(el('div','eyebrow',eb)); h.appendChild(el('h2',null,title+(state.w?' · '+fmt(state.w)+' kg':''))); }
+function vhead(h,eb,title){ h.textContent=''; h.appendChild(el('div','eyebrow',eb)); h.appendChild(el('h2',null,title+(state.w?' · '+fmt(state.w)+' kg':''))); wBand(h); }
 function numIn(val,step,ph){ const i=document.createElement('input'); i.type='number'; i.step=step||'any'; if(val!=null) i.value=val; if(ph) i.placeholder=ph; return i; }
 function selIn(opts,val){ const s=document.createElement('select'); opts.forEach(([v,t])=>{ const o=el('option',null,t); o.value=v; s.appendChild(o); }); if(val!=null) s.value=val; return s; }
 function fld(lbl,inp){ const w=el('label','cfld'); w.appendChild(el('span',null,lbl)); w.appendChild(inp); return w; }
@@ -4579,7 +4723,7 @@ const PROTO=[
   steps:()=>[
    {tm:'0 min',t:'Reconocer y comenzar RCP',L:['Sin respuesta, sin respiración normal y sin pulso (revisar ≤10 s): pida ayuda y el desfibrilador.','Compresiones de alta calidad: 100–120/min, al menos 1/3 del diámetro del tórax, reexpansión completa y pausas mínimas.','Sin vía aérea avanzada: <b>15:2</b> con 2 reanimadores (<b>30:2</b> con 1). Con vía aérea avanzada: compresiones continuas y 1 ventilación c/2–3 s.','Oxígeno, monitor/desfibrilador y acceso IV/IO.']},
    {tm:'c/2 min',t:'Ritmo desfibrilable (FV / TV sin pulso)',L:[
-     dz('1.ª descarga',2,2,'J'), dz('2.ª descarga',4,4,'J'),
+     dz('1.ª descarga',2,2,'J',{mx:200}), dz('2.ª descarga',4,4,'J',{mx:200}),
      'Siguientes: ≥4 J/kg, sin pasar de 10 J/kg'+(PW()?' ('+fmt(10*PW())+' J)':'')+' ni de la dosis de adulto de su desfibrilador.',
      'Reanude la RCP de inmediato tras cada descarga, 2 min antes de revisar el ritmo.']},
    {tm:'c/3–5 min',t:'Adrenalina',L:[dz('Adrenalina IV/IO',0.01,0.01,'mg',{mx:1,c:0.1,cu:'0.1 mg/mL (1:10 000)'}),'Ritmo no desfibrilable: lo antes posible. Desfibrilable: después de la 2.ª descarga.'],f:['adrenalina']},
@@ -4656,8 +4800,8 @@ function renderProto(){
   if(!w) h.appendChild(el('p','pnow','Escriba el peso del paciente arriba para ver las dosis calculadas en mg y mL.'));
   const ol=el('ol','psteps');
   p.steps().forEach((s,i)=>{ const li=el('li','pstep'); li.appendChild(el('span','pnum',String(i+1)));
-    const hd=el('div','phd'); hd.appendChild(el('h3',null,s.t)); hd.appendChild(el('span','ptm',s.tm)); li.appendChild(hd);
-    const ul=el('ul','pls'); s.L.forEach(t=>{ const x=el('li',t.startsWith('⚠')?'w':null); x.innerHTML=t; ul.appendChild(x); }); li.appendChild(ul);
+    const hd=el('div','phd'); hd.appendChild(el('h3',null,tmText(s.t))); hd.appendChild(el('span','ptm',s.tm)); li.appendChild(hd);
+    const ul=el('ul','pls'); s.L.forEach(t=>{ const x=el('li',t.startsWith('⚠')?'w':null); x.innerHTML=tmText(t); ul.appendChild(x); }); li.appendChild(ul);
     if((s.f&&s.f.length)||(s.go&&s.go.length)){ const bb=el('div','pbtns');
       (s.go||[]).forEach(([t,fn])=>{ const b=el('button','addbtn go',t); b.type='button'; b.addEventListener('click',fn); bb.appendChild(b); });
       (s.f||[]).forEach(id=>{ const d=DB.find(x=>x.id===id); if(!d) return; const b=el('button','addbtn','Ficha: '+d.n.replace(/\s*\(.*\)$/,'')); b.type='button'; b.addEventListener('click',()=>select(id)); bb.appendChild(b); });
@@ -4869,10 +5013,10 @@ function paroDose(id){ const d=DB.find(x=>x.id===id), w=state.w; if(!d) return n
   const c=(d.conc||[]).filter(x=>x[3]==='iny').sort((a,b)=>a[1]-b[1])[0];
   return {txt:rng(lo,hi,r.u)+(r.max*w>cap?' (tope)':'')+(c?' = '+rng(lo/c[1],hi/c[1],'mL')+' de '+c[0].charAt(0).toLowerCase()+c[0].slice(1):'')+' '+r.v,r,d}; }
 function paroShocks(){ return PARO.log.filter(x=>x.k==='shock').length; }
-function paroJoules(n){ const w=state.w; if(n===1) return {t:'2 J/kg',j:w?2*w:null}; if(n===2) return {t:'4 J/kg',j:w?4*w:null};
-  return {t:'≥4 J/kg, máx. 10 J/kg'+(w?' ('+fmt(10*w)+' J)':'')+' o dosis de adulto',j:w?4*w:null}; }
+function paroJoules(n){ const w=state.w; if(n===1) return {t:'2 J/kg, máx. 200 J',j:w?Math.min(2*w,200):null}; if(n===2) return {t:'4 J/kg, máx. 200 J',j:w?Math.min(4*w,200):null};
+  return {t:'≥4 J/kg, máx. 10 J/kg o 200 J'+(w?' ('+fmt(Math.min(10*w,200))+' J)':''),j:w?Math.min(4*w,200):null}; }
 function paroLastEpi(){ for(let i=PARO.log.length-1;i>=0;i--) if(PARO.log[i].k==='epi') return PARO.log[i].t; return null; }
-function paroAdd(k,txt){ PARO.log.push({t:Date.now(),k,txt}); if(k==='ritmo') { PARO.cyc0=Date.now(); PARO.cycAlert=0; } paroSave(); paroPaint(true); }
+function paroAdd(k,txt){ PARO.log.push({t:Date.now(),k,txt:tmText(txt)}); if(k==='ritmo') { PARO.cyc0=Date.now(); PARO.cycAlert=0; } paroSave(); paroPaint(true); }
 async function paroLock(){ try{ if(PARO.on && 'wakeLock' in navigator && document.visibilityState==='visible' && !PARO.lock){ PARO.lock=await navigator.wakeLock.request('screen'); PARO.lock.addEventListener('release',()=>{ PARO.lock=null; }); } }catch(e){} }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') paroLock(); });
 function paroStart(){ if(PARO.on){ paroPaint(true); return; } PARO.on=true; PARO.t0=Date.now(); PARO.cyc0=PARO.t0; PARO.log=[{t:PARO.t0,k:'inicio',txt:'Inicio del paro / RCP'+(state.w?' · peso '+fmt(state.w)+' kg':'')}]; PARO.min=false; paroSave(); paroRun(); if(curView==='proto') renderProto(); }
@@ -5447,7 +5591,7 @@ function renderInf(){
     let mix=fmt(amt)+' '+unit+' ('+fmt(drugMl)+' mL de '+fmt(x.st)+' '+x.su+'/mL) + aforar a '+tot+' mL'+(big?' — ⚠ el fármaco ocupa más de la mitad: usar concentración fija':'');
     if(adj) mix+=' — ⚠ ajustada a la concentración máxima ('+(neo?cm.tn:cm.t)+'); con '+(x.k?'la regla':'la mezcla estándar')+' quedaría en '+fmt(rule*fu)+' '+x.u.split('/')[0]+'/mL';
     const nt= adj? 'Concentración máxima '+(neo?'neonatal (NeoFax)':'pediátrica (Taketomo)')+', no regla del 6/0.6' : x.nt;
-    const tr=document.createElement('tr'); [x.n, mix, eq+(nt?' · '+nt:''), fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+' → '+fmt(lo)+'–'+fmt(hi)+' mL/h'].forEach((c,j)=>tr.appendChild(el('td',j===3?'big2':null,c))); t.appendChild(tr);
+    const tr=document.createElement('tr'); [tmText(x.n), mix, eq+(nt?' · '+nt:''), fmt(x.lo)+'–'+fmt(x.hi)+' '+x.u+' → '+fmt(lo)+'–'+fmt(hi)+' mL/h'].forEach((c,j)=>tr.appendChild(el('td',j===3?'big2':null,c))); t.appendChild(tr);
     t.appendChild(infPrep(x,amt,tot,drugMl,lo,hi,!cm&&!x.fix)); });
   h.appendChild(t);
   h.appendChild(el('p','src','Rangos de adrenalina, norepinefrina y milrinona: PALS 2023; resto: Taketomo, NeoFax y Harriet Lane 2027.'));
@@ -5706,6 +5850,67 @@ const HLEQ={cols:[['Prematuro','1–3 kg'],['Recién nacido','2–4 kg'],['6 mes
   ['Sonda naso/orogástrica (Fr)',['5','5–8','8','10','10–12','12–14','12–14','14–18','14–18']],
   ['Sonda pleural (Fr)',['10–12','10–12','12–18','16–20','16–24','20–28','20–32','28–38','28–42']],
   ['Sonda Foley (Fr)',['6','8','8','8','8','8','8','10','12']]]};
+/* ---------- vía aérea y equipo para el paciente (peso y edad) ---------- */
+function airwayCalc(w,P,neo){
+  let tet, prof, hoja;
+  if(neo || (P.days!=null&&P.days<=28)){ const g=w*1000; tet = g<800? '2.5 (2.0 opcional <750 g)' : g<=1200? '2.5' : g<=2200? '3.0' : '3.5';
+    const D=[[500,5.25,'<23 sem'],[600,5.5,'23–24 sem'],[800,6,'25–26 sem'],[1000,6.5,'27–29 sem'],[1400,7,'30–32 sem'],[1800,7.5,'33–34 sem'],[2400,8,'35–37 sem'],[3100,8.5,'38–40 sem'],[99999,9,'41–43 sem']];
+    const GA=[[22.99,5.25,'<23 sem'],[24.99,5.5,'23–24 sem'],[26.99,6,'25–26 sem'],[29.99,6.5,'27–29 sem'],[32.99,7,'30–32 sem'],[34.99,7.5,'33–34 sem'],[37.99,8,'35–37 sem'],[40.99,8.5,'38–40 sem'],[99,9,'41–43 sem']]; const gaN=P.ga; const dd= gaN!=null? GA.find(r=>gaN<=r[0]) : D.find(r=>g<=r[0]); prof=fmt(dd[1])+' cm a la encía (NRP 9.ª, por '+(gaN!=null?'edad gestacional '+dd[2]:'peso')+'; o medir con la longitud nasal-trago)'; hoja = g<1000? 'Miller 00 – 0' : g<3000? 'Miller 0' : 'Miller 0 – 1'; }
+  else if(P.years==null){ tet='Escriba la edad'; prof='—'; hoja='—'; }
+  else if(P.years<1){ tet='3.5 – 4.0 sin globo · 3.0 – 3.5 con globo'; prof=fmt(3*3.75)+' cm aprox. (DI × 3)'; hoja='Miller 1'; }
+  else { const sg=P.years/4+4, cg=P.years/4+3.5; tet=fmt(Math.round(sg*2)/2)+' sin globo · '+fmt(Math.round(cg*2)/2)+' con globo'; prof=fmt(3*Math.round(cg*2)/2)+' cm (DI × 3)'; hoja= P.years<2?'Miller 1 – 2': P.years<8?'Miller 2 / Mac 2':'Mac 2 – 3'; }
+  return {tet,prof,hoja,neo:neo||(P.days!=null&&P.days<=28)};
+}
+function eqRows(w,P,neo){
+  const A=airwayCalc(w,P,neo), i= w<2?0 : w<5?1 : w<9?2 : w<11?3 : w<18?4 : w<25?5 : w<38?6 : w<50?7 : 8, c=HLEQ.cols[i];
+  const V=n=>(HLEQ.rows.find(r=>r[0]===n)||[0,[]])[1][i]||'—', HLT='HL 2027, tabla de equipo ('+c[0]+', '+c[1]+')';
+  const inf= A.neo || (P.years!=null && P.years<1), uac=3*w+9;
+  const R=[
+    ['Cánula endotraqueal (DI, mm)',A.tet,A.neo?'NRP 9.ª ed.':'HL 2027 cap. 1 · PALS'],
+    [A.neo?'Profundidad (punta a encía)':'Profundidad (comisura labial)',A.prof,A.neo?'NRP 9.ª ed.':'HL 2027 cap. 1'],
+    ['Hoja de laringoscopio',A.hoja+(A.hoja!==V('Hoja de laringoscopio')?' · tabla: '+V('Hoja de laringoscopio'):''),A.neo?'NRP 9.ª ed. · '+HLT:'HL 2027 cap. 1 · '+HLT],
+    ['Mascarilla laríngea (tamaño)',V('Mascarilla laríngea'),HLT],
+    ['Bolsa-mascarilla',V('Bolsa-mascarilla'),HLT],
+    ['Cánula orofaríngea',V('Cánula orofaríngea'),HLT],
+    ['Cánula nasofaríngea (Fr)',V('Cánula nasofaríngea (Fr)'),HLT],
+    ['Sonda naso/orogástrica (Fr)',V('Sonda naso/orogástrica (Fr)'),HLT],
+    ['Sonda Foley (Fr)',V('Sonda Foley (Fr)'),HLT],
+    ['Sonda pleural (Fr)',V('Sonda pleural (Fr)'),HLT],
+    ['Catéter IV (G)',V('Catéter IV (G)'),HLT],
+    ['Catéter venoso central (Fr)',V('Catéter venoso central (Fr)'),HLT],
+    ['Aguja intraósea (manual)', P.days==null&&!A.neo? '15 G (niños) · 18 G (lactantes y neonatos)' : inf? '18 G' : '15 G','HL 2027 cap. 4'],
+    ['Desfibrilación',fmt(Math.min(2*w,200))+' J → '+fmt(Math.min(4*w,200))+' J → ≥4 J/kg (máx. '+fmt(Math.min(10*w,200))+' J)','HL 2027 cap. 1 (AHA)'],
+    ['Cardioversión sincronizada',fmt(Math.min(0.5*w,200))+'–'+fmt(Math.min(w,200))+' J → '+fmt(Math.min(2*w,200))+' J','HL 2027 cap. 1 (AHA)']];
+  if(A.neo){ R.push(['Catéter arterial umbilical (posición alta)',fmt(Math.round(uac*10)/10)+' cm','HL 2027 cap. 4 (3 × peso al nacer + 9)']);
+    R.push(['Catéter venoso umbilical',fmt(Math.round((0.5*uac+1)*10)/10)+' cm · en urgencia 3–4 cm, hasta refluir sangre','HL 2027 cap. 4 · NRP 9.ª ed.']); }
+  return R;
+}
+function eqCard(h,w,P,neo){
+  const b=el('section','box adm eqcard'); b.appendChild(el('h3',null,'Equipo para este paciente · '+fmt(w)+' kg'+(P.days!=null?' · '+wAgeTxt(P):'')));
+  const t=document.createElement('table'); t.className='rtab';
+  const hd=document.createElement('tr'); ['Equipo','Tamaño','Fuente'].forEach(x=>hd.appendChild(el('th',null,x))); t.appendChild(hd);
+  eqRows(w,P,neo).forEach(([n,v,src])=>{ const tr=document.createElement('tr'); tr.appendChild(el('td',null,n)); tr.appendChild(el('td','big2',v)); tr.appendChild(el('td','eqsrc',src)); t.appendChild(tr); });
+  const wrap=el('div','tscroll'); wrap.appendChild(t); b.appendChild(wrap);
+  b.appendChild(el('p','csub','Ajustar con cinta de Broselow si está disponible. Tener a la mano un tamaño de cánula 0.5 mm mayor y menor.'));
+  const pb=el('button','copybtn','Descargar PDF de hoja de paro'); pb.type='button'; const msg=el('span','svmsg'); b.appendChild(pb); b.appendChild(msg);
+  pb.addEventListener('click',()=>{ const d=new Date(), f='hoja-de-paro-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.pdf'; svDownload(paroSheet(w,P,neo,d),f,msg,'Hoja de paro · '+fmt(w)+' kg'); });
+  h.appendChild(b);
+}
+// hoja de paro en una sola hoja carta: medicamentos de la tabla de reanimación (ya calculados) + equipo + advertencia
+function paroSheet(w,P,neo,d){
+  const fit=(s,w0)=>{ s=String(s).replace(/\s*\(.*$/,''); while(pdfW(s,8.5,false)>w0-8&&s.length>4) s=s.slice(0,-2).replace(/\s+\S*$/,'')+'…'; return s; };
+  const est= state.west&&state.w&&Math.abs(state.w-state.west.w)<0.051? ' (ESTIMADO: '+state.west.t.toLowerCase()+')' : '';
+  const D=[{k:'pt',t:'Peso: '+fmt(w)+' kg'+est+' · Edad: '+(P.days!=null?wAgeTxt(P):'sin capturar')+' · Fecha y hora: '+d.toLocaleDateString('es-MX')+' '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}];
+  const CW=612-52, ws=[.36,.2,.44];
+  const rows=[]; const tb=document.querySelector('#v-reanimacion table.rtab:not(.eqt)');
+  if(tb) [...tb.querySelectorAll('tr')].slice(1).forEach(tr=>{ const c=[...tr.children].map(x=>x.innerText.replace(/\n/g,' ').trim());
+    if(c.length===1) rows.push([c[0].toUpperCase(),'','']); else rows.push([fit(tmText(c[0]),ws[0]*CW),fit(c[1],ws[1]*CW),fit(c[2],ws[2]*CW)]); });
+  D.push({k:'tbl',cap:'Medicamentos de reanimación',head:['Fármaco / acción','Dosis','Volumen'],rows,small:true,w:ws});
+  const er=eqRows(w,P,neo); D.push({k:'tbl',cap:'Equipo',head:['Equipo','Tamaño'],rows:er.map(([n,v])=>[fit(n,.4*CW),fit(v,.6*CW)]),small:true,w:[.4,.6]});
+  D.push({k:'note',t:'ADVERTENCIA: herramienta de apoyo para personal de salud. No sustituye el juicio clínico ni los protocolos institucionales. Verifique cada dosis, presentación y dilución antes de administrar; doble verificación en medicamentos de alto riesgo. Los volúmenes asumen la presentación indicada en la página.'});
+  D.push({k:'src',l:['PALS 2023 (AHA), Programa de Reanimación Neonatal 9.ª ed., Harriet Lane Handbook 2027 (cap. 1, 4 y 18; tabla de equipo por peso), Taketomo y NeoFax. Generado con Pedia Life.']});
+  return D;
+}
 function broBlock(h,w){
   const i= w<2?0 : w<5?1 : w<9?2 : w<11?3 : w<18?4 : w<25?5 : w<38?6 : w<50?7 : 8;
   const c=HLEQ.cols[i];
@@ -5779,6 +5984,8 @@ function renderHoja(){
   const ta=document.createElement('textarea'); ta.className='ordtxt'; ta.readOnly=true; ta.rows=Math.min(14,state.hoja.length*2+2); ta.value=all; h.appendChild(ta);
   const cp=el('button','copybtn','Copiar todas las indicaciones'); cp.type='button'; h.appendChild(cp);
   cp.addEventListener('click',()=>{ const done=()=>{cp.textContent='✓ Copiadas'; setTimeout(()=>cp.textContent='Copiar todas las indicaciones',1600);}; try{ navigator.clipboard.writeText(all).then(done,()=>{ta.select(); document.execCommand('copy'); done();}); }catch(e){ ta.select(); try{document.execCommand('copy');}catch(_){} done(); } });
+  const shb=el('button','addbtn sharebtn','Compartir'); shb.type='button'; h.appendChild(shb);
+  shb.addEventListener('click',()=>shareText('Indicaciones'+(head?' · '+head:'')+'\n'+state.hoja.map((t,ix)=>(ix+1)+'. '+t).join('\n')+SHARE_TAIL, shb));
   const pdf=el('button','addbtn','Descargar PDF'); pdf.type='button'; const pm=el('span','rmeta'); h.appendChild(pdf); h.appendChild(pm);
   pdf.addEventListener('click',()=>{ const d=new Date(), f='hoja-paciente-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.pdf';
     const D=[{k:'blank',l:['Nombre','Cama','Expediente']},{k:'pt',t:(head||'Datos del paciente sin capturar')+' · Fecha: '+d.toLocaleDateString('es-MX')}];
@@ -5812,7 +6019,7 @@ if(location.protocol==='https:' && /\.github\.io$/.test(location.hostname) && 's
 function swStatus(v,off){ const e=$('#pver'); if(!e) return; e.textContent='Versión '+e.dataset.v+((off||!navigator.onLine)?' (sin conexión)':''); }
 window.addEventListener('offline',()=>swStatus(null,true)); window.addEventListener('online',()=>swStatus(null,false));
 try{ const o=JSON.parse(localStorage.getItem('dosis_pt')||'{}'); PTF.forEach(id=>{ if(o[id]!=null&&o[id]!=='') $(id).value=o[id]; }); }catch(e){}
-$('#newpt').addEventListener('click',()=>{ PTF.forEach(id=>{ $(id).value= id==='#edadu'?'a':''; }); state.hoja=[]; savePrefs(); updTabs(); readWeight(); patientNote(); renderCurrent(); try{ localStorage.removeItem('dosis_pt'); }catch(e){} pesoIn.focus(); });
+$('#newpt').addEventListener('click',()=>{ state.wOk=null; PTF.forEach(id=>{ $(id).value= id==='#edadu'?'a':''; }); state.hoja=[]; savePrefs(); updTabs(); readWeight(); patientNote(); renderCurrent(); try{ localStorage.removeItem('dosis_pt'); }catch(e){} pesoIn.focus(); });
 { const sec=$('#patient'), mini=$('#ptmini');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>{ mini.classList.toggle('show',!es[0].isIntersecting); },{threshold:0}).observe(sec);
   $('#ptedit').addEventListener('click',()=>{ sec.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>pesoIn.focus({preventScroll:true}),400); }); }
