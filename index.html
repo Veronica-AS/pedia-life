@@ -548,6 +548,10 @@ body.paroon .metfloat{bottom:auto;top:12px}
 .ck{background:var(--lav-tin);border-radius:12px;padding:8px 10px;min-width:0}
 .ck span{display:block;font-size:12px;color:var(--muted);line-height:1.3}
 .ck b{display:block;font-size:17px;font-weight:600;color:var(--marino-tx);line-height:1.3;overflow-wrap:anywhere}
+.ctabw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 10px 32px}
+.ctab{border-collapse:collapse;font-size:13px;width:100%}.ctab th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:4px 8px;border-bottom:1px solid var(--ash)}
+.ctab td{padding:5px 8px;border-bottom:1px solid var(--ash);vertical-align:top;white-space:nowrap}.ctab tr:last-child td{border-bottom:0}.ctab td:first-child{white-space:normal}
+@media (max-width:520px){ .ctabw{margin-left:0} .ctab{font-size:12px} .ctab th,.ctab td,.cout .ctab td.cnum{padding:4px 3px;white-space:normal} .ctab th{white-space:normal} }
 .cstep{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}.cstep p{margin:0}
 .cstep .cn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--marino);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;margin-top:1px}
 </style>
@@ -700,7 +704,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 21 de noviembre de 2026. Versión de la página: 2026.11.21.</p>
+    <p>Última revisión del contenido: 21 de noviembre de 2026. Versión de la página: 2026.11.21b.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -768,7 +772,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 21 de noviembre de 2026. · <span id="pver" data-v="2026.11.21">Versión 2026.11.21</span></p>
+    <p class="fupd">Última actualización del contenido: 21 de noviembre de 2026. · <span id="pver" data-v="2026.11.21b">Versión 2026.11.21b</span></p>
   </footer>
 </div>
 
@@ -4645,6 +4649,8 @@ function cRender(o,r){ o.textContent=''; let n=0;
     if(x.k){ const g=el('div','ckpi'); x.k.filter(Boolean).forEach(([l,v])=>{ const c=el('div','ck'); c.append(el('span',null,l),el('b',null,v)); g.appendChild(c); }); o.appendChild(g); return; }
     if(x.s){ const p=el('div','cstep'); p.appendChild(el('span','cn',String(++n))); p.appendChild(cRich(el('p'),x.s)); o.appendChild(p); return; }
     if(x.h){ o.appendChild(el('p','chd',x.h)); return; }
+    if(x.t){ const wr=el('div','ctabw'), tb=el('table','ctab'), tr=el('tr'); x.t.h.forEach(c=>tr.appendChild(el('th',null,c))); tb.appendChild(tr);
+      x.t.r.forEach(r=>{ const rr=el('tr'); r.forEach((c,j)=>rr.appendChild(el('td',j&&j<3?'cnum':null,c))); tb.appendChild(rr); }); wr.appendChild(tb); o.appendChild(wr); return; }
     if(x.n){ o.appendChild(cRich(el('p','cnote'),x.n)); } }); }
 function liveOut(b,ins,fn){ const o=el('div','cout'); b.appendChild(o); const up=()=>cRender(o,fn()); ins.forEach(i=>i.addEventListener('input',up)); ins.forEach(i=>i.addEventListener('change',up)); up(); }
 const nv=i=>{ const v=parseFloat(String(i.value).replace(',','.')); return isFinite(v)?v:null; };
@@ -5535,14 +5541,26 @@ function renderCalc(){
       if(p!=null||hc!=null){ gr= (p!=null&&p<7.1)||(hc!=null&&hc<5)?'Grave':(p!=null&&p<7.2)||(hc!=null&&hc<10)?'Moderada':(p!=null&&p<7.3)||(hc!=null&&hc<18)?'Leve':'No cumple criterio de acidosis (pH ≥7.3 y HCO₃ ≥18)'; }
       const hs=w<=10?100*w:w<=20?1000+50*(w-10):Math.min(1500+20*(w-20),2400);
       const defml=(+deh.value)*10*w, bol=(nv(bolo)||10)*w, rate=(defml-bol+hs*2)/48, ir=(+ins.value)*w;
-      return [{k:[['Gravedad (ISPAD)',/^No cumple/.test(gr)?'No cumple':gr],['Bolo de SN en 1 h',fmt(bol)+' mL'],['Líquidos (48 h)',fmt(rate)+' mL/h'],['Insulina (1 U/mL)',fmt(ir)+' U/h = '+fmt(ir)+' mL/h']]},
+      return [{k:[['Gravedad (ISPAD)',/^No cumple/.test(gr)?'No cumple':gr],['Bolo de solución salina 0.9% en 1 h',fmt(bol)+' mL'],['Líquidos (48 h)',fmt(rate)+' mL/h'],['Insulina (1 U/mL)',fmt(ir)+' U/h = '+fmt(ir)+' mL/h']]},
         /^No cumple/.test(gr)? {n:gr+'.'} : null,
-        {s:'Bolo: '+fmt(bol)+' mL de SN en 1 h (10–20 mL/kg; repetir si hay choque).'},
-        {s:'Total de líquidos = mantenimiento + déficit '+deh.value+'% ('+fmt(defml)+' mL) en 48 h, restando el bolo: '+fmt(rate)+' mL/h (habitualmente ≈1.5× mantenimiento = '+fmt(hs*1.5/24)+' mL/h).'},
-        {s:'Insulina rápida IV '+fmt(ir)+' U/h ('+ins.value+' U/kg/h; considerar 0.05 en <2 años), sin bolo. Mezcla: 50 U en 50 mL SN (1 U/mL) → '+fmt(ir)+' mL/h.'},
-        {s:'K: cuando orine y K <5.5, agregar 20 mEq/L de acetato de K + 20 mEq/L de fosfato de K a cada solución (30 + 30 si K <3); vigilar K c/1 h.'},
-        {s:'Sistema de 2 bolsas: (1) SN + K y (2) SG10% en SN 0.45% + K; iniciar la bolsa con glucosa cuando la glucosa sea <300 mg/dL y ajustar la proporción según la glucemia (c/1 h). Gasometría y electrolitos c/2 h.'},
-        '⚠ Edema cerebral (cefalea, bradicardia, HTA, deterioro neurológico): manitol '+fmt(0.5*w)+'–'+fmt(1*w)+' g (0.5–1 g/kg) en 10–15 min o NaCl 3% '+fmt(2.5*w)+'–'+fmt(5*w)+' mL (2.5–5 mL/kg).']; }); }
+        {s:'Bolo: '+fmt(bol)+' mL de solución salina 0.9% en 1 h (10–20 mL/kg; repetir si hay choque).'},
+        {s:'Total de líquidos = mantenimiento + déficit '+deh.value+'% ('+fmt(defml)+' mL) en 48 h, restando el bolo: '+fmt(rate)+' mL/h (habitualmente ≈1.5× mantenimiento = '+fmt(hs*1.5/24)+' mL/h). Este total se reparte entre las 2 bolsas (pasos 6 y 7).'},
+        {s:'Insulina rápida IV '+fmt(ir)+' U/h ('+ins.value+' U/kg/h; considerar 0.05 en <2 años), sin bolo, empezando ≥1 h después de iniciar los líquidos (ISPAD). Mezcla: 50 U en 50 mL de solución salina 0.9% (1 U/mL) → '+fmt(ir)+' mL/h.'},
+        {s:'Potasio: cuando orine y K <5.5, KCl 20 mEq + fosfato de potasio 20 mEq en cada bolsa (≈39 mEq/L de K); vigilar K c/1 h; máx. 0.5 mEq/kg/h. Si K <3.5: posponer la insulina y reponer el K primero, con monitor (ISPAD). El HL sube a 30 + 30 mEq/L si K <3.'},
+        {s:'Glucosa: al bajar a 250–300 mg/dL, o antes si baja >90 mg/dL/h, agregar dextrosa sin bajar la insulina mientras persista la acidosis; puede requerir SG10% o hasta SG12.5% (ISPAD).'},
+        {s:'Sistema de 2 bolsas: preparar cada una así:'},
+        {t:{h:['','Bolsa A','Bolsa B'],
+          r:[['Solución salina 0.9%','1000 mL','800 mL'],['Solución glucosada 50%','—','200 mL'],['KCl','20 mEq','20 mEq'],['Fosfato de potasio','20 mEq','20 mEq'],['Volumen final','1020 mL','1020 mL'],['Glucosa','0%','9.8%'],['Na · K (mEq/L)','151 · 39','121 · 39']].map(r=>r.map((c,j)=>j?c.replace(/ /g,'\u00a0'):c))}},
+        {n:'La bolsa B lleva menos sodio que la A: al subir su proporción baja el sodio que recibe el paciente. Vigile el Na sérico c/2 h.'},
+        {s:'El total se mantiene en '+fmt(rate)+' mL/h; repartirlo entre las bolsas según la glucemia de cada hora (mL/h y porcentaje del total):'},
+        {t:{h:['Glucemia (mg/dL)','Bolsa A','Bolsa B','Glucosa'],
+          r:[['≥300',1,0],['250–299',0.75,0.25],['200–249',0.5,0.5],['150–199',0.25,0.75],['100–149',0,1],['<100',0,1]]
+            .map(([gl,a,bb])=>[gl,fmt(rate*a)+' ('+Math.round(a*100)+'%)',fmt(rate*bb)+' ('+Math.round(bb*100)+'%)',fmt(Math.round(9.8*bb*10)/10)+'%'])}},
+        '⚠ Glucemia <100 mg/dL: todo por la bolsa B y avisar al médico para ajustar la insulina.',
+        {n:'Gasometría y electrolitos c/2 h; glucemia c/1 h.'},
+        '⚠ Edema cerebral (cefalea, bradicardia, HTA, deterioro neurológico): manitol '+fmt(0.5*w)+'–'+fmt(1*w)+' g (0.5–1 g/kg) en 10–15 min o NaCl 3% '+fmt(2.5*w)+'–'+fmt(5*w)+' mL (2.5–5 mL/kg).']; });
+    srcLine(b,'ISPAD 2022 (Glaser N et al., Pediatr Diabetes 2022;23:835-56) y Harriet Lane 2027, eFig. 10.1.');
+    srcLine(b,'tabla de reparto de las 2 bolsas según la glucemia: Two-bag system, Hurley Medical Center, Glob Pediatr Health 2021 (doi:10.1177/2333794X21991532). Ajústela al protocolo de su hospital.',1); }
 
   // Transfusiones
   { const b=ccard(g,'ra','Hemoderivados','');

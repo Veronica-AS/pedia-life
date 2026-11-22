@@ -6,7 +6,7 @@
 //   3. Publique con `npm run publicar` (copia este archivo e index.html a ../pedia-life-web y hace push).
 // Cambiar VERSION crea una caché nueva y borra la vieja; quien tenga la página abierta verá el aviso
 // «Hay una versión nueva de Pedia Life con correcciones». build.py también escribe esta VERSION en el pie de la página.
-const VERSION='2026.11.21';
+const VERSION='2026.11.21b';
 const CACHE='pedia-life-'+VERSION;
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png'];
 const NAV_TIMEOUT=3000; // ms: si la red tarda más, se muestra la copia guardada mientras termina de llegar la nueva
