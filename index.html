@@ -536,6 +536,20 @@ body.paroon .metfloat{bottom:auto;top:12px}
 .eqcard h3{margin:0 0 8px;color:var(--marino-tx)}.eqcard td.eqsrc{font-size:12px;color:var(--muted)}.eqcard .copybtn{margin-top:10px}
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media (max-width:860px){ .rtab{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%} }
+/* resultado de calculadoras: panel blanco, cifras resaltadas, tarjetas, pasos y avisos */
+.cout{margin-top:12px;border:1px solid var(--ash);border-top:1px solid var(--ash);border-radius:16px;background:var(--surface);padding:12px 14px;color:var(--ink)}
+.cout p{margin:0 0 8px;font-size:14px;line-height:1.55;font-weight:400}.cout p:first-child{font-weight:400}.cout > :last-child{margin-bottom:0}
+.cout .clab{color:var(--muted);font-weight:500}
+.cout .cnum{color:var(--marino-tx);font-weight:600;white-space:nowrap}
+.cout .cwarn{background:var(--coral-tin);color:var(--coral-t);border-radius:12px;padding:8px 12px;font-weight:500}
+.cout .chd{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.cout .cnote{font-size:13px;color:var(--muted)}.cout .cnote .cnum{color:var(--ink)}
+.ckpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:0 0 12px}
+.ck{background:var(--lav-tin);border-radius:12px;padding:8px 10px;min-width:0}
+.ck span{display:block;font-size:12px;color:var(--muted);line-height:1.3}
+.ck b{display:block;font-size:17px;font-weight:600;color:var(--marino-tx);line-height:1.3;overflow-wrap:anywhere}
+.cstep{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}.cstep p{margin:0}
+.cstep .cn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--marino);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;margin-top:1px}
 </style>
 <meta name="theme-color" content="#153E8A" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1626" media="(prefers-color-scheme: dark)">
@@ -686,7 +700,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 20 de noviembre de 2026. Versión de la página: 2026.11.20.</p>
+    <p>Última revisión del contenido: 21 de noviembre de 2026. Versión de la página: 2026.11.21.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -754,7 +768,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 20 de noviembre de 2026. · <span id="pver" data-v="2026.11.20">Versión 2026.11.20</span></p>
+    <p class="fupd">Última actualización del contenido: 21 de noviembre de 2026. · <span id="pver" data-v="2026.11.21">Versión 2026.11.21</span></p>
   </footer>
 </div>
 
@@ -4618,7 +4632,21 @@ function ccard(g,cls,t,sub){ const b=el('div','box '+cls); if(sub) b.appendChild
     state.accOpen=state.accOpen||{}; if(state.accOpen[key]) d.open=true; const sm=document.createElement('summary'); sm.appendChild(el('span','accdot c-'+({adm:'blue',vig:'green',ci:'yellow',ra:'pink',dil:'blue'}[cls]||'blue'))); sm.appendChild(el('span','acct',t)); d.appendChild(sm); d.appendChild(b);
     d.addEventListener('toggle',()=>{ state.accOpen[key]=d.open; }); g.appendChild(d); return b; }
   b.insertBefore(el('h3',null,t),b.firstChild); g.appendChild(b); return b; }
-function liveOut(b,ins,fn){ const o=el('div','cout'); b.appendChild(o); const up=()=>{ o.textContent=''; const r=fn(); (r||[]).forEach(x=>{ if(x==null) return; const p=el('p',x.startsWith('⚠')?'cwarn':null,x); o.appendChild(p); }); }; ins.forEach(i=>i.addEventListener('input',up)); ins.forEach(i=>i.addEventListener('change',up)); up(); }
+// Resultado de calculadora. Cada elemento puede ser:
+//  'texto' (párrafo; «Etiqueta: valor» y las cifras con unidad se resaltan; si empieza con ⚠ va en recuadro coral),
+//  {k:[[etiqueta,valor],…]} (tarjetas de resultado), {s:'texto'} (paso numerado), {h:'título'} (subtítulo), {n:'texto'} (nota en gris).
+const CNUM=/(?:[≈≥≤~]\s?)?\d[\d,.]*(?:\s?[–-]\s?\d[\d,.]*)?\s?(?:mL\/h|mL|mEq\/L|mEq\/h|mEq|U\/h|U|mg|g|L|J)(?![\w\/²])/g;
+function cRich(p,t){ const m=t.match(/^([^:⚠0-9(][^:]{1,48}):\s+/); if(m){ p.appendChild(el('span','clab',m[1]+': ')); t=t.slice(m[0].length); }
+  let i=0; t.replace(CNUM,(s,at)=>{ if(at>i) p.appendChild(document.createTextNode(t.slice(i,at))); p.appendChild(el('b','cnum',s)); i=at+s.length; return s; });
+  if(i<t.length) p.appendChild(document.createTextNode(t.slice(i))); return p; }
+function cRender(o,r){ o.textContent=''; let n=0;
+  (r||[]).forEach(x=>{ if(x==null) return;
+    if(typeof x==='string'){ o.appendChild(x.startsWith('⚠')? el('p','cwarn',x) : cRich(el('p'),x)); return; }
+    if(x.k){ const g=el('div','ckpi'); x.k.filter(Boolean).forEach(([l,v])=>{ const c=el('div','ck'); c.append(el('span',null,l),el('b',null,v)); g.appendChild(c); }); o.appendChild(g); return; }
+    if(x.s){ const p=el('div','cstep'); p.appendChild(el('span','cn',String(++n))); p.appendChild(cRich(el('p'),x.s)); o.appendChild(p); return; }
+    if(x.h){ o.appendChild(el('p','chd',x.h)); return; }
+    if(x.n){ o.appendChild(cRich(el('p','cnote'),x.n)); } }); }
+function liveOut(b,ins,fn){ const o=el('div','cout'); b.appendChild(o); const up=()=>cRender(o,fn()); ins.forEach(i=>i.addEventListener('input',up)); ins.forEach(i=>i.addEventListener('change',up)); up(); }
 const nv=i=>{ const v=parseFloat(String(i.value).replace(',','.')); return isFinite(v)?v:null; };
 function actFrac(P){ if(P.days!=null&&P.days<=28) return 0.8; if(P.years!=null&&P.years<1) return 0.7; return 0.6; }
 
@@ -5445,23 +5473,29 @@ function renderCalc(){
     liveOut(b,[na,meta,sol],()=>{ const a=nv(na), t=nv(meta), s=+sol.value; if(!a||!t||a<=t) return ['Capture un Na mayor que la meta.'];
       const def=act*w*(a/t-1)*1000, dl=(s-a)/(act*w+1), hrs=Math.ceil((a-t)/0.5);
       const hh=Math.max(48,hrs), perDay=Math.min(a-t,12), rate=dl<0? (perDay/Math.abs(dl))*1000/24 : null;
-      return ['Déficit de agua libre: '+fmt(def)+' mL. Corregir en ≥48 h: '+fmt(def/2)+'–'+fmt(def*2/3)+' mL (½–⅔) en las primeras 24 h, además del mantenimiento.',
-        'Cada litro de la solución elegida cambia el Na en '+fmt(dl)+' mEq/L (Adrogué-Madias).'+(rate?' Para bajar ≤'+fmt(perDay)+' mEq/L en 24 h: ≈'+fmt(rate)+' mL/h de esa solución (incluye el mantenimiento).':''),
-        'Máx. 10–12 mEq/L en 24 h (0.5 mEq/L/h): de '+fmt(a)+' a '+fmt(t)+' en ≥'+hh+' h. Si fue de instalación aguda (horas) puede corregirse ~1 mEq/L/h.',
-        'Si hay depleción intravascular: bolo de SN 20 mL/kg = '+fmt(20*w)+' mL primero. Solución habitual: ½ SN (agregar K si orina).',
-        '⚠ Medir Na c/2–4 h; corrección rápida → edema cerebral.']; }); }
+      return [{k:[['Déficit de agua libre',fmt(def)+' mL'],['Primeras 24 h (½–⅔)',fmt(def/2)+'–'+fmt(def*2/3)+' mL'],rate&&['Velocidad de la solución','≈'+fmt(rate)+' mL/h'],['Corregir en','≥'+hh+' h']]},
+        {s:'Si hay depleción intravascular: bolo de SN 20 mL/kg = '+fmt(20*w)+' mL primero.'},
+        rate? {s:'Pasar la solución elegida a ≈'+fmt(rate)+' mL/h para bajar ≤'+fmt(perDay)+' mEq/L en 24 h (incluye el mantenimiento).'} : '⚠ La solución elegida no baja el Na de este paciente: elija una con menos sodio.',
+        {s:'Déficit de las primeras 24 h: '+fmt(def/2)+'–'+fmt(def*2/3)+' mL (½–⅔), además del mantenimiento.'},
+        {s:'Bajar máx. 10–12 mEq/L en 24 h (0.5 mEq/L/h): de '+fmt(a)+' a '+fmt(t)+' en ≥'+hh+' h.'},
+        '⚠ Medir Na c/2–4 h; corrección rápida → edema cerebral.',
+        {n:'Cada litro de la solución elegida cambia el Na en '+fmt(dl)+' mEq/L (Adrogué-Madias). Si fue de instalación aguda (horas) puede corregirse ~1 mEq/L/h. Solución habitual: ½ SN (agregar K si orina).'}]; }); }
 
   // Hiponatremia
   { const b=ccard(g,'adm','Hiponatremia · NaCl 3%','NaCl 3% = 0.513 mEq/mL. Preparar: 1 mL de NaCl 17.7% (3 mEq/mL) + 5 mL de agua ≈ 3%.');
     const na=numIn(122), meta=numIn(130), soln=selIn([['154','SN 0.9% (Na 154)'],['513','NaCl 3% (Na 513)'],['130','Hartmann (Na 130)']],'154'), sint=selIn([['1','Con síntomas graves (convulsión, coma, apnea)'],['0','Sin síntomas graves']],'0');
     const m=el('div','mini'); m.append(fld('Na actual',na),fld('Na meta (24 h)',meta),fld('Solución',soln),fld('Cuadro',sint)); b.appendChild(m);
     liveOut(b,[na,meta,soln,sint],()=>{ const a=nv(na), t=nv(meta); if(!a) return [];
-      const L=[]; if(sint.value==='1'){ L.push('Síntomas graves: NaCl 3% '+fmt(3*w)+'–'+fmt(5*w)+' mL (3–5 mL/kg) en 10–30 min hasta que cese la convulsión o Na >125; 1 mL/kg sube ~1 mEq/L. Subir ~1–2 mEq/L/h solo en esta fase.'); }
-      if(t&&t>a){ const mEq=act*w*(t-a), s1=+soln.value, dl=(s1-a)/(act*w+1), ch=Math.min(t-a,8);
-        L.push('Déficit de Na para subir a '+fmt(t)+': '+fmt(mEq)+' mEq = '+fmt(mEq/0.513)+' mL de NaCl 3% o '+fmt(mEq/3)+' mL de NaCl 17.7%.');
-        if(dl>0) L.push('Cada litro de la solución elegida sube el Na '+fmt(dl)+' mEq/L → para subir '+fmt(ch)+' mEq/L en 24 h: ≈'+fmt(ch/dl*1000/24)+' mL/h (Adrogué-Madias).');
+      const L=[], gr=sint.value==='1', K=[];
+      if(gr) K.push(['NaCl 3% en bolo (3–5 mL/kg)',fmt(3*w)+'–'+fmt(5*w)+' mL']);
+      let mEq=null, dl=null, ch=null; if(t&&t>a){ mEq=act*w*(t-a); dl=(+soln.value-a)/(act*w+1); ch=Math.min(t-a,8);
+        K.push(['Déficit de Na (meta '+fmt(t)+')',fmt(mEq)+' mEq'],['Equivale a NaCl 3%',fmt(mEq/0.513)+' mL']); if(dl>0) K.push(['Velocidad de la solución','≈'+fmt(ch/dl*1000/24)+' mL/h']); }
+      if(K.length) L.push({k:K});
+      if(gr) L.push({s:'Síntomas graves: NaCl 3% '+fmt(3*w)+'–'+fmt(5*w)+' mL (3–5 mL/kg) en 10–30 min hasta que cese la convulsión o Na >125; 1 mL/kg sube ~1 mEq/L. Subir ~1–2 mEq/L/h solo en esta fase.'});
+      if(mEq!=null){ L.push({s:'Déficit de Na para subir a '+fmt(t)+': '+fmt(mEq)+' mEq = '+fmt(mEq/0.513)+' mL de NaCl 3% o '+fmt(mEq/3)+' mL de NaCl 17.7%.'});
+        if(dl>0) L.push({s:'Para subir '+fmt(ch)+' mEq/L en 24 h: solución elegida a ≈'+fmt(ch/dl*1000/24)+' mL/h (cada litro sube el Na '+fmt(dl)+' mEq/L; Adrogué-Madias).'});
         if(t-a>8) L.push('⚠ La meta supera 8 mEq/L en 24 h: riesgo de desmielinización osmótica (crónica: no más de 4–6 mEq/L/24 h).'); }
-      L.push('Asintomático: evitar solución hipertónica; si requiere líquidos, isotónicos. Hipovolemia: SN 20 mL/kg = '+fmt(20*w)+' mL. SIADH: restringir líquidos. Medir Na c/2–4 h.'); return L; }); }
+      L.push({n:'Asintomático: evitar solución hipertónica; si requiere líquidos, isotónicos. Hipovolemia: SN 20 mL/kg = '+fmt(20*w)+' mL. SIADH: restringir líquidos. Medir Na c/2–4 h.'}); return L; }); }
 
   // Hipoglucemia
   { const b=ccard(g,'ci','Hipoglucemia', neo?'Neonato: SG10% 2 mL/kg (200 mg/kg) en 1–2 min y luego infusión.':'Bolo de glucosa y después infusión continua con glucosa para evitar recurrencia.');
@@ -5476,17 +5510,18 @@ function renderCalc(){
     const k=numIn(2.8), dose=numIn(0.5), via=selIn([['p','Vía periférica'],['c','Vía central']],'p');
     const m=el('div','mini'); m.append(fld('K actual',k),fld('Dosis (mEq/kg)',dose),fld('Vía',via)); b.appendChild(m);
     liveOut(b,[k,dose,via],()=>{ const d=nv(dose)||0.5, mEq=Math.min(d*w,40), cmax=via.value==='c'?0.15:0.08, vol=Math.max(mEq/cmax, 0);
-      const L=['Reposición: '+fmt(mEq)+' mEq de KCl ('+fmt(mEq/2)+' mL de la ampolleta) — '+fmt(d)+' mEq/kg, máx. 40 mEq.',
-        'Diluir en ≥'+fmt(Math.ceil(vol))+' mL de solución (concentración máx. '+(via.value==='c'?'150 mEq/L central':'80 mEq/L periférica')+').',
-        'Pasar en 1–2 h (máx. 0.5 mEq/kg/h; hasta 1 mEq/kg/h solo con monitor ECG): '+fmt(Math.min(0.5*w,20))+' mEq/h máx.'];
+      const L=[{k:[['KCl',fmt(mEq)+' mEq'],['Ampolleta 2 mEq/mL',fmt(mEq/2)+' mL'],['Diluir en',fmt(Math.ceil(vol))+' mL o más'],['Pasar en','1–2 h']]},
+        {s:'Reposición: '+fmt(mEq)+' mEq de KCl ('+fmt(mEq/2)+' mL de la ampolleta) — '+fmt(d)+' mEq/kg, máx. 40 mEq.'},
+        {s:'Diluir en ≥'+fmt(Math.ceil(vol))+' mL de solución (concentración máx. '+(via.value==='c'?'150 mEq/L central':'80 mEq/L periférica')+').'},
+        {s:'Pasar en 1–2 h (máx. 0.5 mEq/kg/h; hasta 1 mEq/kg/h solo con monitor ECG): '+fmt(Math.min(0.5*w,20))+' mEq/h máx.'}];
       const kv=nv(k); if(kv!=null&&kv<2.5) L.push('⚠ K <2.5: monitor cardiaco continuo. Corregir Mg si está bajo.');
-      L.push('Asintomático y tolera VO: preferir KCl oral 1–2 mEq/kg/día dividido.'); return L; }); }
+      L.push({n:'Asintomático y tolera VO: preferir KCl oral 1–2 mEq/kg/día dividido.'}); return L; }); }
 
   // Bicarbonato
   { const b=ccard(g,'dil','Acidosis metabólica · bicarbonato','Déficit (mEq) = 0.3 × peso × déficit de base. Reponer la mitad y recontrolar gasometría.');
     const eb=numIn(-15); const m=el('div','mini'); m.append(fld('Exceso de base',eb)); b.appendChild(m);
     liveOut(b,[eb],()=>{ const e=nv(eb); if(e==null) return []; const def=0.3*w*Math.abs(e), half=def/2;
-      return ['Déficit total: '+fmt(def)+' mEq · reponer 50%: '+fmt(half)+' mEq.',
+      return [{k:[['Déficit total',fmt(def)+' mEq'],['Reponer 50%',fmt(half)+' mEq'],neo?['Bicarbonato 4.2%',fmt(half*2)+' mL']:['Bicarbonato 8.4%',fmt(half)+' mL']]},
         neo?('Neonato: '+fmt(half*2)+' mL de bicarbonato 4.2% (0.5 mEq/mL; diluir 8.4% 1:1 con agua), a ≤1 mEq/kg/min o en 30–60 min.'):('Volumen: '+fmt(half)+' mL de 8.4% (1 mEq/mL) o '+fmt(half/0.89)+' mL de 7.5% (0.89 mEq/mL), diluido, en 1–2 h.'),
         '⚠ Solo con ventilación adecuada. No indicado de rutina en CAD ni en paro (salvo hiperK, tóxicos o acidosis grave documentada).']; }); }
 
@@ -5500,12 +5535,13 @@ function renderCalc(){
       if(p!=null||hc!=null){ gr= (p!=null&&p<7.1)||(hc!=null&&hc<5)?'Grave':(p!=null&&p<7.2)||(hc!=null&&hc<10)?'Moderada':(p!=null&&p<7.3)||(hc!=null&&hc<18)?'Leve':'No cumple criterio de acidosis (pH ≥7.3 y HCO₃ ≥18)'; }
       const hs=w<=10?100*w:w<=20?1000+50*(w-10):Math.min(1500+20*(w-20),2400);
       const defml=(+deh.value)*10*w, bol=(nv(bolo)||10)*w, rate=(defml-bol+hs*2)/48, ir=(+ins.value)*w;
-      return ['Gravedad (ISPAD): '+gr+'.',
-        '1) Bolo: '+fmt(bol)+' mL de SN en 1 h (10–20 mL/kg; repetir si hay choque).',
-        '2) Total de líquidos = mantenimiento + déficit '+deh.value+'% ('+fmt(defml)+' mL) en 48 h, restando el bolo: '+fmt(rate)+' mL/h (habitualmente ≈1.5× mantenimiento = '+fmt(hs*1.5/24)+' mL/h).',
-        '3) Insulina rápida IV '+fmt(ir)+' U/h ('+ins.value+' U/kg/h; considerar 0.05 en <2 años), sin bolo. Mezcla: 50 U en 50 mL SN (1 U/mL) → '+fmt(ir)+' mL/h.',
-        '4) K: cuando orine y K <5.5, agregar 20 mEq/L de acetato de K + 20 mEq/L de fosfato de K a cada solución (30 + 30 si K <3); vigilar K c/1 h.',
-        '5) Sistema de 2 bolsas: (1) SN + K y (2) SG10% en SN 0.45% + K; iniciar la bolsa con glucosa cuando la glucosa sea <300 mg/dL y ajustar la proporción según la glucemia (c/1 h). Gasometría y electrolitos c/2 h.',
+      return [{k:[['Gravedad (ISPAD)',/^No cumple/.test(gr)?'No cumple':gr],['Bolo de SN en 1 h',fmt(bol)+' mL'],['Líquidos (48 h)',fmt(rate)+' mL/h'],['Insulina (1 U/mL)',fmt(ir)+' U/h = '+fmt(ir)+' mL/h']]},
+        /^No cumple/.test(gr)? {n:gr+'.'} : null,
+        {s:'Bolo: '+fmt(bol)+' mL de SN en 1 h (10–20 mL/kg; repetir si hay choque).'},
+        {s:'Total de líquidos = mantenimiento + déficit '+deh.value+'% ('+fmt(defml)+' mL) en 48 h, restando el bolo: '+fmt(rate)+' mL/h (habitualmente ≈1.5× mantenimiento = '+fmt(hs*1.5/24)+' mL/h).'},
+        {s:'Insulina rápida IV '+fmt(ir)+' U/h ('+ins.value+' U/kg/h; considerar 0.05 en <2 años), sin bolo. Mezcla: 50 U en 50 mL SN (1 U/mL) → '+fmt(ir)+' mL/h.'},
+        {s:'K: cuando orine y K <5.5, agregar 20 mEq/L de acetato de K + 20 mEq/L de fosfato de K a cada solución (30 + 30 si K <3); vigilar K c/1 h.'},
+        {s:'Sistema de 2 bolsas: (1) SN + K y (2) SG10% en SN 0.45% + K; iniciar la bolsa con glucosa cuando la glucosa sea <300 mg/dL y ajustar la proporción según la glucemia (c/1 h). Gasometría y electrolitos c/2 h.'},
         '⚠ Edema cerebral (cefalea, bradicardia, HTA, deterioro neurológico): manitol '+fmt(0.5*w)+'–'+fmt(1*w)+' g (0.5–1 g/kg) en 10–15 min o NaCl 3% '+fmt(2.5*w)+'–'+fmt(5*w)+' mL (2.5–5 mL/kg).']; }); }
 
   // Transfusiones
@@ -5523,12 +5559,13 @@ function renderCalc(){
   { const b=ccard(g,'ci','Quemaduras · reanimación hídrica','Solo % de superficie corporal quemada (SCQ) de 2.º y 3.er grado.'); b.style.gridColumn='span 2';
     const scq=numIn(20); const m=el('div','mini'); m.append(fld('% SCQ',scq)); b.appendChild(m);
     liveOut(b,[scq],()=>{ const s=nv(scq); if(!s) return []; const pk=4*w*s, gv=5000*sc*s/100+2000*sc, hs=w<=10?100*w:w<=20?1000+50*(w-10):Math.min(1500+20*(w-20),2400);
-      const L=['Parkland (Hartmann o SN; indicado con ≥15% SCQ): '+fmt(pk)+' mL en 24 h → '+fmt(pk/2)+' mL en las primeras 8 h desde la quemadura ('+fmt(pk/16)+' mL/h) y '+fmt(pk/2)+' mL en 16 h ('+fmt(pk/32)+' mL/h).'];
-      L.push('Puede iniciarse con bolo de 20 mL/kg = '+fmt(20*w)+' mL de Hartmann o SN.'+(s<15?' Con <15% SCQ, líquidos IV según el estado clínico.':''));
-      if(w<30) L.push('Lactantes y niños pequeños: agregar mantenimiento con glucosa (Holliday) '+fmt(hs/24)+' mL/h para evitar hipoglucemia.');
-      L.push('Galveston (alternativa): 5000 mL/m² SCQ + 2000 mL/m² = '+fmt(gv)+' mL/24 h (SC '+fmt(sc)+' m²).');
-      L.push('Meta de diuresis: '+fmt(w<30?1*w:0.5*w)+' mL/h ('+(w<30?'1':'0.5')+' mL/kg/h). Ajustar el ritmo según diuresis.');
-      L.push('Lund-Browder: cabeza 19% (<1 a), 17% (1–4 a), 13% (5–9 a), 11% (10–14 a); cada muslo 5.5 / 6.5 / 8 / 8.5%; cada pierna 5 / 5 / 5.5 / 6%; tronco ant. y post. 13% c/u; palma del paciente ≈1%.');
+      const L=[{k:[['Parkland en 24 h',fmt(pk)+' mL'],['Primeras 8 h',fmt(pk/16)+' mL/h'],['Siguientes 16 h',fmt(pk/32)+' mL/h'],['Meta de diuresis',fmt(w<30?1*w:0.5*w)+' mL/h']]}];
+      L.push({s:'Puede iniciarse con bolo de 20 mL/kg = '+fmt(20*w)+' mL de Hartmann o SN.'+(s<15?' Con <15% SCQ, líquidos IV según el estado clínico.':'')});
+      L.push({s:'Parkland (Hartmann o SN; indicado con ≥15% SCQ): '+fmt(pk)+' mL en 24 h → '+fmt(pk/2)+' mL en las primeras 8 h desde la quemadura ('+fmt(pk/16)+' mL/h) y '+fmt(pk/2)+' mL en 16 h ('+fmt(pk/32)+' mL/h).'});
+      if(w<30) L.push({s:'Lactantes y niños pequeños: agregar mantenimiento con glucosa (Holliday) '+fmt(hs/24)+' mL/h para evitar hipoglucemia.'});
+      L.push({s:'Meta de diuresis: '+fmt(w<30?1*w:0.5*w)+' mL/h ('+(w<30?'1':'0.5')+' mL/kg/h). Ajustar el ritmo según diuresis.'});
+      L.push({n:'Galveston (alternativa): 5000 mL/m² SCQ + 2000 mL/m² = '+fmt(gv)+' mL/24 h (SC '+fmt(sc)+' m²).'});
+      L.push({n:'Lund-Browder: cabeza 19% (<1 a), 17% (1–4 a), 13% (5–9 a), 11% (10–14 a); cada muslo 5.5 / 6.5 / 8 / 8.5%; cada pierna 5 / 5 / 5.5 / 6%; tronco ant. y post. 13% c/u; palma del paciente ≈1%.'});
       return L; }); }
   labCards(g,P);
 
