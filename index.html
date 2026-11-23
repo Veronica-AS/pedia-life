@@ -708,7 +708,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23.</p>
+    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23b.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -776,7 +776,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23">Versión 2026.11.23</span></p>
+    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23b">Versión 2026.11.23b</span></p>
   </footer>
 </div>
 
@@ -4685,16 +4685,18 @@ function chkList(b,items){ return items.map(t=>{ const l=el('label','chk'); cons
 function labCards(g,P){
   const w=state.w;
   accSec(g,'Ácido-base y electrolitos');
-  { const b=ccard(g,'adm','Brecha aniónica (anion gap) y delta gap','BA = Na − (Cl + HCO₃). Normal 12 ± 2 mEq/L. Opcional: albúmina para corregir.');
-    const na=numIn(null,'any','Na'), cl=numIn(null,'any','Cl'), hc=numIn(null,'any','HCO₃'), al=numIn(null,'any','g/dL');
-    const m=el('div','mini'); m.append(fld('Na (mEq/L)',na),fld('Cl (mEq/L)',cl),fld('HCO₃ (mEq/L)',hc),fld('Albúmina (opcional)',al)); b.appendChild(m);
-    liveOut(b,[na,cl,hc,al],()=>{ const N=nv(na),C=nv(cl),H=nv(hc),A=nv(al); if(N==null||C==null||H==null) return ['Capture Na, Cl y HCO₃.'];
+  { const b=ccard(g,'adm','Brecha aniónica (anion gap) y delta gap','BA = Na − (Cl + HCO₃). Normal 12 ± 2 mEq/L. Opcional: albúmina para corregir y PaCO₂ para revisar la compensación.');
+    const na=numIn(null,'any','Na'), cl=numIn(null,'any','Cl'), hc=numIn(null,'any','HCO₃'), al=numIn(null,'any','g/dL'), pc=numIn(null,'any','mmHg');
+    const m=el('div','mini'); m.append(fld('Na (mEq/L)',na),fld('Cl (mEq/L)',cl),fld('HCO₃ (mEq/L)',hc),fld('Albúmina (opcional)',al),fld('PaCO₂ (opcional)',pc)); b.appendChild(m);
+    liveOut(b,[na,cl,hc,al,pc],()=>{ const N=nv(na),C=nv(cl),H=nv(hc),A=nv(al),PC=nv(pc); if(N==null||C==null||H==null) return ['Capture Na, Cl y HCO₃.'];
       const ag=N-(C+H), L=['Brecha aniónica: '+fmt(Math.round(ag*10)/10)+' mEq/L (normal 12 ± 2).'];
       let agc=ag; if(A!=null){ agc=ag+2.5*(4-A); L.push('Corregida por albúmina: '+fmt(Math.round(agc*10)/10)+' mEq/L (BA + 2.5 × [4 − albúmina]; se toma 4 g/dL como albúmina normal).'); }
       if(agc>20) L.push('⚠ Mayor de 20: acidosis metabólica con brecha elevada primaria, sin importar el pH o el HCO₃.');
       else if(agc>15) L.push('⚠ Mayor de 15: acidosis metabólica con brecha aniónica elevada.');
       else if(agc<12) L.push('Menor de 12: si hay acidosis metabólica, es sin brecha elevada (hiperclorémica).');
       if(agc>15){ const dg=(agc-12)-(24-H); L.push('Delta gap = (BA − 12) − (24 − HCO₃) = '+fmt(Math.round(dg*10)/10)+(dg>6?' → mayor de 6: acidosis con brecha + alcalosis metabólica.':dg<-6?' → menor de −6: acidosis con brecha + acidosis sin brecha.':' → sin otro trastorno metabólico agregado.')); }
+      if(H<20){ const ex=1.5*H+8, r=x=>Math.round(x*10)/10; L.push('PaCO₂ esperada (Winter) = 1.5 × HCO₃ + 8 ± 2 = '+fmt(r(ex-2))+'–'+fmt(r(ex+2))+' mmHg.');
+        if(PC!=null) L.push(PC>ex+2?'⚠ PaCO₂ '+fmt(PC)+' mayor que la esperada: acidosis respiratoria agregada (compensación insuficiente).':PC<ex-2?'⚠ PaCO₂ '+fmt(PC)+' menor que la esperada: alcalosis respiratoria agregada.':'PaCO₂ '+fmt(PC)+' dentro de lo esperado: compensación respiratoria adecuada.'); }
       return L; }); }
   { const b=ccard(g,'adm','Osmolalidad sérica y brecha osmolar','Osm calculada = 2 × Na + glucosa / 18 + BUN / 2.8. Brecha osmolar normal: hasta 10 mOsm/kg.');
     const na=numIn(null,'any','Na'), gl=numIn(null,'any','mg/dL'), bu=numIn(null,'any','mg/dL'), om=numIn(null,'any','mOsm/kg');
@@ -5668,13 +5670,30 @@ function renderCalc(){
       const kv=nv(k); if(kv!=null&&kv<2.5) L.push('⚠ K <2.5: monitor cardiaco continuo. Corregir Mg si está bajo.');
       L.push({n:'Asintomático y tolera VO: preferir KCl oral 1–2 mEq/kg/día dividido.'}); return L; }); }
 
-  // Bicarbonato
-  { const b=ccard(g,'dil','Acidosis metabólica · bicarbonato','Déficit (mEq) = 0.3 × peso × déficit de base. Reponer la mitad y recontrolar gasometría.');
-    const eb=numIn(-15); const m=el('div','mini'); m.append(fld('Exceso de base',eb)); b.appendChild(m);
-    liveOut(b,[eb],()=>{ const e=nv(eb); if(e==null) return []; const def=0.3*w*Math.abs(e), half=def/2;
-      return [{k:[['Déficit total',fmt(def)+' mEq'],['Reponer 50%',fmt(half)+' mEq'],neo?['Bicarbonato 4.2%',fmt(half*2)+' mL']:['Bicarbonato 8.4%',fmt(half)+' mL']]},
-        neo?('Neonato: '+fmt(half*2)+' mL de bicarbonato 4.2% (0.5 mEq/mL; diluir 8.4% 1:1 con agua), a ≤1 mEq/kg/min o en 30–60 min.'):('Volumen: '+fmt(half)+' mL de 8.4% (1 mEq/mL) o '+fmt(half/0.89)+' mL de 7.5% (0.89 mEq/mL), diluido, en 1–2 h.'),
-        '⚠ Solo con ventilación adecuada. No indicado de rutina en CAD ni en paro (salvo hiperK, tóxicos o acidosis grave documentada).']; }); }
+  // Bicarbonato (HL 2027, formulario: bicarbonato de sodio)
+  { const b=ccard(g,'dil','Acidosis metabólica · bicarbonato','Dosis (HL 2027): 0.3 × peso × déficit de base, o 0.5 × peso × (24 − HCO₃). En adultos, 0.2 × peso × déficit de base.');
+    const eb=numIn(-15,'any','negativo'), hc=numIn(null,'any','mEq/L'),
+      fac=selIn([['0.3','0.3 (neonato a niño)'],['0.2','0.2 (adulto)']],(P.years!=null&&P.years>=18)?'0.2':'0.3'),
+      rep=selIn([['50','La mitad (uso habitual)'],['100','Todo el déficit']],'50'),
+      pre=selIn([['0.89','7.5% (IMSS)'],['1','8.4%']],'0.89');
+    const m=el('div','mini'); m.append(fld('Exceso de base (EB)',eb),fld('o HCO₃ sérico',hc),fld('Factor de EB',fac),fld('Reponer',rep),fld('Presentación',pre)); b.appendChild(m);
+    liveOut(b,[eb,hc,fac,rep,pre],()=>{ const e=nv(eb), H=nv(hc), f=+fac.value, c=+pre.value, pl=c<1?'7.5%':'8.4%';
+      if(e==null&&H==null) return ['Capture el exceso de base o el HCO₃.'];
+      const dE=(e!=null&&e<0)? f*w*Math.abs(e) : null, dH=(H!=null&&H<24)? 0.5*w*(24-H) : null;
+      if(dE==null&&dH==null) return ['Sin déficit: EB ≥ 0 o HCO₃ ≥ 24. No aplica bicarbonato (si el EB es positivo hay alcalosis).'];
+      const def=dE!=null? dE : dH, by=dE!=null? 'EB' : 'HCO₃', dose=def*(+rep.value)/100;
+      const st=dose/c, fin=dose/0.5, dil=Math.max(fin-st,0), hrs=Math.max(2,Math.ceil(dose/w*2)/2), rate=fin/hrs, r1=x=>Math.round(x*10)/10;
+      const L=[{k:[['Déficit por '+by,fmt(r1(def))+' mEq'],['A reponer ('+rep.value+'%)',fmt(r1(dose))+' mEq'],['Bicarbonato '+pl,fmt(r1(st))+' mL'],['Infusión',fmt(r1(rate))+' mL/h × '+fmt(r1(hrs))+' h']]}];
+      if(dE!=null&&dH!=null) L.push({n:'Por HCO₃: 0.5 × '+fmt(w)+' × (24 − '+fmt(H)+') = '+fmt(r1(dH))+' mEq. Se usa el cálculo por EB.'});
+      L.push({s:'Preparar: '+fmt(r1(st))+' mL de bicarbonato '+pl+' + '+fmt(r1(dil))+' mL de SG5% o agua inyectable = '+fmt(r1(fin))+' mL a 0.5 mEq/mL (concentración máxima para infusión, todas las edades).'});
+      L.push({s:'Pasar a '+fmt(r1(rate))+' mL/h en '+fmt(r1(hrs))+' h: '+fmt(r1(dose/hrs/w))+' mEq/kg/h (máx. 1 mEq/kg/h, en no menos de 2 h).'});
+      L.push({s:'Recontrolar gasometría y electrolitos al terminar; calcular de nuevo con el EB nuevo.'});
+      L.push('Carga de sodio: '+fmt(r1(dose))+' mEq de Na ('+fmt(r1(dose/w))+' mEq/kg); cada mEq de bicarbonato aporta 1 mEq de Na.');
+      L.push('⚠ Contraindicado con ventilación inadecuada, alcalosis respiratoria o hipocloremia. No mezclar con calcio, norepinefrina ni dobutamina. Puede causar hipernatremia, hipopotasemia, hipocalcemia e hipomagnesemia: corregir el K antes. Necrosis si se extravasa.');
+      L.push({n:'No indicado de rutina en CAD (ISPAD 2022) ni en paro (PALS), salvo hiperpotasemia, intoxicaciones (p. ej., tricíclicos) o acidosis grave documentada.'});
+      return L; });
+    srcLine(b,'Harriet Lane 2027, formulario (bicarbonato de sodio): fórmulas, dilución a 0.5 mEq/mL, máx. 1 mEq/kg/h, contraindicaciones e incompatibilidades. Presentación 7.5%: Cuadro Básico IMSS.');
+    srcLine(b,'Reponer la mitad del déficit y recontrolar: uso habitual.',1); }
 
   // CAD
   accSec(g,'Por peso: urgencias');
