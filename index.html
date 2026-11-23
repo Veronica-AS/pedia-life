@@ -707,7 +707,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 22 de noviembre de 2026. Versión de la página: 2026.11.22c.</p>
+    <p>Última revisión del contenido: 22 de noviembre de 2026. Versión de la página: 2026.11.22d.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -775,7 +775,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 22 de noviembre de 2026. · <span id="pver" data-v="2026.11.22c">Versión 2026.11.22c</span></p>
+    <p class="fupd">Última actualización del contenido: 22 de noviembre de 2026. · <span id="pver" data-v="2026.11.22d">Versión 2026.11.22d</span></p>
   </footer>
 </div>
 
@@ -5645,8 +5645,7 @@ function renderCalc(){
     { const z=n=>String(n).padStart(2,'0'), msg=el('span','svmsg'), bx=el('div','cadpdf'); b.appendChild(el('p','chd','Hojas para imprimir'));
       const hdr=d=>[{k:'blank',l:['Nombre','Cama','Expediente']},{k:'pt',t:'Peso: '+fmt(w)+' kg · Edad: '+(P.days!=null?wAgeTxt(P):'sin capturar')+' · Fecha y hora: '+d.toLocaleDateString('es-MX')+' '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}];
       const SRC={k:'src',l:['ISPAD 2022 (Glaser N et al., Pediatr Diabetes 2022;23:835-56); Harriet Lane Handbook 2027, eFig. 10.1. Tabla de reparto de 2 bolsas: Hurley Medical Center, Glob Pediatr Health 2021 (doi:10.1177/2333794X21991532), fuente externa a los libros. Hartmann: composición del Cuadro Básico IMSS. Generado con Pedia Life.']};
-      const go=(lab,file,ttl,mk,sub)=>{ const pb=el('button','copybtn',lab); pb.type='button'; bx.appendChild(pb);
-        pb.addEventListener('click',()=>{ const d=new Date(); svDownload(mk(d,cadCalc()),'cad-'+file+'-'+d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'.pdf',msg,ttl+' · '+fmt(w)+' kg',{brand:1,sub}); }); };
+      const SHEETS=[]; const go=(lab,file,ttl,mk,sub)=>SHEETS.push({ttl,mk,sub});
       go('PDF: indicaciones médicas','indicaciones','Cetoacidosis diabética',(d,C)=>{ const D=hdr(d); D[1].t+=' · pH '+(ph.value||'—')+' · HCO3 '+(hco.value||'—')+' mmol/L · Deshidratación '+deh.value+'% · Bolo '+(nv(bolo)||10)+' mL/kg · Insulina '+ins.value+' U/kg/h · Bolsas con '+(C.h?'Hartmann':'solución salina 0.9%');
         return D.concat(cPDF(cadFn().concat(['⚠ Insulina y potasio son de alto riesgo: doble verificación antes de administrar. Ajuste al protocolo de su hospital.']),true)).concat([{k:'blank',l:['Elaboró','Firma']},SRC]); },'INDICACIONES MÉDICAS');
       go('PDF: hoja de enfermería','enfermeria','CAD · hoja de enfermería',(d,C)=>hdr(d).concat([
@@ -5660,6 +5659,10 @@ function renderCalc(){
         {k:'pt',t:'Total de líquidos: '+fmt(C.rate)+' mL/h (bolsa A + bolsa B) · Insulina: '+fmt(C.ir)+' mL/h · Glucometría capilar cada hora · Electrolitos, química sanguínea y gasometría venosa cada 2–4 h'},
         {k:'tbl',head:['Fecha y hora','Glucemia (mg/dL)','Bolsa A mL/h','Bolsa B mL/h','Total mL/h','Insulina mL/h','Iniciales'],rows:Array.from({length:24},()=>['','','','','','','']),rh:21,grid:1,w:[.18,.16,.14,.14,.13,.14,.11]},
         {k:'note',t:'Goteo de cada bolsa según la glucemia: ver la hoja de enfermería. Glucemia <100 mg/dL: avisar al médico.'}]),'REGISTRO HORARIO');
+      { const pb=el('button','copybtn','Descargar PDF: indicaciones, enfermería y registro (3 hojas)'); pb.type='button'; bx.appendChild(pb);
+        pb.addEventListener('click',()=>{ const d=new Date(), C=cadCalc(), kg=' · '+fmt(w)+' kg';
+          const D=SHEETS.reduce((acc,sh,i)=>acc.concat(i?[{k:'newpage',title:sh.ttl+kg,sub:sh.sub}]:[],sh.mk(d,C)),[]);
+          svDownload(D,'cad-hojas-'+d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'.pdf',msg,SHEETS[0].ttl+kg,{brand:1,sub:SHEETS[0].sub}); }); }
       b.appendChild(bx); b.appendChild(msg); }
     srcLine(b,'ISPAD 2022 (Glaser N et al., Pediatr Diabetes 2022;23:835-56) y Harriet Lane 2027, eFig. 10.1.');
     srcLine(b,'tabla de reparto de las 2 bolsas según la glucemia: Two-bag system, Hurley Medical Center, Glob Pediatr Health 2021 (doi:10.1177/2333794X21991532). Ajústela al protocolo de su hospital.',1); }
@@ -5912,12 +5915,15 @@ function svPDF(D,title,o){
   const rect=(x,yy,w,h,fill,stroke)=>ops.push((fill==null?'':Array.isArray(fill)?fill.join(' ')+' rg ':fill+' g ')+(stroke?'0.55 G 0.5 w ':'')+x.toFixed(1)+' '+(PH-yy-h).toFixed(1)+' '+w.toFixed(1)+' '+h.toFixed(1)+' re '+(fill!=null&&stroke?'B':fill!=null?'f':'S')+' 0 g');
   const wrap=(s,size,bold,w)=>{ const out=[]; let ln=''; String(s).split(/\s+/).forEach(wd=>{ const t=ln?ln+' '+wd:wd; if(pdfW(t,size,bold)>w&&ln){ out.push(ln); ln=wd; } else ln=t; }); if(ln) out.push(ln); return out; };
   const para=(s,size,bold,x,w,lead)=>{ wrap(s,size,bold,w).forEach(l=>{ need(lead); text(x,y+size,l,size,bold); y+=lead; }); };
-  if(B){ rr(M,y,CW,50,10,PC.mar,null); text(M+16,y+17,'PEDIA LIFE · '+((o&&o.sub)||'HOJA DE INDICACIONES'),7.5,true,PC.lavl); text(M+16,y+38,title||'',18,true,PC.w);
+  const head=(title,sub)=>{
+  if(B){ rr(M,y,CW,50,10,PC.mar,null); text(M+16,y+17,'PEDIA LIFE · '+(sub||'HOJA DE INDICACIONES'),7.5,true,PC.lavl); text(M+16,y+38,title||'',18,true,PC.w);
     const hl='@pedia.life'; text(M+CW-16-pdfW(hl,8,false),y+17,hl,8,false,PC.lavl); y+=58;
     const cy=y+3; circ(M+3,cy,3,PC.tur); rr(M+10,cy-0.6,CW/2-22,1.2,0.6,PC.lav,null); circ(M+CW/2,cy,3.5,PC.cor); rr(M+CW/2+12,cy-0.6,CW/2-22,1.2,0.6,PC.lav,null); circ(M+CW-3,cy,3,PC.dur); y+=14; }
   else { text(M,y+8,'PEDIA LIFE · DOSIS PEDIÁTRICAS Y NEONATALES',7,false); y+=12;
-  text(M,y+19,title||'Signos vitales del paciente',19,true); y+=26; }
+  text(M,y+19,title||'Signos vitales del paciente',19,true); y+=26; } };
+  head(title,o&&o.sub);
   D.forEach(b=>{
+    if(b.k==='newpage'){ page(); head(b.title,b.sub); return; }
     const bw=b=>{ const f=b.w||(b.l.length===3&&b.l[0]==='Nombre'? [.5,.17,.33] : b.l.map(()=>1/b.l.length)); let a=0; return f.map(v=>{ const r={x:M+a*CW,w:v*CW}; a+=v; return r; }); };
     if(B && b.k==='blank'){ const W=bw(b); b.l.forEach((l,i)=>{ const x=W[i].x, w=W[i].w; text(x,y+14,l+':',9,true,PC.mar); ops.push(PC.lav.join(' ')+' RG 0.8 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S 0 G'); }); y+=24; return; }
     if(B && b.k==='pt'){ const L=wrap(b.t,8.5,true,CW-20), h=L.length*11+10; need(h); rr(M,y,CW,h,8,PC.lavt,null); L.forEach((l,i)=>text(M+10,y+14+i*11,l,8.5,true,PC.mar)); y+=h+8; return; }
