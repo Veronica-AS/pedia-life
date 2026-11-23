@@ -554,6 +554,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
 .ctab{border-collapse:collapse;font-size:13px;width:100%}.ctab th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:4px 8px;border-bottom:1px solid var(--ash)}
 .ctab td{padding:5px 8px;border-bottom:1px solid var(--ash);vertical-align:top;white-space:nowrap}.ctab tr:last-child td{border-bottom:0}.ctab td:first-child{white-space:normal}.ctab.cwrap td,.cout .ctab.cwrap td.cnum{white-space:normal}
 @media (max-width:520px){ .ctabw{margin-left:0} .ctab{font-size:12px} .ctab th,.ctab td,.cout .ctab td.cnum{padding:4px 3px;white-space:normal} .ctab th{white-space:normal} }
+.cadpdf{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.cadpdf .copybtn{margin:0}
 .cstep{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}.cstep p{margin:0}
 .cstep .cn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--marino);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;margin-top:1px}
 </style>
@@ -706,7 +707,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 22 de noviembre de 2026. Versión de la página: 2026.11.22b.</p>
+    <p>Última revisión del contenido: 22 de noviembre de 2026. Versión de la página: 2026.11.22c.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -774,7 +775,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 22 de noviembre de 2026. · <span id="pver" data-v="2026.11.22b">Versión 2026.11.22b</span></p>
+    <p class="fupd">Última actualización del contenido: 22 de noviembre de 2026. · <span id="pver" data-v="2026.11.22c">Versión 2026.11.22c</span></p>
   </footer>
 </div>
 
@@ -4654,6 +4655,15 @@ function cRender(o,r){ o.textContent=''; let n=0;
     if(x.t){ const wr=el('div','ctabw'), tb=el('table','ctab'+(x.t.wrap?' cwrap':'')), tr=el('tr'); x.t.h.forEach(c=>tr.appendChild(el('th',null,c))); tb.appendChild(tr);
       x.t.r.forEach(r=>{ const rr=el('tr'); r.forEach((c,j)=>rr.appendChild(el('td',j&&j<(x.t.num||3)?'cnum':null,c))); tb.appendChild(rr); }); wr.appendChild(tb); o.appendChild(wr); return; }
     if(x.n){ o.appendChild(cRich(el('p','cnote'),x.n)); } }); }
+function cPDF(L,brand){ const D=[], warn=[]; let n=0;
+  (L||[]).forEach(x=>{ if(x==null) return;
+    if(typeof x==='string'){ if(x.startsWith('⚠')) warn.push(x); else D.push({k:'note',t:x}); return; }
+    if(x.k){ if(brand){ D.push({k:'kpi',l:x.k.filter(Boolean)}); return; } D.push({k:'tbl',cap:'Resumen',head:['Concepto','Valor'],rows:x.k.filter(Boolean).map(([a,v])=>[a,v]),small:true,w:[.62,.38]}); return; }
+    if(x.s){ D.push({k:'li',n:++n,t:x.s,sz:brand?8.5:9}); return; }
+    if(x.t){ D.push({k:'tbl',head:x.t.h.map(h=>h||' '),rows:x.t.r,small:true}); return; }
+    if(x.n){ D.push({k:'note',t:x.n}); return; }
+    if(x.h){ D.push({k:'note',t:x.h}); } });
+  if(warn.length) D.push({k:'ev',t:'Avisos',l:warn}); return D; }
 function liveOut(b,ins,fn){ const o=el('div','cout'); b.appendChild(o); const up=()=>cRender(o,fn()); ins.forEach(i=>i.addEventListener('input',up)); ins.forEach(i=>i.addEventListener('change',up)); up(); }
 const nv=i=>{ const v=parseFloat(String(i.value).replace(',','.')); return isFinite(v)?v:null; };
 function actFrac(P){ if(P.days!=null&&P.days<=28) return 0.8; if(P.years!=null&&P.years<1) return 0.7; return 0.6; }
@@ -5598,29 +5608,59 @@ function renderCalc(){
   { const b=ccard(g,'vig','Cetoacidosis diabética (Harriet Lane 2027 / ISPAD 2022)','Diagnóstico (ISPAD 2022): glucosa >200 mg/dL (o DM conocida) + pH <7.3 o HCO₃ <18 + cetonemia/cetonuria. El Harriet Lane 2027 usa HCO₃ <15.');
     b.style.gridColumn='span 2';
     const ph=numIn(7.15), hco=numIn(8), deh=selIn([['5','Deshidratación 5%'],['7','7%'],['10','10%']],'7'), bolo=numIn(10), ins=selIn([['0.1','0.1 U/kg/h'],['0.05','0.05 U/kg/h (<2 años o leve)']],(P.years!=null&&P.years<2)?'0.05':'0.1');
-    const m=el('div','mini'); m.append(fld('pH',ph),fld('HCO₃',hco),fld('Déficit',deh),fld('Bolo (mL/kg)',bolo),fld('Insulina',ins)); b.appendChild(m);
-    liveOut(b,[ph,hco,deh,bolo,ins],()=>{ const p=nv(ph), hc=nv(hco); let gr='—';
+    const sol=selIn([['ss','Solución salina 0.9%'],['h','Hartmann']],'ss');
+    const m=el('div','mini'); m.append(fld('pH',ph),fld('HCO₃',hco),fld('Déficit',deh),fld('Bolo (mL/kg)',bolo),fld('Insulina',ins),fld('Solución de las bolsas',sol)); b.appendChild(m);
+    // solución base de las 2 bolsas (mEq/L; Hartmann según el Cuadro Básico IMSS: NaCl 6 g, KCl 0.3 g, CaCl2 0.2 g y lactato de sodio 3.1 g por litro)
+    const SOLS={ss:{n:'Solución salina 0.9%',na:154,k:0},h:{n:'Hartmann',na:130.4,k:4.02}};
+    const cadCalc=()=>{ const p=nv(ph), hc=nv(hco); let gr='—';
       if(p!=null||hc!=null){ gr= (p!=null&&p<7.1)||(hc!=null&&hc<5)?'Grave':(p!=null&&p<7.2)||(hc!=null&&hc<10)?'Moderada':(p!=null&&p<7.3)||(hc!=null&&hc<18)?'Leve':'No cumple criterio de acidosis (pH ≥7.3 y HCO₃ ≥18)'; }
       const hs=w<=10?100*w:w<=20?1000+50*(w-10):Math.min(1500+20*(w-20),2400);
-      const defml=(+deh.value)*10*w, bol=(nv(bolo)||10)*w, rate=(defml-bol+hs*2)/48, ir=(+ins.value)*w;
+      const defml=(+deh.value)*10*w, bol=(nv(bolo)||10)*w, rate=(defml-bol+hs*2)/48, ir=(+ins.value)*w, S=SOLS[sol.value]||SOLS.ss, V=1020;
+      const naA=Math.round(S.na*1000/V), kA=Math.round((S.k+40)*1000/V), naB=Math.round(S.na*800/V), kB=Math.round((S.k*0.8+40)*1000/V);
+      const dist=[['≥300',1,0],['250–299',0.75,0.25],['200–249',0.5,0.5],['150–199',0.25,0.75],['100–149',0,1],['<100',0,1]]
+        .map(([gl,a,bb])=>[gl,fmt(rate*a)+' ('+Math.round(a*100)+'%)',fmt(rate*bb)+' ('+Math.round(bb*100)+'%)',fmt(Math.round(9.8*bb*10)/10)+'%']);
+      return {gr,hs,defml,bol,rate,ir,S,h:sol.value==='h',naA,kA,naB,kB,dist}; };
+    const bagA=C=>'Bolsa A (sin glucosa): '+C.S.n+' 1000 mL + KCl 20 mEq + fosfato de potasio 20 mEq. Volumen final 1020 mL.';
+    const bagB=C=>'Bolsa B (glucosa al 9.8%): solución glucosada 50% 200 mL + '+C.S.n.replace(/^S/,'s')+' 800 mL + KCl 20 mEq + fosfato de potasio 20 mEq. Volumen final 1020 mL.';
+    const HART_CA='⚠ El Hartmann contiene calcio (2.7 mEq/L): confirme con farmacia la compatibilidad con el fosfato de potasio antes de mezclarlos.';
+    const cadFn=()=>{ const C=cadCalc(), {gr,hs,defml,bol,rate,ir}=C;
       return [{k:[['Gravedad (ISPAD)',/^No cumple/.test(gr)?'No cumple':gr],['Bolo de solución salina 0.9% en 1 h',fmt(bol)+' mL'],['Líquidos (48 h)',fmt(rate)+' mL/h'],['Insulina (1 U/mL)',fmt(ir)+' U/h = '+fmt(ir)+' mL/h']]},
         /^No cumple/.test(gr)? {n:gr+'.'} : null,
         {s:'Bolo: '+fmt(bol)+' mL de solución salina 0.9% en 1 h (10–20 mL/kg; repetir si hay choque).'},
         {s:'Total de líquidos = mantenimiento + déficit '+deh.value+'% ('+fmt(defml)+' mL) en 48 h, restando el bolo: '+fmt(rate)+' mL/h (habitualmente ≈1.5× mantenimiento = '+fmt(hs*1.5/24)+' mL/h). Este total se reparte entre las 2 bolsas (pasos 6 y 7).'},
         {s:'Insulina rápida IV '+fmt(ir)+' U/h ('+ins.value+' U/kg/h; considerar 0.05 en <2 años), sin bolo, empezando ≥1 h después de iniciar los líquidos (ISPAD). Mezcla: 50 U en 50 mL de solución salina 0.9% (1 U/mL) → '+fmt(ir)+' mL/h.'},
-        {s:'Potasio: cuando orine y K <5.5, KCl 20 mEq + fosfato de potasio 20 mEq en cada bolsa (≈39 mEq/L de K); vigilar K c/1 h; máx. 0.5 mEq/kg/h. Si K <3.5: posponer la insulina y reponer el K primero, con monitor (ISPAD). El HL sube a 30 + 30 mEq/L si K <3.'},
+        {s:'Potasio: cuando orine y K <5.5, KCl 20 mEq + fosfato de potasio 20 mEq en cada bolsa (≈'+C.kA+' mEq/L de K en la bolsa A); vigilar K c/1 h; máx. 0.5 mEq/kg/h. Si K <3.5: posponer la insulina y reponer el K primero, con monitor (ISPAD). El HL sube a 30 + 30 mEq/L si K <3.'},
         {s:'Glucosa: al bajar a 250–300 mg/dL, o antes si baja >90 mg/dL/h, agregar dextrosa sin bajar la insulina mientras persista la acidosis; puede requerir SG10% o hasta SG12.5% (ISPAD).'},
         {s:'Sistema de 2 bolsas: preparar cada una así:'},
         {t:{h:['','Bolsa A','Bolsa B'],
-          r:[['Solución salina 0.9%','1000 mL','800 mL'],['Solución glucosada 50%','—','200 mL'],['KCl','20 mEq','20 mEq'],['Fosfato de potasio','20 mEq','20 mEq'],['Volumen final','1020 mL','1020 mL'],['Glucosa','0%','9.8%'],['Na · K (mEq/L)','151 · 39','121 · 39']].map(r=>r.map((c,j)=>j?c.replace(/ /g,'\u00a0'):c))}},
+          r:[[C.S.n,'1000 mL','800 mL'],['Solución glucosada 50%','—','200 mL'],['KCl','20 mEq','20 mEq'],['Fosfato de potasio','20 mEq','20 mEq'],['Volumen final','1020 mL','1020 mL'],['Glucosa','0%','9.8%'],['Na · K (mEq/L)',C.naA+' · '+C.kA,C.naB+' · '+C.kB]].map(r=>r.map((c,j)=>j?c.replace(/ /g,'\u00a0'):c))}},
         {n:'La bolsa B lleva menos sodio que la A: al subir su proporción baja el sodio que recibe el paciente. Vigile el Na sérico c/2 h.'},
+        C.h? HART_CA : null,
         {s:'El total se mantiene en '+fmt(rate)+' mL/h; repartirlo entre las bolsas según la glucemia de cada hora (mL/h y porcentaje del total):'},
-        {t:{h:['Glucemia (mg/dL)','Bolsa A','Bolsa B','Glucosa'],
-          r:[['≥300',1,0],['250–299',0.75,0.25],['200–249',0.5,0.5],['150–199',0.25,0.75],['100–149',0,1],['<100',0,1]]
-            .map(([gl,a,bb])=>[gl,fmt(rate*a)+' ('+Math.round(a*100)+'%)',fmt(rate*bb)+' ('+Math.round(bb*100)+'%)',fmt(Math.round(9.8*bb*10)/10)+'%'])}},
+        {t:{h:['Glucemia (mg/dL)','Bolsa A','Bolsa B','Glucosa'],r:C.dist}},
         '⚠ Glucemia <100 mg/dL: todo por la bolsa B y avisar al médico para ajustar la insulina.',
-        {n:'Gasometría y electrolitos c/2 h; glucemia c/1 h.'},
-        '⚠ Edema cerebral (cefalea, bradicardia, HTA, deterioro neurológico): manitol '+fmt(0.5*w)+'–'+fmt(1*w)+' g (0.5–1 g/kg) en 10–15 min o NaCl 3% '+fmt(2.5*w)+'–'+fmt(5*w)+' mL (2.5–5 mL/kg).']; });
+        {n:'Glucometría capilar c/1 h; electrolitos séricos, química sanguínea y gasometría venosa c/2–4 h.'},
+        '⚠ Edema cerebral (cefalea, bradicardia, HTA, deterioro neurológico): manitol '+fmt(0.5*w)+'–'+fmt(1*w)+' g (0.5–1 g/kg) en 10–15 min o NaCl 3% '+fmt(2.5*w)+'–'+fmt(5*w)+' mL (2.5–5 mL/kg).']; };
+    liveOut(b,[ph,hco,deh,bolo,ins,sol],cadFn);
+    { const z=n=>String(n).padStart(2,'0'), msg=el('span','svmsg'), bx=el('div','cadpdf'); b.appendChild(el('p','chd','Hojas para imprimir'));
+      const hdr=d=>[{k:'blank',l:['Nombre','Cama','Expediente']},{k:'pt',t:'Peso: '+fmt(w)+' kg · Edad: '+(P.days!=null?wAgeTxt(P):'sin capturar')+' · Fecha y hora: '+d.toLocaleDateString('es-MX')+' '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}];
+      const SRC={k:'src',l:['ISPAD 2022 (Glaser N et al., Pediatr Diabetes 2022;23:835-56); Harriet Lane Handbook 2027, eFig. 10.1. Tabla de reparto de 2 bolsas: Hurley Medical Center, Glob Pediatr Health 2021 (doi:10.1177/2333794X21991532), fuente externa a los libros. Hartmann: composición del Cuadro Básico IMSS. Generado con Pedia Life.']};
+      const go=(lab,file,ttl,mk,sub)=>{ const pb=el('button','copybtn',lab); pb.type='button'; bx.appendChild(pb);
+        pb.addEventListener('click',()=>{ const d=new Date(); svDownload(mk(d,cadCalc()),'cad-'+file+'-'+d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'.pdf',msg,ttl+' · '+fmt(w)+' kg',{brand:1,sub}); }); };
+      go('PDF: indicaciones médicas','indicaciones','Cetoacidosis diabética',(d,C)=>{ const D=hdr(d); D[1].t+=' · pH '+(ph.value||'—')+' · HCO3 '+(hco.value||'—')+' mmol/L · Deshidratación '+deh.value+'% · Bolo '+(nv(bolo)||10)+' mL/kg · Insulina '+ins.value+' U/kg/h · Bolsas con '+(C.h?'Hartmann':'solución salina 0.9%');
+        return D.concat(cPDF(cadFn().concat(['⚠ Insulina y potasio son de alto riesgo: doble verificación antes de administrar. Ajuste al protocolo de su hospital.']),true)).concat([{k:'blank',l:['Elaboró','Firma']},SRC]); },'INDICACIONES MÉDICAS');
+      go('PDF: hoja de enfermería','enfermeria','CAD · hoja de enfermería',(d,C)=>hdr(d).concat([
+        {k:'box',hl:1,t:'1.ª vía periférica: soluciones (sistema de 2 bolsas)',l:[bagA(C),bagB(C),'Las dos bolsas van por la misma vía (conexión en Y); el goteo de cada una se ajusta con la tabla.']},
+        {k:'tbl',cap:'Goteo según la glucometría capilar · total '+fmt(C.rate)+' mL/h (sumando las 2 bolsas)',head:['Glucemia (mg/dL)','Bolsa A mL/h','Bolsa B mL/h','Glucosa'],rows:C.dist,small:true},
+        {k:'box',hl:1,t:'2.ª vía periférica: insulina',l:['Insulina rápida 50 U + solución salina 0.9% 50 mL (concentración 1 U/mL).','Infundir a '+fmt(C.ir)+' mL/h = '+fmt(C.ir)+' U/h ('+ins.value+' U/kg/h), en bomba de infusión; no suspender sin indicación médica.','⚠ Cambiar la preparación de insulina cada 4 horas.']},
+        {k:'box',t:'Controles',l:['Glucometría capilar cada hora; ajustar el goteo de las bolsas con la tabla.','Electrolitos séricos, química sanguínea y gasometría venosa cada 2–4 horas.','Signos vitales, estado neurológico y balance de líquidos cada hora.']},
+        {k:'ev',t:'Avisar al médico',l:['⚠ Glucemia <100 mg/dL (pasar todo por la bolsa B) o si baja más de 90 mg/dL en 1 hora.','⚠ Cefalea, vómito, bradicardia, hipertensión, irritabilidad o somnolencia (posible edema cerebral).','⚠ Insulina y potasio: doble verificación antes de administrar.']},
+        {k:'blank',l:['Elaboró','Firma']},SRC]),'HOJA DE ENFERMERÍA');
+      go('PDF: registro horario','registro','CAD · registro horario',(d,C)=>hdr(d).concat([
+        {k:'pt',t:'Total de líquidos: '+fmt(C.rate)+' mL/h (bolsa A + bolsa B) · Insulina: '+fmt(C.ir)+' mL/h · Glucometría capilar cada hora · Electrolitos, química sanguínea y gasometría venosa cada 2–4 h'},
+        {k:'tbl',head:['Fecha y hora','Glucemia (mg/dL)','Bolsa A mL/h','Bolsa B mL/h','Total mL/h','Insulina mL/h','Iniciales'],rows:Array.from({length:24},()=>['','','','','','','']),rh:21,grid:1,w:[.18,.16,.14,.14,.13,.14,.11]},
+        {k:'note',t:'Goteo de cada bolsa según la glucemia: ver la hoja de enfermería. Glucemia <100 mg/dL: avisar al médico.'}]),'REGISTRO HORARIO');
+      b.appendChild(bx); b.appendChild(msg); }
     srcLine(b,'ISPAD 2022 (Glaser N et al., Pediatr Diabetes 2022;23:835-56) y Harriet Lane 2027, eFig. 10.1.');
     srcLine(b,'tabla de reparto de las 2 bolsas según la glucemia: Two-bag system, Hurley Medical Center, Glob Pediatr Health 2021 (doi:10.1177/2333794X21991532). Ajústela al protocolo de su hospital.',1); }
 
@@ -5856,18 +5896,49 @@ function pdfTxt(s){ return String(s).replace(/≥/g,'>=').replace(/≤/g,'<=').r
 function pdfW(s,size,bold){ const W=bold?PDFW.b:PDFW.r; let w=0; for(const ch of pdfTxt(s)){ const c=ch.normalize('NFD').charCodeAt(0); w+= c>=32&&c<=126? W[c-32] : 556; } return w*size/1000; }
 function pdfEsc(s){ let o=''; for(const ch of pdfTxt(s)){ let c=ch.charCodeAt(0); if(PDFMAP[ch]) c=PDFMAP[ch]; else if(c>255) c=63;
   o+= c===40||c===41||c===92? '\\'+ch : c<32||c>126? '\\'+c.toString(8).padStart(3,'0') : ch; } return o; }
-function svPDF(D,title){
-  const PW=612, PH=792, M=26, CW=PW-2*M, pages=[]; let ops=[], y=M;
+// o.brand: estilo con colores de marca (encabezado marino, tarjetas lavanda, tablas con encabezado marino y filas alternas, avisos en coral)
+const PC={mar:[.082,.243,.541],lav:[.482,.525,.965],lavt:[.925,.933,.996],lavl:[.85,.87,.98],tur:[.133,.722,.773],cor:[.761,.208,.286],cort:[1,.922,.933],dur:[1,.839,.71],mut:[.29,.333,.471],ink:[.078,.137,.29],w:[1,1,1]};
+function svPDF(D,title,o){
+  const B=!!(o&&o.brand), PW=612, PH=792, M=26, CW=PW-2*M, pages=[]; let ops=[], y=M;
   const page=()=>{ if(ops.length) pages.push(ops.join('\n')); ops=[]; y=M; };
   const need=h=>{ if(y+h>PH-M) page(); };
-  const text=(x,yy,s,size,bold)=>ops.push('BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x.toFixed(1)+' '+(PH-yy).toFixed(1)+' Td ('+pdfEsc(s)+') Tj ET');
+  const text=(x,yy,s,size,bold,col)=>ops.push((col?col.join(' ')+' rg ':'')+'BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x.toFixed(1)+' '+(PH-yy).toFixed(1)+' Td ('+pdfEsc(s)+') Tj ET'+(col?' 0 g':''));
+  const rr=(x,yy,w,h,r,fill,stroke)=>{ const X=x, Y=PH-yy-h, k=0.5523*r; ops.push((fill?fill.join(' ')+' rg ':'')+(stroke?stroke.join(' ')+' RG 0.8 w ':'')+
+    (X+r).toFixed(1)+' '+Y.toFixed(1)+' m '+(X+w-r).toFixed(1)+' '+Y.toFixed(1)+' l '+(X+w-r+k).toFixed(1)+' '+Y.toFixed(1)+' '+(X+w).toFixed(1)+' '+(Y+r-k).toFixed(1)+' '+(X+w).toFixed(1)+' '+(Y+r).toFixed(1)+' c '+
+    (X+w).toFixed(1)+' '+(Y+h-r).toFixed(1)+' l '+(X+w).toFixed(1)+' '+(Y+h-r+k).toFixed(1)+' '+(X+w-r+k).toFixed(1)+' '+(Y+h).toFixed(1)+' '+(X+w-r).toFixed(1)+' '+(Y+h).toFixed(1)+' c '+
+    (X+r).toFixed(1)+' '+(Y+h).toFixed(1)+' l '+(X+r-k).toFixed(1)+' '+(Y+h).toFixed(1)+' '+X.toFixed(1)+' '+(Y+h-r+k).toFixed(1)+' '+X.toFixed(1)+' '+(Y+h-r).toFixed(1)+' c '+
+    X.toFixed(1)+' '+(Y+r).toFixed(1)+' l '+X.toFixed(1)+' '+(Y+r-k).toFixed(1)+' '+(X+r-k).toFixed(1)+' '+Y.toFixed(1)+' '+(X+r).toFixed(1)+' '+Y.toFixed(1)+' c h '+(fill&&stroke?'B':fill?'f':'S')+' 0 g 0 G'); };
+  const circ=(cx,cy,r,fill)=>rr(cx-r,cy-r,2*r,2*r,r,fill,null);
   const rect=(x,yy,w,h,fill,stroke)=>ops.push((fill==null?'':Array.isArray(fill)?fill.join(' ')+' rg ':fill+' g ')+(stroke?'0.55 G 0.5 w ':'')+x.toFixed(1)+' '+(PH-yy-h).toFixed(1)+' '+w.toFixed(1)+' '+h.toFixed(1)+' re '+(fill!=null&&stroke?'B':fill!=null?'f':'S')+' 0 g');
   const wrap=(s,size,bold,w)=>{ const out=[]; let ln=''; String(s).split(/\s+/).forEach(wd=>{ const t=ln?ln+' '+wd:wd; if(pdfW(t,size,bold)>w&&ln){ out.push(ln); ln=wd; } else ln=t; }); if(ln) out.push(ln); return out; };
   const para=(s,size,bold,x,w,lead)=>{ wrap(s,size,bold,w).forEach(l=>{ need(lead); text(x,y+size,l,size,bold); y+=lead; }); };
-  text(M,y+8,'PEDIA LIFE · DOSIS PEDIÁTRICAS Y NEONATALES',7,false); y+=12;
-  text(M,y+19,title||'Signos vitales del paciente',19,true); y+=26;
+  if(B){ rr(M,y,CW,50,10,PC.mar,null); text(M+16,y+17,'PEDIA LIFE · '+((o&&o.sub)||'HOJA DE INDICACIONES'),7.5,true,PC.lavl); text(M+16,y+38,title||'',18,true,PC.w);
+    const hl='@pedia.life'; text(M+CW-16-pdfW(hl,8,false),y+17,hl,8,false,PC.lavl); y+=58;
+    const cy=y+3; circ(M+3,cy,3,PC.tur); rr(M+10,cy-0.6,CW/2-22,1.2,0.6,PC.lav,null); circ(M+CW/2,cy,3.5,PC.cor); rr(M+CW/2+12,cy-0.6,CW/2-22,1.2,0.6,PC.lav,null); circ(M+CW-3,cy,3,PC.dur); y+=14; }
+  else { text(M,y+8,'PEDIA LIFE · DOSIS PEDIÁTRICAS Y NEONATALES',7,false); y+=12;
+  text(M,y+19,title||'Signos vitales del paciente',19,true); y+=26; }
   D.forEach(b=>{
-    if(b.k==='blank'){ const w=CW/b.l.length; b.l.forEach((l,i)=>{ const x=M+i*w; text(x,y+14,l+':',9,true); ops.push('0.4 G 0.6 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S'); }); y+=22; }
+    const bw=b=>{ const f=b.w||(b.l.length===3&&b.l[0]==='Nombre'? [.5,.17,.33] : b.l.map(()=>1/b.l.length)); let a=0; return f.map(v=>{ const r={x:M+a*CW,w:v*CW}; a+=v; return r; }); };
+    if(B && b.k==='blank'){ const W=bw(b); b.l.forEach((l,i)=>{ const x=W[i].x, w=W[i].w; text(x,y+14,l+':',9,true,PC.mar); ops.push(PC.lav.join(' ')+' RG 0.8 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S 0 G'); }); y+=24; return; }
+    if(B && b.k==='pt'){ const L=wrap(b.t,8.5,true,CW-20), h=L.length*11+10; need(h); rr(M,y,CW,h,8,PC.lavt,null); L.forEach((l,i)=>text(M+10,y+14+i*11,l,8.5,true,PC.mar)); y+=h+8; return; }
+    if(b.k==='kpi'){ const n=b.l.length, g=8, bw=(CW-g*(n-1))/n, h=36; need(h+8); b.l.forEach(([lb,v],i)=>{ const x=M+i*(bw+g); rr(x,y,bw,h,8,PC.lavt,null); rr(x,y+8,3,h-16,1.5,PC.lav,null);
+        text(x+10,y+14,wrap(lb,7,false,bw-14)[0],7,false,PC.mut); let fs=13; while(pdfW(v,fs,true)>bw-14&&fs>8) fs-=0.5; text(x+10,y+29,v,fs,true,PC.mar); }); y+=h+8; return; }
+    if(B && b.k==='li'){ const z=b.sz||10, L=wrap(b.t,z,false,CW-24); need(L.length*(z+3)+3); circ(M+7,y+z/2+1.5,7,PC.mar); const nt=String(b.n); text(M+7-pdfW(nt,8,true)/2,y+z/2+4.3,nt,8,true,PC.w);
+      L.forEach(l=>{ text(M+22,y+z,l,z,false,PC.ink); y+=z+3; }); y+=3; return; }
+    if(b.k==='box'){ const lines=b.l.map(t=>({w:t.startsWith('⚠'),l:wrap(t.replace(/^⚠\s*/,''),9,t.startsWith('⚠'),CW-34)})), h=lines.reduce((a,x)=>a+x.l.length*12+2,0)+28; need(h);
+      const hh=b.hl&&B?8:0; need(hh); if(B){ rr(M,y,CW,h+hh,10,PC.lavt,null); if(b.hl){ rr(M,y,CW,26,10,PC.mar,null); rr(M,y+14,CW,12,0,PC.mar,null); text(M+14,y+17.5,b.t.toUpperCase(),10.5,true,PC.w); } else text(M+14,y+15,b.t.toUpperCase(),8.5,true,PC.mar); } else { rect(M,y,CW,h,null,true); text(M+8,y+13,b.t,9.5,true); } y+=24+hh;
+      lines.forEach(x=>{ if(B) circ(M+17,y+5,2,x.w?PC.cor:PC.lav); x.l.forEach(l=>{ text(M+24,y+9,l,9,x.w,B?(x.w?PC.cor:PC.ink):null); y+=12; }); y+=2; }); y+=10; return; }
+    if(B && b.k==='tbl'){ const n=b.head.length, ws=(b.w||b.head.map(()=>1/n)).map(f=>f*CW), rh=b.rh||12.5, fs=8.5; need((b.cap?18:0)+rh*(b.rows.length+1)+8);
+      if(b.cap){ text(M,y+11,b.cap,10.5,true,PC.mar); y+=17; }
+      rr(M,y,CW,rh,5,PC.mar,null); let x=M; b.head.forEach((c,j)=>{ const tw=pdfW(c,fs,true); text(j? x+(ws[j]-tw)/2 : x+8, y+rh/2+fs*0.35, c, fs, true, PC.w); x+=ws[j]; }); y+=rh;
+      b.rows.forEach((r,i)=>{ if(i%2) rr(M,y,CW,rh,0,PC.lavt,null); if(b.grid){ let gx=M; ws.forEach(cw=>{ ops.push(PC.lavl.join(' ')+' RG 0.6 w '+gx.toFixed(1)+' '+(PH-y-rh).toFixed(1)+' '+cw.toFixed(1)+' '+rh.toFixed(1)+' re S 0 G'); gx+=cw; }); } let x=M; r.forEach((c,j)=>{ const s=String(c), tw=pdfW(s,fs,!j); text(j? x+(ws[j]-tw)/2 : x+8, y+rh/2+fs*0.35, s, fs, !j, j?PC.ink:PC.mar); x+=ws[j]; }); y+=rh; });
+      ops.push(PC.lavl.join(' ')+' RG 0.8 w '+M+' '+(PH-y).toFixed(1)+' m '+(M+CW)+' '+(PH-y).toFixed(1)+' l S 0 G'); y+=8; return; }
+    if(B && b.k==='note'){ wrap(b.t,8.5,false,CW).forEach(l=>{ need(11); text(M,y+8.5,l,8.5,false,PC.mut); y+=11; }); y+=5; return; }
+    if(B && b.k==='ev'){ const lines=b.l.map(s=>wrap(s.replace(/^⚠\s*/,''),9,true,CW-34)); const h=lines.reduce((a,x)=>a+x.length*12,0)+30; need(h);
+      rr(M,y,CW,h,10,PC.cort,null); rr(M,y,4,h,2,PC.cor,null); text(M+14,y+15,b.t.toUpperCase(),8.5,true,PC.cor); y+=24;
+      lines.forEach(L=>{ circ(M+17,y+5,2,PC.cor); L.forEach(l=>{ text(M+24,y+9,l,9,true,PC.cor); y+=12; }); }); y+=10; return; }
+    if(B && b.k==='src'){ y+=2; need(12); text(M,y+8,'Fuentes',8,true,PC.mar); y+=11; b.l.forEach(s=>wrap(s,7,false,CW).forEach(l=>{ need(9); text(M,y+7,l,7,false,PC.mut); y+=9; })); return; }
+    if(b.k==='blank'){ const W=bw(b); b.l.forEach((l,i)=>{ const x=W[i].x, w=W[i].w; text(x,y+14,l+':',9,true); ops.push('0.4 G 0.6 w '+(x+pdfW(l+':',9,true)+4).toFixed(1)+' '+(PH-y-16).toFixed(1)+' m '+(x+w-12).toFixed(1)+' '+(PH-y-16).toFixed(1)+' l S'); }); y+=22; }
     else if(b.k==='pt'){ para(b.t,9,true,M,CW,12); y+=6; }
     else if(b.k==='ev'){ const lines=b.l.map(s=>({w:s.startsWith('⚠'),l:wrap((s.startsWith('⚠')?'(!) ':'')+s,9,s.startsWith('⚠'),CW-16)})); const h=lines.reduce((a,x)=>a+x.l.length*12,0)+24;
       need(h); rect(M,y,CW,h,null,true); text(M+8,y+13,b.t,9.5,true); y+=19; lines.forEach(x=>x.l.forEach(l=>{ text(M+8,y+9,l,9,x.w); y+=12; })); y+=12; }
@@ -5877,23 +5948,23 @@ function svPDF(D,title){
           text(j||b.small? x+(w-tw)/2 : x+6, y+rh/2+fs*0.35, s, fs, bb); x+=w; }); y+=rh; };
       row(b.head,true,0.9); b.rows.forEach(r=>row(r,false,null)); y+=b.small?12:6; }
     else if(b.k==='note'){ para(b.t,8.5,false,M,CW,11); y+=5; }
-    else if(b.k==='li'){ need(14); text(M,y+10,b.n+'.',10,true); para(b.t,10,false,M+18,CW-18,13); y+=5; }
+    else if(b.k==='li'){ const z=b.sz||10; need(z+4); text(M,y+z,b.n+'.',z,true); para(b.t,z,false,M+18,CW-18,z+3); y+=b.sz?3:5; }
     else if(b.k==='src'){ y+=4; need(12); text(M,y+8,'Fuentes',8,true); y+=11; b.l.forEach(s=>para(s,7,false,M,CW,9)); }
   });
-  y+=6; para('Herramienta de apoyo; no sustituye el juicio clínico ni los protocolos institucionales.',8,false,M,CW,10);
+  y+=6; if(B){ need(10); text(M,y+8,'Herramienta de apoyo; no sustituye el juicio clínico ni los protocolos institucionales.',8,false,PC.mut); y+=10; } else para('Herramienta de apoyo; no sustituye el juicio clínico ni los protocolos institucionales.',8,false,M,CW,10);
   page();
   // ensamblar el archivo
   const objs=['<< /Type /Catalog /Pages 2 0 R >>',null,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
   const kids=[]; pages.forEach((c,i)=>{ const pn=objs.length+1; kids.push(pn+' 0 R'); objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+PW+' '+PH+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+(pn+1)+' 0 R >>');
-    const foot='BT /F1 7 Tf '+M+' 20 Td ('+pdfEsc('Pedia Life · página '+(i+1)+' de '+pages.length)+') Tj ET'; const st=c+'\n'+foot; objs.push('<< /Length '+st.length+' >>\nstream\n'+st+'\nendstream'); });
+    const foot=(B? PC.mar.join(' ')+' rg ':'')+'BT /F1 7 Tf '+M+' 20 Td ('+pdfEsc('Pedia Life'+(B?' · @pedia.life':'')+' · página '+(i+1)+' de '+pages.length)+') Tj ET'+(B?' 0 g':''); const st=c+'\n'+foot; objs.push('<< /Length '+st.length+' >>\nstream\n'+st+'\nendstream'); });
   objs[1]='<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+pages.length+' >>';
   let out='%PDF-1.4\n', off=[]; objs.forEach((o,i)=>{ off.push(out.length); out+=(i+1)+' 0 obj\n'+o+'\nendobj\n'; });
   const xr=out.length; out+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n'+off.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('');
   out+='trailer\n<< /Size '+(objs.length+1)+' /Root 1 0 R >>\nstartxref\n'+xr+'\n%%EOF\n';
   return out;
 }
-async function svDownload(D,name,msg,title){
-  const blob=new Blob([svPDF(D,title)],{type:'application/pdf'});
+async function svDownload(D,name,msg,title,o){
+  const blob=new Blob([svPDF(D,title,o)],{type:'application/pdf'});
   try{ const dl=window.claude&&claude.use? await claude.use('downloads') : null;
     if(dl){ await dl.save({filename:name,data:blob}); msg.textContent='PDF listo.'; return; } }
   catch(e){ const c=e&&e.code; if(c==='declined'){ msg.textContent='Descarga cancelada.'; return; } if(c==='rate_limited'){ msg.textContent='Ya hay una descarga pendiente; intente de nuevo en un momento.'; return; } }
