@@ -552,7 +552,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
 .ck b{display:block;font-size:17px;font-weight:600;color:var(--marino-tx);line-height:1.3;overflow-wrap:anywhere}
 .ctabw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 10px 32px}
 .ctab{border-collapse:collapse;font-size:13px;width:100%}.ctab th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:4px 8px;border-bottom:1px solid var(--ash)}
-.ctab td{padding:5px 8px;border-bottom:1px solid var(--ash);vertical-align:top;white-space:nowrap}.ctab tr:last-child td{border-bottom:0}.ctab td:first-child{white-space:normal}
+.ctab td{padding:5px 8px;border-bottom:1px solid var(--ash);vertical-align:top;white-space:nowrap}.ctab tr:last-child td{border-bottom:0}.ctab td:first-child{white-space:normal}.ctab.cwrap td,.cout .ctab.cwrap td.cnum{white-space:normal}
 @media (max-width:520px){ .ctabw{margin-left:0} .ctab{font-size:12px} .ctab th,.ctab td,.cout .ctab td.cnum{padding:4px 3px;white-space:normal} .ctab th{white-space:normal} }
 .cstep{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}.cstep p{margin:0}
 .cstep .cn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--marino);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;margin-top:1px}
@@ -706,7 +706,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 22 de noviembre de 2026. Versión de la página: 2026.11.22.</p>
+    <p>Última revisión del contenido: 22 de noviembre de 2026. Versión de la página: 2026.11.22b.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -774,7 +774,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 22 de noviembre de 2026. · <span id="pver" data-v="2026.11.22">Versión 2026.11.22</span></p>
+    <p class="fupd">Última actualización del contenido: 22 de noviembre de 2026. · <span id="pver" data-v="2026.11.22b">Versión 2026.11.22b</span></p>
   </footer>
 </div>
 
@@ -4651,8 +4651,8 @@ function cRender(o,r){ o.textContent=''; let n=0;
     if(x.k){ const g=el('div','ckpi'); x.k.filter(Boolean).forEach(([l,v])=>{ const c=el('div','ck'); c.append(el('span',null,l),el('b',null,v)); g.appendChild(c); }); o.appendChild(g); return; }
     if(x.s){ const p=el('div','cstep'); p.appendChild(el('span','cn',String(++n))); p.appendChild(cRich(el('p'),x.s)); o.appendChild(p); return; }
     if(x.h){ o.appendChild(el('p','chd',x.h)); return; }
-    if(x.t){ const wr=el('div','ctabw'), tb=el('table','ctab'), tr=el('tr'); x.t.h.forEach(c=>tr.appendChild(el('th',null,c))); tb.appendChild(tr);
-      x.t.r.forEach(r=>{ const rr=el('tr'); r.forEach((c,j)=>rr.appendChild(el('td',j&&j<3?'cnum':null,c))); tb.appendChild(rr); }); wr.appendChild(tb); o.appendChild(wr); return; }
+    if(x.t){ const wr=el('div','ctabw'), tb=el('table','ctab'+(x.t.wrap?' cwrap':'')), tr=el('tr'); x.t.h.forEach(c=>tr.appendChild(el('th',null,c))); tb.appendChild(tr);
+      x.t.r.forEach(r=>{ const rr=el('tr'); r.forEach((c,j)=>rr.appendChild(el('td',j&&j<(x.t.num||3)?'cnum':null,c))); tb.appendChild(rr); }); wr.appendChild(tb); o.appendChild(wr); return; }
     if(x.n){ o.appendChild(cRich(el('p','cnote'),x.n)); } }); }
 function liveOut(b,ins,fn){ const o=el('div','cout'); b.appendChild(o); const up=()=>cRender(o,fn()); ins.forEach(i=>i.addEventListener('input',up)); ins.forEach(i=>i.addEventListener('change',up)); up(); }
 const nv=i=>{ const v=parseFloat(String(i.value).replace(',','.')); return isFinite(v)?v:null; };
@@ -5627,12 +5627,19 @@ function renderCalc(){
   // Transfusiones
   { const b=ccard(g,'ra','Hemoderivados','');
     const hb=numIn(7), hbm=numIn(10); const m=el('div','mini'); m.append(fld('Hb actual',hb),fld('Hb meta',hbm)); b.appendChild(m);
-    liveOut(b,[hb,hbm],()=>{ const a=nv(hb), t=nv(hbm), vse=neo?85:P.years!=null&&P.years<1?80:75; const L=[];
-      if(a!=null&&t!=null&&t>a){ const v=w*vse*(t-a)/20; L.push('Concentrado eritrocitario: '+fmt(Math.min(v,20*w))+' mL (VSE '+vse+' mL/kg × ΔHb / Hb del concentrado ≈20 g/dL)'+(v>20*w?' — limitado a 20 mL/kg por evento.':'.')); }
-      L.push('Regla práctica CE: 10–15 mL/kg = '+fmt(10*w)+'–'+fmt(15*w)+' mL en 2–4 h (máx. 4 h por unidad); sube Hb ~2–3 g/dL. En choque hemorrágico (PALS): CE 10 mL/kg = '+fmt(10*w)+' mL si persiste mala perfusión tras 2–3 bolos de 20 mL/kg.');
-      L.push('Plaquetas: 10–15 mL/kg = '+fmt(10*w)+'–'+fmt(15*w)+' mL (o 1 U de donador único por cada 10 kg = '+fmt(Math.max(1,Math.round(w/10)))+' U), en 30–60 min.');
-      L.push('Plasma fresco congelado: 10–15 mL/kg = '+fmt(10*w)+'–'+fmt(15*w)+' mL en 30–60 min.');
-      L.push('Crioprecipitado: 1 U por cada 5–10 kg = '+fmt(Math.max(1,Math.round(w/10)))+'–'+fmt(Math.max(1,Math.round(w/5)))+' U.');
+    liveOut(b,[hb,hbm],()=>{ const a=nv(hb), t=nv(hbm), vse=neo?85:P.years!=null&&P.years<1?80:75; const L=[], K=[];
+      const u10=Math.max(1,Math.round(w/10)), u5=Math.max(1,Math.round(w/5)), r=(x,y)=>fmt(x*w)+'–'+fmt(y*w)+' mL';
+      let ce=null; if(a!=null&&t!=null&&t>a){ const v=w*vse*(t-a)/20; ce={v:Math.min(v,20*w),cap:v>20*w}; K.push(['Concentrado eritrocitario (Hb '+fmt(a)+' → '+fmt(t)+')',fmt(ce.v)+' mL']); }
+      K.push(['Plaquetas',r(10,15)],['Plasma fresco congelado',r(10,15)],['Crioprecipitado',fmt(u10)+'–'+fmt(u5)+' U']);
+      L.push({k:K});
+      if(ce) L.push({n:'Concentrado eritrocitario por fórmula: VSE '+vse+' mL/kg × ΔHb / Hb del concentrado (≈20 g/dL) = '+fmt(ce.v)+' mL'+(ce.cap?' — limitado a 20 mL/kg por evento.':'.')});
+      L.push({t:{wrap:1,num:2,h:['Producto','Volumen','Pasar en'],r:[
+        ['Concentrado eritrocitario (10–15 mL/kg)',r(10,15),'2–4 h (máx. 4 h por unidad)'],
+        ['Plaquetas (10–15 mL/kg, o 1 U de donador único por cada 10 kg)',r(10,15)+' o '+fmt(u10)+' U','30–60 min'],
+        ['Plasma fresco congelado (10–15 mL/kg)',r(10,15),'30–60 min'],
+        ['Crioprecipitado (1 U por cada 5–10 kg)',fmt(u10)+'–'+fmt(u5)+' U','—']]}});
+      L.push({n:'El concentrado eritrocitario a 10–15 mL/kg sube la Hb ~2–3 g/dL.'});
+      L.push('⚠ Choque hemorrágico (PALS): concentrado eritrocitario 10 mL/kg = '+fmt(10*w)+' mL si persiste la mala perfusión tras 2–3 bolos de cristaloide de 20 mL/kg.');
       return L; }); }
 
   // Quemados
