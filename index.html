@@ -723,7 +723,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23c.</p>
+    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23d.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -791,7 +791,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23c">Versión 2026.11.23c</span></p>
+    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23d">Versión 2026.11.23d</span></p>
   </footer>
 </div>
 
@@ -4676,7 +4676,7 @@ function cPDF(L,brand){ const D=[], warn=[]; let n=0;
     if(typeof x==='string'){ if(x.startsWith('⚠')) warn.push(x); else D.push({k:'note',t:x}); return; }
     if(x.k){ if(brand){ D.push({k:'kpi',l:x.k.filter(Boolean)}); return; } D.push({k:'tbl',cap:'Resumen',head:['Concepto','Valor'],rows:x.k.filter(Boolean).map(([a,v])=>[a,v]),small:true,w:[.62,.38]}); return; }
     if(x.s){ D.push({k:'li',n:++n,t:x.s,sz:brand?8.5:9}); return; }
-    if(x.t){ D.push({k:'tbl',head:x.t.h.map(h=>h||' '),rows:x.t.r,small:true}); return; }
+    if(x.t){ D.push({k:'tbl',head:x.t.h.map(h=>h||' '),rows:x.t.r,small:true,w:x.t.w}); return; }
     if(x.n){ D.push({k:'note',t:x.n}); return; }
     if(x.h){ D.push({k:'note',t:x.h}); } });
   if(warn.length) D.push({k:'ev',t:'Avisos',l:warn}); return D; }
@@ -5789,6 +5789,68 @@ function renderCalc(){
     srcLine(b,'Harriet Lane 2027, formulario (bicarbonato de sodio): fórmulas, dilución a 0.5 mEq/mL, máx. 1 mEq/kg/h, contraindicaciones e incompatibilidades. Presentación 7.5%: Cuadro Básico IMSS.');
     srcLine(b,'Reponer la mitad del déficit y recontrolar: uso habitual.',1); }
 
+  // Requerimientos calóricos: OMS (FAO/WHO/UNU 1985) y Schofield (peso), con factores de ESPGHAN 2018 / ASPEN 2017
+  accSec(g,'Por peso: nutrición');
+  { const b=ccard(g,'ci','Requerimientos calóricos · OMS y Schofield','Gasto energético en reposo (GER) por ecuación, multiplicado por el factor según la situación clínica.'); b.style.gridColumn='span 2';
+    const sx=selIn([['m','Masculino'],['f','Femenino']],P.sx||'m'),
+      fac=selIn([['1','1.0 · Crítico, fase aguda (sin factores)'],['1.2','1.2 · Acostado despierto o sentado quieto'],['1.3','1.3 · Crítico, fase estable'],['1.45','1.4–1.5 · Recuperación tras la fase aguda'],['1.5','1.5 · Actividad ligera'],['1.7','1.7 · Actividad moderada'],['2','2.0 · Actividad intensa, o NP estable (doble del GER)']],'1.3');
+    const m=el('div','mini'); m.append(fld('Sexo',sx),fld('Situación / factor',fac)); b.appendChild(m);
+    const kcFn=(pdf)=>{ const y=P.years, f=+fac.value, r0=x=>Math.round(x), L=[];
+      if(y==null) return ['Capture la edad del paciente (arriba, en «Más datos») para elegir la ecuación por edad.'];
+      if(!pdf){ const N=nutDx(P,sx.value,w);
+        if(N.err) L.push({n:'Antropometría (OMS): '+N.err});
+        else if(N.rows.length){ L.push({h:'Antropometría · '+N.G.ref+(N.G.corr?' · edad corregida':'')}); L.push({t:{h:['Indicador','Medida','Z','Percentil','Interpretación'],r:N.rows,wrap:1}}); L.push('Diagnóstico nutricional: '+N.dx); L.push({h:'Requerimientos calóricos'}); } }
+      const M=sx.value==='m', band=y<3?0:y<10?1:y<18?2:3, bn=['<3 años','3–10 años','10–18 años','18–30 años'][band];
+      const WHO=[[60.9,-54,61.0,-51],[22.7,495,22.5,499],[17.5,651,12.2,746],[15.3,679,14.7,496]][band], SCH=[[59.5,-30.4,58.3,-31.1],[22.7,504.3,20.3,485.9],[17.7,658.2,13.4,692.6],[15.0,692.2,14.8,486.6]][band];
+      const eq=(c)=>M? c[0]*w+c[1] : c[2]*w+c[3], ew=eq(WHO), es=eq(SCH);
+      // Schofield con peso y talla (talla en m): Schofield 1985, convertido de MJ a kcal (× 239)
+      const SPT=band<3&&P.talla? (M?[[0.167,1517.4,-617.6],[19.6,130.3,414.9],[16.25,137.2,515.5]]:[[16.25,1023.2,-413.5],[16.97,161.8,371.2],[8.365,465.6,200]])[band] : null;
+      const et=SPT? SPT[0]*w+SPT[1]*P.talla/100+SPT[2] : null;
+      const fl=f===1.45?'1.4–1.5':fmt(f), mt=x=>f===1.45? fmt(r0(1.4*x))+'–'+fmt(r0(1.5*x)) : fmt(r0(f*x));
+      const mk=x=>f===1.45? fmt(r0(1.4*x/w))+'–'+fmt(r0(1.5*x/w)) : fmt(r0(f*x/w));
+      const pre=(P.ga!=null&&P.ga<37&&(P.epm==null||P.epm<44))||w<2.5;
+      if(pre){ L.push('⚠ Prematuro o peso <2.5 kg: las ecuaciones de OMS y Schofield no se hicieron para prematuros y dan valores muy bajos. Use los aportes por kg de ESPGHAN.');
+        L.push({s:'Prematuro: enteral 115–140 kcal/kg/d = '+fmt(r0(115*w))+'–'+fmt(r0(140*w))+' kcal/d; más de 140 solo si no crece con aporte proteico adecuado, sin pasar de 160 kcal/kg/d (ESPGHAN 2022). Parenteral 90–120 kcal/kg/d = '+fmt(r0(90*w))+'–'+fmt(r0(120*w))+' kcal/d; el primer día al menos 45–55 kcal/kg/d (ESPGHAN 2018).'}); }
+      L.push({k:[['Meta · OMS (×'+fl+')',mt(ew)+' kcal/d'],['Meta · Schofield peso (×'+fl+')',mt(es)+' kcal/d'],et!=null&&['Meta · Schofield peso y talla (×'+fl+')',mt(et)+' kcal/d']]});
+      L.push({t:{h:['Ecuación ('+bn+', '+(M?'masculino':'femenino')+')','GER kcal/d','Meta kcal/d','Meta kcal/kg/d'],r:[
+        ['OMS: '+fmt(M?WHO[0]:WHO[2])+' × peso '+((M?WHO[1]:WHO[3])<0?'− ':'+ ')+fmt(Math.abs(M?WHO[1]:WHO[3])),fmt(r0(ew)),mt(ew),mk(ew)],
+        ['Schofield (peso): '+fmt(M?SCH[0]:SCH[2])+' × peso '+((M?SCH[1]:SCH[3])<0?'− ':'+ ')+fmt(Math.abs(M?SCH[1]:SCH[3])),fmt(r0(es)),mt(es),mk(es)]].concat(et!=null?[['Schofield (peso y talla): '+String(SPT[0])+' × peso + '+String(SPT[1])+' × talla m '+(SPT[2]<0?'− ':'+ ')+fmt(Math.abs(SPT[2])),fmt(r0(et)),mt(et),mk(et)]]:[]),wrap:1,w:[.58,.13,.15,.14]}});
+      if(et==null) L.push({n:band<3?'Capture la talla para calcular también Schofield con peso y talla.':'Schofield con peso y talla: solo hasta los 18 años en esta herramienta.'});
+      if(f===1) L.push({s:'Paciente crítico: usar el GER sin agregar factores de estrés (ASPEN 2017); lo ideal es la calorimetría indirecta. Meta: aportar al menos dos tercios del requerimiento al final de la primera semana en UCIP. Proteína mínima 1.5 g/kg/d = '+fmt(Math.round(1.5*w*10)/10)+' g/d.'});
+      if(f===1.3) L.push({s:'Fase estable de la enfermedad crítica: ~1.3 × GER para permitir crecimiento y recuperación (ESPGHAN 2018).'});
+      if(f===1.45) L.push({s:'Después de la fase aguda se ha sugerido 1.4–1.5 × GER medido (ESPGHAN 2018).'});
+      if(f>=1.5&&f<2||f===1.2) L.push({s:'Factores de actividad física (PAL) de ESPGHAN 2018: 1.0 dormido, 1.2 acostado despierto, 1.4–1.5 de pie o sentado, 1.5 ligera, 1.7 moderada, 2.0 intensa. La mayoría de los niños hospitalizados tiene actividad baja.'});
+      if(f===2) L.push({s:'Nutrición parenteral en pacientes estables: puede calcularse como el doble del GER (ESPGHAN 2018).'});
+      const gr=y<0.25?175:y<0.5?60:y<1?20:20;
+      L.push('Costo energético del crecimiento: ≈'+gr+' kcal/d a esta edad (≈30 kcal/d en el pico de crecimiento puberal).');
+      L.push({n:'Recuperación nutricional (catch-up): el requerimiento calculado con el peso real puede multiplicarse por 1.2–1.5, o más en desnutrición grave (ESPGHAN 2018). Ajustar con la curva de crecimiento.'});
+      const PN=[['Pretérmino',null,'90–120','45–55 (día 1)'],['0–1 año','75–85','60–65','45–50'],['1–7 años','65–75','55–60','40–45'],['7–12 años','55–65','40–55','30–40'],['12–18 años','30–55','25–40','20–30']];
+      const pi=y<1?1:y<7?2:y<12?3:4;
+      if(!pdf){ L.push({h:'Nutrición parenteral: kcal/kg/d por fase (ESPGHAN 2018)'});
+      L.push({t:{h:['Edad','Recuperación','Estable','Aguda'],r:PN.slice(1).map((r,i)=>[(i+1===pi?'• ':'')+r[0],r[1],r[2],r[3]])}}); }
+      const rng=(s)=>{ const [a,c]=s.split('–').map(Number); return fmt(r0(a*w))+'–'+fmt(r0(c*w)); };
+      L.push('Este paciente con NP'+(pdf?' (ESPGHAN 2018, '+PN[pi][0]+': '+PN[pi][1]+' / '+PN[pi][2]+' / '+PN[pi][3]+' kcal/kg/d)':'')+': recuperación '+rng(PN[pi][1])+' kcal/d · estable '+rng(PN[pi][2])+' kcal/d · aguda '+rng(PN[pi][3])+' kcal/d.');
+      const HLR={m:[[3,'1,078–1,245'],[4,'1,188–1,393'],[5,'1,318–1,567'],[6,'1,421–1,703'],[7,'1,578–1,918'],[8,'1,700–2,086'],[9,'1,803–2,224'],[10,'1,959–2,460'],[11,'2,134–2,712'],[12,'2,234–2,843'],[13,'2,482–3,205'],[14,'2,623–3,407'],[15,'2,744–3,596'],[16,'2,755–3,615'],[17,'2,859–3,777'],[18,'2,856–3,764']],
+        f:[[3,'1,075–1,217'],[4,'1,166–1,374'],[5,'1,241–1,517'],[6,'1,325–1,665'],[7,'1,396–1,770'],[8,'1,470–1,896'],[9,'1,606–2,083'],[10,'1,737–2,253'],[11,'1,856–2,445'],[12,'2,009–2,607'],[13,'2,017–2,648'],[14,'2,139–2,784'],[15,'2,082–2,720'],[16,'2,138–2,781'],[17,'2,178–2,819'],[18,'2,114–2,760']]};
+      if(y>=3){ const a=Math.min(18,Math.floor(y)), rr=HLR[sx.value].find(x=>x[0]===a); if(rr) L.push({n:'Referencia en niños sanos (HL 2027, tabla 21.5; DRI 2023, peso y talla medianos, según actividad): '+a+' años, '+(M?'masculino':'femenino')+': '+rr[1]+' kcal/d.'}); }
+      L.push('⚠ Las ecuaciones son poco exactas en enfermedad crítica, desnutrición, obesidad y enfermedades crónicas: vigilar peso, crecimiento y tolerancia, y usar calorimetría indirecta cuando esté disponible.');
+      return L; };
+    liveOut(b,[sx,fac],()=>kcFn(false));
+    { const msg=el('span','svmsg'), bx=el('div','cadpdf'), pb=el('button','copybtn','Descargar PDF: antropometría, diagnóstico y requerimientos'); pb.type='button'; bx.appendChild(pb); b.appendChild(bx); b.appendChild(msg);
+      pb.addEventListener('click',()=>{ const d=new Date(), z=n=>String(n).padStart(2,'0'), N=nutDx(P,sx.value,w), D=[{k:'blank',l:['Nombre','Cama','Expediente']}];
+        const imc=P.talla? w/Math.pow(P.talla/100,2) : null;
+        D.push({k:'pt',t:'Edad: '+(P.days!=null?wAgeTxt(P):'sin capturar')+(N.G&&N.G.corr?' (se usa edad corregida)':'')+' · Sexo: '+(sx.value==='m'?'masculino':'femenino')+' · Peso: '+fmt(w)+' kg · Talla: '+(P.talla!=null?fmt(P.talla)+' cm':'sin capturar')+(imc?' · IMC: '+fmt(Math.round(imc*10)/10)+' kg/m²':'')+(P.ga!=null?' · EG: '+fmt(P.ga)+' sem':'')+' · Fecha: '+d.toLocaleDateString('es-MX')});
+        if(N.err) D.push({k:'note',t:'Antropometría (OMS): '+N.err});
+        else if(N.rows.length){ D.push({k:'tbl',cap:'Antropometría · '+N.G.ref+(N.G.corr?' · edad corregida por prematurez':''),head:['Indicador','Medida','Puntaje Z','Percentil','Interpretación'],w:[.27,.15,.13,.13,.32],rows:N.rows,small:true});
+          D.push({k:'box',hl:1,t:'Diagnóstico nutricional',l:[N.dx]});
+          D.push({k:'note',t:'Desnutrición por peso para la talla o IMC (AND/ASPEN; HL 2027, tabla 21.13): leve −1 a −1.9 Z, moderada −2 a −2.9 Z, grave −3 Z o menos. '+(N.G.ref.startsWith('OMS 2006')?'Menores de 5 años (OMS): sobrepeso mayor de +2 Z, obesidad mayor de +3 Z.':'5 a 19 años (OMS 2007): sobrepeso mayor de +1 Z, obesidad mayor de +2 Z.')+' Talla baja: menor del p5 (HL 2027).'}); }
+        const K=cPDF(kcFn(true),true);
+        D.push(...K, {k:'blank',l:['Elaboró','Firma']},
+          {k:'src',l:[SV.src.who,'Harriet Lane 2027: tablas 21.5 y 21.13, cap. 21. Fuentes externas a los libros: Schofield con peso y talla (Schofield WN, Hum Nutr Clin Nutr 1985;39 Suppl 1:5-41); Schofield por peso, factores y NP (ESPGHAN/ESPEN/ESPR/CSPEN 2018, Joosten K et al., Clin Nutr 2018;37:2309-14); OMS FAO/WHO/UNU 1985 (Borsani B et al., Front Pediatr 2023;11:1097152); paciente crítico SCCM/ASPEN 2017 (Mehta NM et al., Pediatr Crit Care Med 2017;18:675-715); prematuros ESPGHAN 2022 (Embleton ND et al., J Pediatr Gastroenterol Nutr 2023;76:248-68). Generado con Pedia Life.']});
+        svDownload(D,'evaluacion-nutricional-'+d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'.pdf',msg,'Evaluación nutricional · '+fmt(w)+' kg',{brand:1,sub:'CRECIMIENTO Y REQUERIMIENTOS'}); }); }
+    srcLine(b,'Harriet Lane 2027, tabla 21.5 (rangos de energía en niños sanos).');
+    srcLine(b,'Schofield con peso y talla: Schofield WN, Hum Nutr Clin Nutr 1985;39 Suppl 1:5-41 (coeficientes cotejados con Borsani 2023 y la aplicación nutricional de la SEGHNP). Schofield por peso: ESPGHAN/ESPEN/ESPR/CSPEN 2018, Energía (Joosten K et al., Clin Nutr 2018;37:2309-14), tabla 1, con sus factores y tabla de NP. OMS: FAO/WHO/UNU 1985 (coeficientes según Borsani B et al., Front Pediatr 2023;11:1097152, tabla 1). Paciente crítico: SCCM/ASPEN 2017 (Mehta NM et al., Pediatr Crit Care Med 2017;18:675-715). Prematuros: ESPGHAN 2022 (Embleton ND et al., J Pediatr Gastroenterol Nutr 2023;76:248-68).',1); }
+
   // CAD
   accSec(g,'Por peso: urgencias');
   { const b=ccard(g,'vig','Cetoacidosis diabética (Harriet Lane 2027 / ISPAD 2022)','Diagnóstico (ISPAD 2022): glucosa >200 mg/dL (o DM conocida) + pH <7.3 o HCO₃ <18 + cetonemia/cetonuria. El Harriet Lane 2027 usa HCO₃ <15.');
@@ -6091,6 +6153,12 @@ function whoCalc(P,sx,w){ // lista de indicadores con puntaje Z y percentil
   } else return {err:'La referencia de la OMS llega a los 19 años.'};
   return {R,corr,ref:d<=1856?'OMS 2006 (0–5 años)':'OMS 2007 (5–19 años)',imc};
 }
+function nutDx(P,sx,w){ // antropometría OMS y diagnóstico nutricional (mismos cortes que la hoja de signos vitales)
+  const G=whoCalc(P,sx,w); if(G.err) return {err:G.err};
+  const sg=z=>(z>0?'+':'')+fmt(z), nut=G.R.find(r=>/^Peso para la (longitud|talla)/.test(r.nm))||G.R.find(r=>/IMC/.test(r.nm)), tl=G.R.find(r=>/(Talla|Longitud) para la edad/.test(r.nm));
+  const a=nut? (nut.i==='Normal'?'Estado nutricional normal':nut.i)+' ('+nut.nm.replace(/^IMC/,'IMC').replace(/^P/,'p')+' '+sg(nut.z)+' Z, p'+nut.p+')' : 'Sin clasificar: capture la talla para calcular peso para la talla o IMC';
+  const b=tl? (tl.i==='Normal'?'talla adecuada para la edad':'talla baja para la edad')+' ('+sg(tl.z)+' Z, p'+tl.p+')' : null;
+  return {G,dx:a+(b?'; '+b:'')+'.',rows:G.R.map(r=>[r.nm,whoVal(r),sg(r.z),r.p,r.i])}; }
 function whoVal(r){ return /IMC/.test(r.nm)? fmt(Math.round(r.val*10)/10)+' kg/m²' : /Peso/.test(r.nm)? fmt(r.val)+' kg' : fmt(r.val)+' cm'; }
 function svRng(a,b){ return a>b? '—' : a===b? String(a) : a+'–'+b; }
 function svDoc(P,sx,m){ // hoja exclusiva del paciente: tablas P5 / P50 / P90 / P95 de FC, FR y TA
