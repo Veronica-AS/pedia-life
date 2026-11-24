@@ -723,7 +723,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23d.</p>
+    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23e.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -791,7 +791,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23d">Versión 2026.11.23d</span></p>
+    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23e">Versión 2026.11.23e</span></p>
   </footer>
 </div>
 
@@ -5797,7 +5797,8 @@ function renderCalc(){
     const m=el('div','mini'); m.append(fld('Sexo',sx),fld('Situación / factor',fac)); b.appendChild(m);
     const kcFn=(pdf)=>{ const y=P.years, f=+fac.value, r0=x=>Math.round(x), L=[];
       if(y==null) return ['Capture la edad del paciente (arriba, en «Más datos») para elegir la ecuación por edad.'];
-      if(!pdf){ const N=nutDx(P,sx.value,w);
+      const N=nutDx(P,sx.value,w), useI=!!(N.over&&N.pi&&N.pi<w), wk=useI? N.pi : w, wkt=useI? 'peso ideal '+fmt(Math.round(wk*10)/10)+' kg' : 'peso real '+fmt(w)+' kg';
+      if(!pdf){
         if(N.err) L.push({n:'Antropometría (OMS): '+N.err});
         else if(N.rows.length){ L.push({h:'Antropometría · '+N.G.ref+(N.G.corr?' · edad corregida':'')}); L.push({t:{h:['Indicador','Medida','Z','Percentil','Interpretación'],r:N.rows,wrap:1}}); L.push('Diagnóstico nutricional: '+N.dx); L.push({h:'Requerimientos calóricos'}); } }
       const M=sx.value==='m', band=y<3?0:y<10?1:y<18?2:3, bn=['<3 años','3–10 años','10–18 años','18–30 años'][band];
@@ -5816,7 +5817,7 @@ function renderCalc(){
         ['OMS: '+fmt(M?WHO[0]:WHO[2])+' × peso '+((M?WHO[1]:WHO[3])<0?'− ':'+ ')+fmt(Math.abs(M?WHO[1]:WHO[3])),fmt(r0(ew)),mt(ew),mk(ew)],
         ['Schofield (peso): '+fmt(M?SCH[0]:SCH[2])+' × peso '+((M?SCH[1]:SCH[3])<0?'− ':'+ ')+fmt(Math.abs(M?SCH[1]:SCH[3])),fmt(r0(es)),mt(es),mk(es)]].concat(et!=null?[['Schofield (peso y talla): '+String(SPT[0])+' × peso + '+String(SPT[1])+' × talla m '+(SPT[2]<0?'− ':'+ ')+fmt(Math.abs(SPT[2])),fmt(r0(et)),mt(et),mk(et)]]:[]),wrap:1,w:[.58,.13,.15,.14]}});
       if(et==null) L.push({n:band<3?'Capture la talla para calcular también Schofield con peso y talla.':'Schofield con peso y talla: solo hasta los 18 años en esta herramienta.'});
-      if(f===1) L.push({s:'Paciente crítico: usar el GER sin agregar factores de estrés (ASPEN 2017); lo ideal es la calorimetría indirecta. Meta: aportar al menos dos tercios del requerimiento al final de la primera semana en UCIP. Proteína mínima 1.5 g/kg/d = '+fmt(Math.round(1.5*w*10)/10)+' g/d.'});
+      if(f===1) L.push({s:'Paciente crítico: usar el GER sin agregar factores de estrés (ASPEN 2017); lo ideal es la calorimetría indirecta. Meta: aportar al menos dos tercios del requerimiento al final de la primera semana en UCIP. Proteína mínima 1.5 g/kg/d = '+fmt(Math.round(1.5*wk*10)/10)+' g/d'+(useI?' (con el peso ideal, como indica ASPEN 2017 en obesidad)':'')+'.'});
       if(f===1.3) L.push({s:'Fase estable de la enfermedad crítica: ~1.3 × GER para permitir crecimiento y recuperación (ESPGHAN 2018).'});
       if(f===1.45) L.push({s:'Después de la fase aguda se ha sugerido 1.4–1.5 × GER medido (ESPGHAN 2018).'});
       if(f>=1.5&&f<2||f===1.2) L.push({s:'Factores de actividad física (PAL) de ESPGHAN 2018: 1.0 dormido, 1.2 acostado despierto, 1.4–1.5 de pie o sentado, 1.5 ligera, 1.7 moderada, 2.0 intensa. La mayoría de los niños hospitalizados tiene actividad baja.'});
@@ -5828,8 +5829,10 @@ function renderCalc(){
       const pi=y<1?1:y<7?2:y<12?3:4;
       if(!pdf){ L.push({h:'Nutrición parenteral: kcal/kg/d por fase (ESPGHAN 2018)'});
       L.push({t:{h:['Edad','Recuperación','Estable','Aguda'],r:PN.slice(1).map((r,i)=>[(i+1===pi?'• ':'')+r[0],r[1],r[2],r[3]])}}); }
-      const rng=(s)=>{ const [a,c]=s.split('–').map(Number); return fmt(r0(a*w))+'–'+fmt(r0(c*w)); };
-      L.push('Este paciente con NP'+(pdf?' (ESPGHAN 2018, '+PN[pi][0]+': '+PN[pi][1]+' / '+PN[pi][2]+' / '+PN[pi][3]+' kcal/kg/d)':'')+': recuperación '+rng(PN[pi][1])+' kcal/d · estable '+rng(PN[pi][2])+' kcal/d · aguda '+rng(PN[pi][3])+' kcal/d.');
+      const rng=(s)=>{ const [a,c]=s.split('–').map(Number); return fmt(r0(a*wk))+'–'+fmt(r0(c*wk)); };
+      L.push('Si recibe nutrición parenteral (ESPGHAN 2018, '+PN[pi][0]+': recuperación '+PN[pi][1]+', estable '+PN[pi][2]+', aguda '+PN[pi][3]+' kcal/kg/d; con '+wkt+'): recuperación '+rng(PN[pi][1])+' kcal/d · estable '+rng(PN[pi][2])+' kcal/d · aguda '+rng(PN[pi][3])+' kcal/d. La fase de recuperación aplica también a pacientes fuera de terapia intensiva.');
+      if(useI) L.push('⚠ '+(/Obesidad/.test(N.dx)?'Obesidad':'Sobrepeso')+': los kcal/kg de NP y la proteína se calculan con el peso ideal para la talla ('+fmt(Math.round(wk*10)/10)+' kg = IMC mediano de la OMS para su edad × talla²). Con el peso real ('+fmt(w)+' kg) se sobreestiman. Las ecuaciones de OMS y Schofield de arriba usan el peso real.');
+      else if(N.over&&!N.pi) L.push('⚠ Sobrepeso u obesidad: capture la talla para calcular la NP con el peso ideal; con el peso real se sobreestima.');
       const HLR={m:[[3,'1,078–1,245'],[4,'1,188–1,393'],[5,'1,318–1,567'],[6,'1,421–1,703'],[7,'1,578–1,918'],[8,'1,700–2,086'],[9,'1,803–2,224'],[10,'1,959–2,460'],[11,'2,134–2,712'],[12,'2,234–2,843'],[13,'2,482–3,205'],[14,'2,623–3,407'],[15,'2,744–3,596'],[16,'2,755–3,615'],[17,'2,859–3,777'],[18,'2,856–3,764']],
         f:[[3,'1,075–1,217'],[4,'1,166–1,374'],[5,'1,241–1,517'],[6,'1,325–1,665'],[7,'1,396–1,770'],[8,'1,470–1,896'],[9,'1,606–2,083'],[10,'1,737–2,253'],[11,'1,856–2,445'],[12,'2,009–2,607'],[13,'2,017–2,648'],[14,'2,139–2,784'],[15,'2,082–2,720'],[16,'2,138–2,781'],[17,'2,178–2,819'],[18,'2,114–2,760']]};
       if(y>=3){ const a=Math.min(18,Math.floor(y)), rr=HLR[sx.value].find(x=>x[0]===a); if(rr) L.push({n:'Referencia en niños sanos (HL 2027, tabla 21.5; DRI 2023, peso y talla medianos, según actividad): '+a+' años, '+(M?'masculino':'femenino')+': '+rr[1]+' kcal/d.'}); }
@@ -5846,10 +5849,10 @@ function renderCalc(){
           D.push({k:'note',t:'Desnutrición por peso para la talla o IMC (AND/ASPEN; HL 2027, tabla 21.13): leve −1 a −1.9 Z, moderada −2 a −2.9 Z, grave −3 Z o menos. '+(N.G.ref.startsWith('OMS 2006')?'Menores de 5 años (OMS): sobrepeso mayor de +2 Z, obesidad mayor de +3 Z.':'5 a 19 años (OMS 2007): sobrepeso mayor de +1 Z, obesidad mayor de +2 Z.')+' Talla baja: menor del p5 (HL 2027).'}); }
         const K=cPDF(kcFn(true),true);
         D.push(...K, {k:'blank',l:['Elaboró','Firma']},
-          {k:'src',l:[SV.src.who,'Harriet Lane 2027: tablas 21.5 y 21.13, cap. 21. Fuentes externas a los libros: Schofield con peso y talla (Schofield WN, Hum Nutr Clin Nutr 1985;39 Suppl 1:5-41); Schofield por peso, factores y NP (ESPGHAN/ESPEN/ESPR/CSPEN 2018, Joosten K et al., Clin Nutr 2018;37:2309-14); OMS FAO/WHO/UNU 1985 (Borsani B et al., Front Pediatr 2023;11:1097152); paciente crítico SCCM/ASPEN 2017 (Mehta NM et al., Pediatr Crit Care Med 2017;18:675-715); prematuros ESPGHAN 2022 (Embleton ND et al., J Pediatr Gastroenterol Nutr 2023;76:248-68). Generado con Pedia Life.']});
+          {k:'src',l:[SV.src.who,'Harriet Lane 2027: tablas 21.5 y 21.13, cap. 21. Fuentes externas a los libros: Schofield con peso y talla (Schofield WN, Hum Nutr Clin Nutr 1985;39 Suppl 1:5-41); Schofield por peso, factores y NP (ESPGHAN/ESPEN/ESPR/CSPEN 2018, Joosten K et al., Clin Nutr 2018;37:2309-14); OMS FAO/WHO/UNU 1985 (Borsani B et al., Front Pediatr 2023;11:1097152); paciente crítico SCCM/ASPEN 2017 (Mehta NM et al., Pediatr Crit Care Med 2017;18:675-715); peso ideal para la talla en sobrepeso u obesidad (IMC mediano OMS × talla²): uso habitual; prematuros ESPGHAN 2022 (Embleton ND et al., J Pediatr Gastroenterol Nutr 2023;76:248-68). Generado con Pedia Life.']});
         svDownload(D,'evaluacion-nutricional-'+d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'.pdf',msg,'Evaluación nutricional · '+fmt(w)+' kg',{brand:1,sub:'CRECIMIENTO Y REQUERIMIENTOS'}); }); }
     srcLine(b,'Harriet Lane 2027, tabla 21.5 (rangos de energía en niños sanos).');
-    srcLine(b,'Schofield con peso y talla: Schofield WN, Hum Nutr Clin Nutr 1985;39 Suppl 1:5-41 (coeficientes cotejados con Borsani 2023 y la aplicación nutricional de la SEGHNP). Schofield por peso: ESPGHAN/ESPEN/ESPR/CSPEN 2018, Energía (Joosten K et al., Clin Nutr 2018;37:2309-14), tabla 1, con sus factores y tabla de NP. OMS: FAO/WHO/UNU 1985 (coeficientes según Borsani B et al., Front Pediatr 2023;11:1097152, tabla 1). Paciente crítico: SCCM/ASPEN 2017 (Mehta NM et al., Pediatr Crit Care Med 2017;18:675-715). Prematuros: ESPGHAN 2022 (Embleton ND et al., J Pediatr Gastroenterol Nutr 2023;76:248-68).',1); }
+    srcLine(b,'Schofield con peso y talla: Schofield WN, Hum Nutr Clin Nutr 1985;39 Suppl 1:5-41 (coeficientes cotejados con Borsani 2023 y la aplicación nutricional de la SEGHNP). Schofield por peso: ESPGHAN/ESPEN/ESPR/CSPEN 2018, Energía (Joosten K et al., Clin Nutr 2018;37:2309-14), tabla 1, con sus factores y tabla de NP. OMS: FAO/WHO/UNU 1985 (coeficientes según Borsani B et al., Front Pediatr 2023;11:1097152, tabla 1). Paciente crítico: SCCM/ASPEN 2017 (Mehta NM et al., Pediatr Crit Care Med 2017;18:675-715; proteína con peso ideal en obesidad). Peso ideal para la talla en sobrepeso u obesidad (IMC mediano de la OMS × talla²) para la NP: uso habitual. Prematuros: ESPGHAN 2022 (Embleton ND et al., J Pediatr Gastroenterol Nutr 2023;76:248-68).',1); }
 
   // CAD
   accSec(g,'Por peso: urgencias');
@@ -6151,14 +6154,16 @@ function whoCalc(P,sx,w){ // lista de indicadores con puntaje Z y percentil
     if(t) add('Talla para la edad',t,T.hfa7,mo,false,'talla');
     if(imc) add('IMC para la edad',imc,T.bfa7,mo,true,'imc7');
   } else return {err:'La referencia de la OMS llega a los 19 años.'};
-  return {R,corr,ref:d<=1856?'OMS 2006 (0–5 años)':'OMS 2007 (5–19 años)',imc};
+  let pi=null; if(t){ const lm= d<=1856? whoLMS(T.bfa[sx],Math.round(d)) : whoLMS(T.bfa7[sx],mo); if(lm) pi=lm[1]*Math.pow(t/100,2); }
+  return {R,corr,ref:d<=1856?'OMS 2006 (0–5 años)':'OMS 2007 (5–19 años)',imc,pi};
 }
 function nutDx(P,sx,w){ // antropometría OMS y diagnóstico nutricional (mismos cortes que la hoja de signos vitales)
   const G=whoCalc(P,sx,w); if(G.err) return {err:G.err};
   const sg=z=>(z>0?'+':'')+fmt(z), nut=G.R.find(r=>/^Peso para la (longitud|talla)/.test(r.nm))||G.R.find(r=>/IMC/.test(r.nm)), tl=G.R.find(r=>/(Talla|Longitud) para la edad/.test(r.nm));
   const a=nut? (nut.i==='Normal'?'Estado nutricional normal':nut.i)+' ('+nut.nm.replace(/^IMC/,'IMC').replace(/^P/,'p')+' '+sg(nut.z)+' Z, p'+nut.p+')' : 'Sin clasificar: capture la talla para calcular peso para la talla o IMC';
   const b=tl? (tl.i==='Normal'?'talla adecuada para la edad':'talla baja para la edad')+' ('+sg(tl.z)+' Z, p'+tl.p+')' : null;
-  return {G,dx:a+(b?'; '+b:'')+'.',rows:G.R.map(r=>[r.nm,whoVal(r),sg(r.z),r.p,r.i])}; }
+  const over=!!nut&&/Sobrepeso|Obesidad/.test(nut.i);
+  return {G,dx:a+(b?'; '+b:'')+'.',rows:G.R.map(r=>[r.nm,whoVal(r),sg(r.z),r.p,r.i]),over,pi:G.pi}; }
 function whoVal(r){ return /IMC/.test(r.nm)? fmt(Math.round(r.val*10)/10)+' kg/m²' : /Peso/.test(r.nm)? fmt(r.val)+' kg' : fmt(r.val)+' cm'; }
 function svRng(a,b){ return a>b? '—' : a===b? String(a) : a+'–'+b; }
 function svDoc(P,sx,m){ // hoja exclusiva del paciente: tablas P5 / P50 / P90 / P95 de FC, FR y TA
