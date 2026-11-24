@@ -293,6 +293,7 @@ label.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 
   /* tokens de tema: texto vs relleno (ver modo oscuro abajo) */
   --bg:#F6F7FE; --surface:#fff; --marino-tx:#153E8A; --coral-fill:#C23549; --lav-fill:#4C57D1;
   --chart-grid:#E6E8F2; --chart-tx:#6B7280; --amb-bg:#FFE3B3; --amb-tx:#6B3A00;
+  --q1:#FFD54A; --q2:#FF9F43; --q3:#E0464F;
   color-scheme:light;
 }
 /* modo oscuro para la guardia: automático según el sistema, o forzado con el botón de tema (data-theme) */
@@ -558,6 +559,20 @@ body.paroon .metfloat{bottom:auto;top:12px}
 .cadpdf{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.cadpdf .copybtn{margin:0}
 .cstep{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}.cstep p{margin:0}
 .cstep .cn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--marino);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+
+/* quemaduras: diagrama */
+.qbtools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}
+.qbseg{display:inline-flex;gap:4px;padding:3px;border-radius:52px;background:var(--bg)}
+.qbb{border:0;border-radius:52px;padding:7px 12px;font:500 13px Poppins,sans-serif;background:transparent;color:var(--ink);cursor:pointer}
+.qbb[aria-pressed="true"]{background:var(--marino);color:#fff}
+.qbb.qg1{background:var(--q1);color:#1d1d1d}.qbb.qg2{background:var(--q2);color:#1d1d1d}.qbb.qg3{background:var(--q3);color:#fff}
+.qbb.qg1,.qbb.qg2,.qbb.qg3{opacity:.55}
+.qbb.qg1[aria-pressed="true"],.qbb.qg2[aria-pressed="true"],.qbb.qg3[aria-pressed="true"]{opacity:1;outline:2px solid var(--marino-tx);outline-offset:2px}
+.qbsize{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);margin:4px 0}
+.qbsize input{flex:1;max-width:220px}
+.qbwrap{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.qbcv{width:min(100%,300px);height:auto;aspect-ratio:1/2;background:var(--bg);border-radius:18px;user-select:none;-webkit-user-select:none}
+.qbside{display:flex;flex-direction:column;gap:8px}
 </style>
 <meta name="theme-color" content="#153E8A" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1626" media="(prefers-color-scheme: dark)">
@@ -708,7 +723,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
       <li><b>Infusiones:</b> regla del 6 y del 0.6, ajustadas a la concentración máxima de Taketomo (pediatría) o NeoFax (neonatos).</li>
     </ul>
     <h3>Revisión</h3>
-    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23b.</p>
+    <p>Última revisión del contenido: 23 de noviembre de 2026. Versión de la página: 2026.11.23c.</p>
   </section>
 
   <section class="panel view hidden legal" id="v-privacidad" aria-labelledby="h-priv">
@@ -776,7 +791,7 @@ body.paroon .metfloat{bottom:auto;top:12px}
     </div>
     <div class="fbrow" id="fbrow"><span>¿Encontraste un error o tienes una sugerencia?</span><a class="fbbtn" id="fbfoot" href="#" target="_blank" rel="noopener">Escríbeme</a></div>
     <nav class="lglinks" aria-label="Información legal"><a href="#referencias">Referencias y metodología</a><a href="#privacidad">Aviso de privacidad</a><a href="#terminos">Términos de uso</a></nav>
-    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23b">Versión 2026.11.23b</span></p>
+    <p class="fupd">Última actualización del contenido: 23 de noviembre de 2026. · <span id="pver" data-v="2026.11.23c">Versión 2026.11.23c</span></p>
   </footer>
 </div>
 
@@ -5538,6 +5553,85 @@ function escNew(g,P){
       return L; }); }
 }
 
+/* ---------- Quemaduras: diagrama de Lund-Browder (HL 2027, fig. 2.4) ---------- */
+// Estado solo en memoria (sobrevive a re-render; «Nuevo paciente» lo borra).
+const QB={f:null,b:null,undo:[],view:'f',tool:'paint',g:2,r:14,age:null};
+const QB_W=300, QB_H=600, QB_S=2; // malla de cálculo 300×600; dibujo a 2× para que se vea nítido
+// Columnas de la figura: A cabeza, B muslo, C pierna (cada cara)
+const QB_AGE=[['0','<1 año',9.5,2.75,2.5],['1','1 año',8.5,3.25,2.5],['5','5 años',6.5,4,2.75],['10','10 años',5.5,4.25,3],['15','15 años',4.5,4.5,3.25],['ad','Adulto',3.5,4.75,3.5]];
+function qbAgeDef(P){ const y=P.years; if(y==null) return '5'; return y<1?'0':y<5?'1':y<10?'5':y<15?'10':y<18?'15':'ad'; }
+// Espejo horizontal de un trazo SVG (todas las órdenes usadas llevan pares x,y)
+function qbMir(d){ let i=0; return d.replace(/-?\d+(\.\d+)?/g,n=>(i++%2===0)?String(QB_W-+n):n); }
+// Trazos del lado izquierdo de la pantalla; el derecho es su espejo.
+const QBP={
+  head:'M150 16 C177 16 192 37 192 59 C201 53 205 75 191 79 C186 98 170 110 150 110 C130 110 114 98 109 79 C95 75 99 53 108 59 C108 37 123 16 150 16 Z',
+  trunkF:'M139 104 L161 104 L162 121 C180 124 196 130 204 142 C210 172 207 204 205 232 C204 266 209 300 207 332 L93 332 C91 300 96 266 95 232 C93 204 90 172 96 142 C104 130 120 124 138 121 Z',
+  trunkB:'M139 104 L161 104 L162 121 C180 124 196 130 204 142 C210 172 207 204 205 232 C204 258 207 278 207 294 L93 294 C93 278 96 258 95 232 C93 204 90 172 96 142 C104 130 120 124 138 121 Z',
+  glut:'M93 292 L150 292 L150 353 C130 358 106 354 96 341 C91 327 91 307 93 292 Z',
+  genit:'M139 322 L161 322 C161 337 156 345 150 348 C144 345 139 337 139 322 Z',
+  thigh:'M94 316 L150 316 L148 338 C145 382 143 412 142 448 L110 448 C107 412 100 372 94 332 Z',
+  leg:'M110 446 L142 446 C144 472 141 506 138 543 L119 543 C116 506 106 474 110 446 Z',
+  footF:'M119 539 L139 539 C140 552 142 563 141 573 C137 582 118 584 106 579 C98 575 102 565 111 557 C116 551 118 545 119 539 Z',
+  footB:'M119 539 L139 539 C141 553 142 567 137 577 C131 586 120 584 116 576 C112 566 116 551 119 539 Z',
+  arm:'M104 134 C90 136 82 148 80 166 C77 190 72 214 67 236 L92 241 C97 218 102 198 106 176 Z',
+  fore:'M67 233 L92 238 C90 266 83 294 78 320 L56 318 C58 290 62 261 67 233 Z',
+  hand:'M56 315 L78 317 C82 330 84 344 82 358 C80 370 72 377 64 375 C56 373 52 363 52 351 C48 347 44 339 46 333 C48 328 52 330 54 334 C54 326 55 320 56 315 Z'};
+// Zonas: [id, nombre, % (número o 'A'|'B'|'C'), trazo]. Las del final se dibujan encima.
+// Vista frontal: el lado derecho del paciente queda a la izquierda de la pantalla; en la espalda, al revés.
+function qbZones(v){ const fr=v==='f', D=fr?'der.':'izq.', I=fr?'izq.':'der.', M=qbMir;
+  const Z=[
+    ['musloL','Muslo '+D,'B',QBP.thigh], ['musloR','Muslo '+I,'B',M(QBP.thigh)],
+    ['piernaL','Pierna '+D,'C',QBP.leg], ['piernaR','Pierna '+I,'C',M(QBP.leg)],
+    ['pieL',fr?'Pie der. (dorso)':'Pie izq. (planta y talón)',1.75,fr?QBP.footF:QBP.footB], ['pieR',fr?'Pie izq. (dorso)':'Pie der. (planta y talón)',1.75,M(fr?QBP.footF:QBP.footB)],
+    ['tronco',fr?'Tronco anterior y cuello':'Espalda y nuca',13,fr?QBP.trunkF:QBP.trunkB] ];
+  if(!fr) Z.push(['glutL','Glúteo izq.',2.5,QBP.glut],['glutR','Glúteo der.',2.5,M(QBP.glut)]);
+  else Z.push(['genit','Genitales',1,QBP.genit]);
+  Z.push(['brazoL','Brazo '+D,2,QBP.arm], ['brazoR','Brazo '+I,2,M(QBP.arm)],
+    ['antebL','Antebrazo '+D,1.5,QBP.fore], ['antebR','Antebrazo '+I,1.5,M(QBP.fore)],
+    ['manoL','Mano '+D,1.5,QBP.hand], ['manoR','Mano '+I,1.5,M(QBP.hand)],
+    ['cab',fr?'Cabeza (cara anterior)':'Cabeza (cara posterior)','A',QBP.head]);
+  return Z; }
+// Detalles de línea (no cuentan como zona)
+function qbDecor(v){ const M=qbMir, h=['M60 362 L60 373','M66 364 L66 375','M72 362 L72 372'];
+  const both=a=>a.concat(a.map(M));
+  if(v==='f') return { lines: both(['M128 54 C132 50 140 50 144 53','M104 300 C116 310 128 318 139 322','M120 446 C125 450 132 450 137 446','M113 572 C114 576 117 577 120 576'].concat(h)).concat(['M142 87 C147 93 153 93 158 87','M147 73 C149 77 151 77 153 73','M141 22 C147 10 160 12 156 22']),
+    dots:[[136,64,3.6],[164,64,3.6],[150,262,2.4]], blush:[[126,80],[174,80]] };
+  return { lines: both(['M118 170 C124 182 136 184 142 176','M122 446 C127 442 134 442 138 446','M122 574 C126 579 132 579 136 574'].concat(h)).concat(['M112 56 C116 30 132 20 150 20 C168 20 184 30 188 56','M146 36 C150 30 156 32 154 38','M150 140 L150 284']),
+    dots:[], blush:[] }; }
+const QB_MAP={};
+function qbMap(v){ if(QB_MAP[v]) return QB_MAP[v];
+  const Z=qbZones(v), id=new Uint8Array(QB_W*QB_H), cv=document.createElement('canvas'); cv.width=QB_W; cv.height=QB_H; const x=cv.getContext('2d',{willReadFrequently:true});
+  Z.forEach((z,i)=>{ x.clearRect(0,0,QB_W,QB_H); x.fillStyle='#000'; x.fill(new Path2D(z[3]));
+    const a=x.getImageData(0,0,QB_W,QB_H).data; for(let k=0;k<id.length;k++) if(a[k*4+3]>=128) id[k]=i+1; });
+  const tot=new Array(Z.length+1).fill(0), cx=new Array(Z.length+1).fill(0), cy=new Array(Z.length+1).fill(0);
+  for(let k=0;k<id.length;k++){ const z=id[k]; if(z){ tot[z]++; cx[z]+=k%QB_W; cy[z]+=(k/QB_W)|0; } }
+  return QB_MAP[v]={Z,id,tot,cx:cx.map((s,i)=>tot[i]?s/tot[i]:0),cy:cy.map((s,i)=>tot[i]?s/tot[i]:0)}; }
+// Capas fijas por vista y tema: relleno (con contorno grueso) y líneas (bordes de zona sin las partes tapadas + detalles)
+const QB_LAY={};
+function qbLayers(v,col){ const key=v+'|'+col.body+col.line+col.sep; if(QB_LAY[key]) return QB_LAY[key];
+  const M=qbMap(v), W=QB_W*QB_S, H=QB_H*QB_S, mk=()=>{ const c=document.createElement('canvas'); c.width=W; c.height=H; return c; };
+  const rgb=a=>'rgb('+a.join(',')+')', P=M.Z.map(z=>new Path2D(z[3]));
+  const fill=mk(), f=fill.getContext('2d'); f.scale(QB_S,QB_S); f.lineJoin='round';
+  f.strokeStyle=rgb(col.line); f.lineWidth=4.5; P.forEach(p=>f.stroke(p)); f.fillStyle=rgb(col.body); P.forEach(p=>f.fill(p));
+  const lines=mk(), l=lines.getContext('2d'), tmp=mk(), t=tmp.getContext('2d',{willReadFrequently:true});
+  P.forEach((p,i)=>{ t.setTransform(1,0,0,1,0,0); t.clearRect(0,0,W,H); t.setTransform(QB_S,0,0,QB_S,0,0); t.lineJoin='round'; t.strokeStyle='rgba('+col.sep.join(',')+',.9)'; t.lineWidth=1.3; t.setLineDash([4,3]); t.stroke(p);
+    const im=t.getImageData(0,0,W,H), d=im.data;
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){ const j=(y*W+x)*4; if(!d[j+3]) continue; const z=M.id[((y/QB_S)|0)*QB_W+((x/QB_S)|0)]; if(z>i+1||z===0) d[j+3]=0; }
+    t.putImageData(im,0,0); l.drawImage(tmp,0,0); });
+  const D=qbDecor(v); l.setTransform(QB_S,0,0,QB_S,0,0); l.lineCap='round'; l.lineJoin='round'; l.strokeStyle=rgb(col.line); l.lineWidth=1.6;
+  D.lines.forEach(s=>l.stroke(new Path2D(s))); l.fillStyle=rgb(col.line); D.dots.forEach(([x,y,r])=>{ l.beginPath(); l.arc(x,y,r,0,Math.PI*2); l.fill(); });
+  l.fillStyle='rgba(255,122,138,.28)'; D.blush.forEach(([x,y])=>{ l.beginPath(); l.ellipse(x,y,8,5,0,0,Math.PI*2); l.fill(); });
+  return QB_LAY[key]={fill,lines}; }
+function qbArr(v){ if(!QB[v]) QB[v]=new Uint8Array(QB_W*QB_H); return QB[v]; }
+function qbPct(z,age){ const c=QB_AGE.find(a=>a[0]===age)||QB_AGE[2]; return z[2]==='A'?c[2]:z[2]==='B'?c[3]:z[2]==='C'?c[4]:z[2]; }
+function qbCalc(age){ const R={1:0,2:0,3:0,rows:[]};
+  ['f','b'].forEach(v=>{ const M=qbMap(v), A=qbArr(v), cnt=M.Z.map(()=>[0,0,0,0]);
+    for(let k=0;k<A.length;k++){ const z=M.id[k]; if(z&&A[k]) cnt[z-1][A[k]]++; }
+    M.Z.forEach((z,i)=>{ const p=qbPct(z,age), t=M.tot[i+1]; if(!t) return; const d=[0,1,2,3].map(g=>cnt[i][g]/t*p);
+      if(d[1]+d[2]+d[3]>0.005){ R[1]+=d[1]; R[2]+=d[2]; R[3]+=d[3]; R.rows.push([z[1]+(v==='f'?'':' · espalda'),p,d]); } }); });
+  return R; }
+function qbReset(){ QB.f=null; QB.b=null; QB.undo=[]; QB.age=null; }
+
 /* ---------- calculadoras ---------- */
 function renderCalc(){
   const h=$('#v-calc'); vhead(h,'Urgencias','Calculadoras');
@@ -5777,9 +5871,69 @@ function renderCalc(){
       L.push('⚠ Choque hemorrágico (PALS): concentrado eritrocitario 10 mL/kg = '+fmt(10*w)+' mL si persiste la mala perfusión tras 2–3 bolos de cristaloide de 20 mL/kg.');
       return L; }); }
 
+  // Quemaduras: diagrama (Lund-Browder modificada, HL 2027 fig. 2.4)
+  const QBR={};
+  { const b=ccard(g,'ci','Quemaduras · superficie corporal quemada','Pinte o toque las zonas quemadas según el grado. Solo 2.º y 3.er grado suman a la SCQ.'); b.style.gridColumn='span 2';
+    if(!QB.age) QB.age=qbAgeDef(P);
+    const age=selIn(QB_AGE.map(a=>[a[0],a[1]]),QB.age); age.addEventListener('change',()=>{ QB.age=age.value; paint(); out(); });
+    const m=el('div','mini'); m.append(fld('Columna de edad (Lund-Browder)',age)); b.appendChild(m);
+    const bar=(cls,items,cur,set)=>{ const r=el('div','qbseg '+cls); items.forEach(([v,t,c])=>{ const x=el('button','qbb'+(c?' '+c:''),t); x.type='button'; x.dataset.v=v; x.setAttribute('aria-pressed',String(String(cur())===v)); x.addEventListener('click',()=>{ set(v); r.querySelectorAll('button').forEach(y=>y.setAttribute('aria-pressed',String(y===x))); upMode(); }); r.appendChild(x); }); return r; };
+    const tools=el('div','qbtools');
+    tools.append(
+      bar('qbgr',[['1','1.º','qg1'],['2','2.º','qg2'],['3','3.º','qg3'],['0','Borrar','qg0']],()=>QB.g,v=>QB.g=+v),
+      bar('qbtl',[['paint','Pintar'],['zone','Zona completa']],()=>QB.tool,v=>QB.tool=v),
+      bar('qbvw',[['f','Frente'],['b','Espalda']],()=>QB.view,v=>{ QB.view=v; paint(); }));
+    b.appendChild(tools);
+    const rr=el('label','qbsize'); rr.appendChild(el('span',null,'Pincel')); const rng=document.createElement('input'); rng.type='range'; rng.min='5'; rng.max='34'; rng.value=QB.r; rng.addEventListener('input',()=>QB.r=+rng.value); rr.appendChild(rng); b.appendChild(rr);
+    const wrap=el('div','qbwrap'), cv=document.createElement('canvas'); cv.width=QB_W*QB_S; cv.height=QB_H*QB_S; cv.className='qbcv'; cv.setAttribute('role','img'); cv.setAttribute('aria-label','Diagrama del cuerpo para marcar quemaduras'); wrap.appendChild(cv);
+    const side=el('div','qbside'); const und=el('button','copybtn','↶ Deshacer'), clr=el('button','copybtn','Borrar todo'); und.type=clr.type='button'; side.append(und,clr); wrap.appendChild(side); b.appendChild(wrap);
+    const o=el('div','cout'); b.appendChild(o);
+    const ctx=cv.getContext('2d');
+    function upMode(){ cv.style.touchAction=QB.tool==='paint'?'none':'manipulation'; rr.style.display=QB.tool==='paint'?'':'none'; }
+    const ovc=document.createElement('canvas'); ovc.width=QB_W; ovc.height=QB_H; const ovx=ovc.getContext('2d');
+    function paint(){ const v=QB.view, M=qbMap(v), A=qbArr(v), cs=getComputedStyle(document.documentElement), hex=s=>{ s=(s||'').trim(); const n=parseInt(s.slice(1),16); return s.length===4?[((n>>8)&15)*17,((n>>4)&15)*17,(n&15)*17]:[(n>>16)&255,(n>>8)&255,n&255]; };
+      const col={body:hex(cs.getPropertyValue('--surface')), line:hex(cs.getPropertyValue('--marino-tx')), sep:hex(cs.getPropertyValue('--muted'))};
+      const G=[null,hex(cs.getPropertyValue('--q1')),hex(cs.getPropertyValue('--q2')),hex(cs.getPropertyValue('--q3'))], LY=qbLayers(v,col);
+      const im=ovx.createImageData(QB_W,QB_H), d=im.data;
+      for(let k=0;k<A.length;k++){ const g=A[k]; if(!g||!M.id[k]) continue; const c=G[g], j=k*4; d[j]=c[0]; d[j+1]=c[1]; d[j+2]=c[2]; d[j+3]=235; }
+      ovx.putImageData(im,0,0);
+      ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
+      ctx.drawImage(LY.fill,0,0); ctx.imageSmoothingEnabled=true; ctx.drawImage(ovc,0,0,cv.width,cv.height); ctx.drawImage(LY.lines,0,0);
+      ctx.setTransform(QB_S,0,0,QB_S,0,0); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='600 10px Poppins, sans-serif';
+      M.Z.forEach((z,i)=>{ const p=fmt(qbPct(z,QB.age)), x=M.cx[i+1], y=z[0]==='cab'?(v==='f'?100:78):M.cy[i+1];
+        if(z[0]==='genit') return; ctx.lineWidth=3; ctx.strokeStyle='rgba('+col.body.join(',')+',.85)'; ctx.strokeText(p,x,y); ctx.fillStyle='rgb('+col.sep.join(',')+')'; ctx.fillText(p,x,y); });
+      ctx.fillStyle='rgb('+col.line.join(',')+')'; ctx.font='600 12px Poppins, sans-serif'; ctx.textAlign='left'; ctx.fillText(v==='f'?'FRENTE':'ESPALDA',14,20); }
+    function out(){ const R=qbCalc(QB.age), r1=x=>Math.round(x*10)/10, s=r1(R[2]+R[3]);
+      const L=[{k:[['SCQ (2.º + 3.º)',fmt(s)+' %'],['2.º grado',fmt(r1(R[2]))+' %'],['3.er grado',fmt(r1(R[3]))+' %'],['1.er grado (no suma)',fmt(r1(R[1]))+' %']]}];
+      if(R.rows.length) L.push({t:{h:['Zona','% zona','Quemado'],r:R.rows.map(([n,p,d])=>[n,fmt(p),[d[3]>0.005?'3.º '+fmt(r1(d[3])):'',d[2]>0.005?'2.º '+fmt(r1(d[2])):'',d[1]>0.005?'1.º '+fmt(r1(d[1])):''].filter(Boolean).join(' · ')]),wrap:1}});
+      else L.push({n:'Sin zonas marcadas. Elija el grado y pinte con el dedo, o use «Zona completa» y toque cada zona.'});
+      if(s>=15) L.push('⚠ SCQ ≥15%: reanimación hídrica con fórmula (Parkland o Galveston).');
+      L.push({n:'Planta y talón cuentan como una sola zona de 1.75% (como la Lund-Browder original); con esto el cuerpo completo suma 99% (la figura no asigna % al cuello). Palma del paciente con dedos ≈ 1%.'});
+      cRender(o,L);
+      const u=el('button','copybtn','Usar '+fmt(s)+' % en «Reanimación hídrica»'); u.type='button'; u.disabled=!s;
+      u.addEventListener('click',()=>{ if(!QBR.scq) return; QBR.scq.value=s; QBR.scq.dispatchEvent(new Event('input',{bubbles:true})); const c=QBR.scq.closest('details'); if(c) c.open=true; QBR.scq.scrollIntoView({behavior:'smooth',block:'center'}); });
+      o.appendChild(u); }
+    const snap=()=>{ QB.undo.push({f:QB.f?QB.f.slice():null,b:QB.b?QB.b.slice():null}); if(QB.undo.length>25) QB.undo.shift(); };
+    const pos=e=>{ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*QB_W/r.width,(e.clientY-r.top)*QB_H/r.height]; };
+    function dab(x,y){ const A=qbArr(QB.view), id=qbMap(QB.view).id, R=QB.r, g=QB.g;
+      for(let yy=Math.max(0,Math.floor(y-R));yy<=Math.min(QB_H-1,Math.ceil(y+R));yy++) for(let xx=Math.max(0,Math.floor(x-R));xx<=Math.min(QB_W-1,Math.ceil(x+R));xx++){ const dx=xx-x, dy=yy-y; if(dx*dx+dy*dy<=R*R){ const k=yy*QB_W+xx; if(id[k]) A[k]=g; } } }
+    let last=null, raf=0; const req=()=>{ if(!raf) raf=requestAnimationFrame(()=>{ raf=0; paint(); }); };
+    cv.addEventListener('pointerdown',e=>{ const [x,y]=pos(e);
+      if(QB.tool==='zone'){ const M=qbMap(QB.view), z=M.id[(Math.round(y)*QB_W+Math.round(x))]; if(!z) return; snap(); const A=qbArr(QB.view);
+        for(let k=0;k<A.length;k++) if(M.id[k]===z) A[k]=QB.g; paint(); out(); return; }
+      e.preventDefault(); snap(); last=[x,y]; try{ cv.setPointerCapture(e.pointerId); }catch(_){} dab(x,y); req(); });
+    cv.addEventListener('pointermove',e=>{ if(!last) return; const [x,y]=pos(e), dx=x-last[0], dy=y-last[1], n=Math.max(1,Math.ceil(Math.hypot(dx,dy)/(QB.r/3)));
+      for(let i=1;i<=n;i++) dab(last[0]+dx*i/n,last[1]+dy*i/n); last=[x,y]; req(); });
+    const end=()=>{ if(!last) return; last=null; paint(); out(); };
+    cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end); cv.addEventListener('lostpointercapture',end);
+    und.addEventListener('click',()=>{ const s=QB.undo.pop(); if(!s) return; QB.f=s.f; QB.b=s.b; paint(); out(); });
+    clr.addEventListener('click',()=>{ if(!QB.f&&!QB.b) return; snap(); QB.f=null; QB.b=null; paint(); out(); });
+    upMode(); paint(); out();
+    srcLine(b,'Harriet Lane 2027, fig. 2.4 (tabla de Lund-Browder modificada): % de cada zona por edad; solo quemaduras de espesor parcial y total. Dibujo propio de Pedia Life.'); }
+
   // Quemados
   { const b=ccard(g,'ci','Quemaduras · reanimación hídrica','Solo % de superficie corporal quemada (SCQ) de 2.º y 3.er grado.'); b.style.gridColumn='span 2';
-    const scq=numIn(20); const m=el('div','mini'); m.append(fld('% SCQ',scq)); b.appendChild(m);
+    const scq=numIn(20); QBR.scq=scq; const m=el('div','mini'); m.append(fld('% SCQ',scq)); b.appendChild(m);
     liveOut(b,[scq],()=>{ const s=nv(scq); if(!s) return []; const pk=4*w*s, gv=5000*sc*s/100+2000*sc, hs=w<=10?100*w:w<=20?1000+50*(w-10):Math.min(1500+20*(w-20),2400);
       const L=[{k:[['Parkland en 24 h',fmt(pk)+' mL'],['Primeras 8 h',fmt(pk/16)+' mL/h'],['Siguientes 16 h',fmt(pk/32)+' mL/h'],['Meta de diuresis',fmt(w<30?1*w:0.5*w)+' mL/h']]}];
       L.push({s:'Puede iniciarse con bolo de 20 mL/kg = '+fmt(20*w)+' mL de Hartmann o SN.'+(s<15?' Con <15% SCQ, líquidos IV según el estado clínico.':'')});
@@ -5787,11 +5941,11 @@ function renderCalc(){
       if(w<30) L.push({s:'Lactantes y niños pequeños: agregar mantenimiento con glucosa (Holliday) '+fmt(hs/24)+' mL/h para evitar hipoglucemia.'});
       L.push({s:'Meta de diuresis: '+fmt(w<30?1*w:0.5*w)+' mL/h ('+(w<30?'1':'0.5')+' mL/kg/h). Ajustar el ritmo según diuresis.'});
       L.push({n:'Galveston (alternativa): 5000 mL/m² SCQ + 2000 mL/m² = '+fmt(gv)+' mL/24 h (SC '+fmt(sc)+' m²).'});
-      L.push({n:'Lund-Browder: cabeza 19% (<1 a), 17% (1–4 a), 13% (5–9 a), 11% (10–14 a); cada muslo 5.5 / 6.5 / 8 / 8.5%; cada pierna 5 / 5 / 5.5 / 6%; tronco ant. y post. 13% c/u; palma del paciente ≈1%.'});
+      L.push({n:'Lund-Browder (HL 2027, fig. 2.4): cabeza 19% (<1 a), 17% (1 a), 13% (5 a), 11% (10 a); cada muslo 5.5 / 6.5 / 8 / 8.5%; cada pierna 5 / 5 / 5.5 / 6%; tronco ant. y post. 13% c/u; palma del paciente ≈1%. Use el diagrama de arriba para calcularla.'});
       return L; }); }
   labCards(g,P);
 
-  h.appendChild(el('p','src','Fuentes: Harriet Lane Handbook 2027 (cap. 1 urgencias y gases, cap. 2 quemaduras, cap. 10 CAD, cap. 11 líquidos, electrolitos y ácido-base, cap. 19 FENa y TFG, tabla de reanimación), PALS 2023 (choque, hemoderivados) e ISPAD 2022 (gravedad de CAD). Galveston y Lund-Browder: uso habitual.'));
+  h.appendChild(el('p','src','Fuentes: Harriet Lane Handbook 2027 (cap. 1 urgencias y gases, cap. 2 quemaduras, cap. 10 CAD, cap. 11 líquidos, electrolitos y ácido-base, cap. 19 FENa y TFG, tabla de reanimación), PALS 2023 (choque, hemoderivados) e ISPAD 2022 (gravedad de CAD). Lund-Browder modificada: HL 2027, fig. 2.4. Galveston: uso habitual.'));
   h.appendChild(el('p','src out','⚠ Herramienta de apoyo: verificar con el protocolo de su unidad.'));
 }
 
@@ -6312,7 +6466,7 @@ if(location.protocol==='https:' && /\.github\.io$/.test(location.hostname) && 's
 function swStatus(v,off){ const e=$('#pver'); if(!e) return; e.textContent='Versión '+e.dataset.v+((off||!navigator.onLine)?' (sin conexión)':''); }
 window.addEventListener('offline',()=>swStatus(null,true)); window.addEventListener('online',()=>swStatus(null,false));
 try{ const o=JSON.parse(localStorage.getItem('dosis_pt')||'{}'); PTF.forEach(id=>{ if(o[id]!=null&&o[id]!=='') $(id).value=o[id]; }); }catch(e){}
-$('#newpt').addEventListener('click',()=>{ state.wOk=null; Object.assign(BIL,{ga:null,h:null,tsb:null,tsb0:null,toma0:'',rf:{},nrf:false,nac:'',toma:''}); PTF.forEach(id=>{ $(id).value= id==='#edadu'?'a':''; }); state.hoja=[]; savePrefs(); updTabs(); readWeight(); patientNote(); renderCurrent(); try{ localStorage.removeItem('dosis_pt'); }catch(e){} pesoIn.focus(); });
+$('#newpt').addEventListener('click',()=>{ state.wOk=null; qbReset(); Object.assign(BIL,{ga:null,h:null,tsb:null,tsb0:null,toma0:'',rf:{},nrf:false,nac:'',toma:''}); PTF.forEach(id=>{ $(id).value= id==='#edadu'?'a':''; }); state.hoja=[]; savePrefs(); updTabs(); readWeight(); patientNote(); renderCurrent(); try{ localStorage.removeItem('dosis_pt'); }catch(e){} pesoIn.focus(); });
 { const sec=$('#patient'), mini=$('#ptmini');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>{ mini.classList.toggle('show',!es[0].isIntersecting); },{threshold:0}).observe(sec);
   $('#ptedit').addEventListener('click',()=>{ sec.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>pesoIn.focus({preventScroll:true}),400); }); }
